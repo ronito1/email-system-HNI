@@ -54,7 +54,7 @@ app.post("/send-welcome-email", async (req, res) => {
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden;">
         <tr>
           <td align="center" style="background:#d32f2f;padding:20px;">
-            <img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI" style="display:block;">
+            <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="display:block;">
           </td>
         </tr>
         <tr>
@@ -125,7 +125,7 @@ app.post("/send-listing-live-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Your Property is Now Live on Home HNI!</h2>
@@ -192,7 +192,7 @@ app.post("/send-price-suggestions-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">Rent & Sale Trends in ${locality || 'Your Area'}</h2>
@@ -245,7 +245,7 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">✅ Thank you for applying for a Home Loan</h2>
@@ -309,7 +309,7 @@ app.post("/send-plan-activated-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Your Home HNI Premium Plan is Activated!</h2>
@@ -370,7 +370,7 @@ app.post("/send-plan-upgrade-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">Unlock More With Home HNI Elite Plan</h2>
@@ -431,7 +431,7 @@ app.post("/send-deal-closed-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Congratulations! Your Deal is Closed With Home HNI</h2>
@@ -493,7 +493,7 @@ app.post("/send-help-request-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🚀 We're Here to Help You Post Your Property!</h2>
@@ -560,7 +560,7 @@ Team Home HNI
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">New Help Request - Property Listing Assistance</h2>
@@ -624,7 +624,7 @@ app.post("/send-freshly-painted-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎨 Freshly Painted Homes - Our Agent Will Contact You Soon!</h2>
@@ -699,7 +699,7 @@ app.post("/send-property-submitted-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">✅ Thank You for Posting Your Property!</h2>
@@ -804,7 +804,7 @@ app.post("/send-property-rejected-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">❌ Property Listing Update - Action Required</h2>
@@ -885,7 +885,7 @@ app.post("/send-show-interest-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">💝 Thank You for Showing Interest!</h2>
@@ -986,7 +986,7 @@ app.post("/send-mark-rented-sold-email", async (req, res) => {
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="cid:homehni_logo" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">✅ Property Status Updated Successfully!</h2>

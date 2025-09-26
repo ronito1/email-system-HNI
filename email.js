@@ -1,6 +1,11 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -22,6 +27,17 @@ export const sendEmail = async ({ to, subject, text, html }) => {
     if (html) {
       mailOptions.html = html;
       mailOptions.text = text; // Fallback text version
+
+      // Attach inline logo if referenced via cid
+      if (html.includes('cid:homehni_logo')) {
+        mailOptions.attachments = [
+          {
+            filename: 'logo.jpg',
+            path: path.join(__dirname, 'logo.jpg'),
+            cid: 'homehni_logo',
+          },
+        ];
+      }
     } else {
       mailOptions.text = text;
     }
