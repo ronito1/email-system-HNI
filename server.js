@@ -236,11 +236,11 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
   const { to, userName, loanEligibilityUrl } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "Need a Home Loan? Instant Approval via Home HNI Partners";
+  const subject = "✅ Thank you for applying for a Home Loan – We'll contact you within 12 hours";
   
   const html = `<!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Home Loan via Home HNI Partners</title></head>
+<head><meta charset="UTF-8"><title>Home Loan Application Received</title></head>
 <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
@@ -248,18 +248,19 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">Need a Home Loan? Instant Approval via Home HNI Partners</h2>
-            <p>Hello ${userName || 'there'},</p>
-            <p>Looking to sell or buy? Get financial assistance with:</p>
+            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">✅ Thank you for applying for a Home Loan</h2>
+            <p>Hi ${userName || 'there'},</p>
+            <p>We’ve received your loan request. <strong>Our agents will contact you within 12 hours</strong> to assist with next steps.</p>
+            <p><strong>What we'll help you with:</strong></p>
             <ul style="padding-left:20px;margin:12px 0;">
-              <li>Instant loan approval</li>
-              <li>Best interest rates</li>
-              <li>Hassle-free documentation</li>
+              <li>Eligibility and best-rate options</li>
+              <li>Required documentation checklist</li>
+              <li>Fast-track approval via Home HNI partners</li>
             </ul>
             <p style="text-align:center;margin:28px 0;">
-              <a href="${loanEligibilityUrl || 'https://homehni.com/loan-eligibility'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:14px 30px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">👉 Check My Eligibility</a>
+              <a href="${loanEligibilityUrl || 'https://homehni.com/loan-eligibility'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:14px 30px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">👉 Check Eligibility / Prepare Docs</a>
             </p>
-            <p>Finance made simple with Home HNI.</p>
+            <p>Thanks for choosing <strong>Home HNI</strong>.</p>
             <p><strong>Team Home HNI</strong></p>
           </td>
         </tr>
@@ -271,18 +272,20 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
 </body>
 </html>`;
 
-  const text = `Need a Home Loan? Instant Approval via Home HNI Partners
+  const text = `✅ Thank you for applying for a Home Loan
 
-Hello ${userName || 'there'},
+Hi ${userName || 'there'},
 
-Looking to sell or buy? Get financial assistance with:
-• Instant loan approval
-• Best interest rates
-• Hassle-free documentation
+We’ve received your loan request. Our agents will contact you within 12 hours to assist with next steps.
 
-Check your eligibility: ${loanEligibilityUrl || 'https://homehni.com/loan-eligibility'}
+What we'll help you with:
+• Eligibility and best-rate options
+• Required documentation checklist
+• Fast-track approval via Home HNI partners
 
-Finance made simple with Home HNI.
+Prepare now: ${loanEligibilityUrl || 'https://homehni.com/loan-eligibility'}
+
+Thanks for choosing Home HNI.
 
 Team Home HNI
 
@@ -1409,7 +1412,7 @@ app.post("/send-services-application-email", async (req, res) => {
   const { to, userName, serviceType, applicationDetails } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🎯 Thank You for Your Service Application!";
+  const subject = "✅ Thank you for applying/booking – Our agents will contact you within 12 hours";
   
   const html = `<!DOCTYPE html>
 <html>
@@ -1421,9 +1424,9 @@ app.post("/send-services-application-email", async (req, res) => {
         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://i.postimg.cc/g0FsnQ5k/image.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎯 Thank You for Your Service Application!</h2>
+            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">✅ Thank you for your ${serviceType || 'service'} request</h2>
             <p>Hi ${userName || 'there'},</p>
-            <p>Thank you for applying for our <strong>${serviceType || 'service'}</strong>! Our agents will contact you soon.</p>
+            <p>Thank you for applying/booking <strong>${serviceType || 'service'}</strong>. <strong>Our agents will contact you within 12 hours</strong> to confirm details.</p>
             <p style="background:#e8f5e8;padding:15px;border-left:4px solid #4caf50;margin:20px 0;">
               <strong>Application Details:</strong><br>
               🎯 Service: ${serviceType || 'Selected Service'}<br>
@@ -1432,7 +1435,7 @@ app.post("/send-services-application-email", async (req, res) => {
             </p>
             <p><strong>What happens next?</strong></p>
             <ul style="padding-left:20px;margin:12px 0;">
-              <li>📞 Our specialized agent will contact you within 24 hours</li>
+              <li>📞 Our specialized agent will contact you within 12 hours</li>
               <li>💬 We'll discuss your specific requirements</li>
               <li>📋 Provide you with a customized service plan</li>
               <li>✅ Schedule the service at your convenience</li>
