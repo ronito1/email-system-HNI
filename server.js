@@ -885,7 +885,7 @@ Your Success Partners
 
 // Help Request Email Template - "I'm interested / Let us help you"
 app.post("/send-help-request-email", async (req, res) => {
-  const { to, userName, propertyType, phone } = req.body;
+  const { to, userName, propertyType, phone, adminEmail, customerPhone } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
   const subject = "🚀 Home HNI Assistance Request - We'll Help You!";
@@ -964,11 +964,6 @@ Home HNI Team
 © 2025 Home HNI - Your Trusted Property Platform`;
 
   const result = await sendEmail({ to, subject, html, text });
-  res.json(result);
-}); 
-
-
-
 
   // Enhanced admin notification
   if (adminEmail) {
