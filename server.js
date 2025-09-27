@@ -1734,6 +1734,7 @@ Home HNI Quality Assurance Team
 //   const result = await sendEmail({ to, subject, html, text });
 //   res.json(result);
 // });
+
 // 14. Contact owner email (Contact owner button trigger)
 app.post("/send-contact-owner-email", async (req, res) => {
   const { to, userName, propertyAddress, propertyType, interestedUserName, interestedUserEmail, interestedUserPhone, dashboardUrl } = req.body;
