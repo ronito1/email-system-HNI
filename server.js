@@ -799,23 +799,13 @@ Your Success Partners
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
-
-// 7. Deal closed email
+// 7. Deal closed email - CLEANED VERSION
 app.post("/send-deal-closed-email", async (req, res) => {
   const { to, userName, locality, dealType, postDealServicesUrl, propertyValue } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
   const subject = "🎉 Congratulations! Your Property Deal is Successfully Closed with Home HNI";
   
-  const services = [
-    { icon: "🚚", title: "Professional Moving Services", desc: "Hassle-free packing and transportation", price: "Starting ₹5,000" },
-    { icon: "🎨", title: "Deep Cleaning & Painting", desc: "Make your new place move-in ready", price: "Starting ₹8,000" },
-    { icon: "📜", title: "Legal Documentation Support", desc: "Registration and agreement assistance", price: "Starting ₹15,000" },
-    { icon: "🔧", title: "Home Renovation Services", desc: "Complete interior and exterior makeover", price: "Starting ₹25,000" },
-    { icon: "🏠", title: "Property Management", desc: "Ongoing maintenance and tenant management", price: "Starting ₹2,000/month" },
-    { icon: "💡", title: "Smart Home Solutions", desc: "Modern automation and security systems", price: "Starting ₹20,000" }
-  ];
-
   const html = `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><title>Congratulations! Deal Successfully Closed</title></head>
@@ -832,67 +822,33 @@ app.post("/send-deal-closed-email", async (req, res) => {
             </div>
             
             <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>🏆 <strong>Fantastic news!</strong> Your property in <strong>${locality || 'your area'}</strong> has been successfully <strong>${dealType || 'sold/rented'}</strong> through Home HNI's premium platform.</p>
+            <p>🏆 <strong>Fantastic news!</strong> Your property in <strong>${locality || 'your area'}</strong> has been successfully <strong>${dealType || 'sold/rented'}</strong> through Home HNI's platform.</p>
             
             ${propertyValue ? `
             <div style="background: linear-gradient(135deg, #e8f5e8, #f1f8e9); padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center; border-left: 4px solid #4caf50;">
               <h4 style="margin: 0 0 10px; color: #2e7d32;">💰 Deal Summary</h4>
               <p style="margin: 5px 0; font-size: 18px;"><strong>Property Value: ₹${propertyValue}</strong></p>
-              <p style="margin: 5px 0; color: #666;">Transaction completed through Home HNI Premium Services</p>
+              <p style="margin: 5px 0; color: #666;">Transaction completed through Home HNI</p>
             </div>
             ` : ''}
 
-            <div style="background: #fff3e0; padding: 20px; border-radius: 8px; margin: 25px 0;">
-              <h3 style="margin: 0 0 15px; color: #f57c00; text-align: center;">🌟 Complete Your Property Journey</h3>
-              <p style="text-align: center; margin-bottom: 20px;">Now that your deal is closed, let us help you with the next steps:</p>
-              
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
-                ${services.map(service => `
-                  <div style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; background: #fff; text-align: center;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">${service.icon}</div>
-                    <h5 style="margin: 0 0 8px; color: #d32f2f; font-size: 14px;">${service.title}</h5>
-                    <p style="margin: 0 0 8px; font-size: 12px; color: #666;">${service.desc}</p>
-                    <p style="margin: 0; font-size: 12px; font-weight: bold; color: #f57c00;">${service.price}</p>
-                  </div>
-                `).join('')}
-              </div>
+            <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
+              <h4 style="color:#d32f2f;margin:0 0 15px;">📞 Need Support?</h4>
+              <p style="margin:5px 0;">📱 Contact us: +91 8074 017 388</p>
+              <p style="margin:5px 0;">📧 Email: homehni8@gmail.com</p>
+              <p style="margin:5px 0;">⏰ Available: Monday - Saturday, 9 AM - 7 PM</p>
             </div>
 
-            <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin: 25px 0;">
-              <h4 style="margin: 0 0 15px; color: #1976d2;">🎯 Special Post-Deal Offers</h4>
-              <p style="margin: 8px 0;">✅ <strong>20% Discount</strong> on all Home HNI services for closed deal customers</p>
-              <p style="margin: 8px 0;">✅ <strong>Free Consultation</strong> for your next property investment</p>
-              <p style="margin: 8px 0;">✅ <strong>Priority Booking</strong> for all premium services</p>
-              <p style="margin: 8px 0;">✅ <strong>Exclusive Access</strong> to off-market property deals</p>
-            </div>
-
-            <p style="text-align:center;margin:30px 0;">
-              <a href="${postDealServicesUrl || 'https://homehni.com/services'}" style="background:linear-gradient(135deg, #d32f2f, #f44336);color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;box-shadow:0 4px 12px rgba(211,47,47,0.3);">🛠️ Explore Post-Deal Services</a>
+            <p style="text-align:center;margin:28px 0;">
+              <a href="${postDealServicesUrl || 'https://homehni.com/dashboard'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📋 View Dashboard</a>
             </p>
-
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
-              <h4 style="margin: 0 0 10px; color: #6c757d;">💬 We'd Love Your Feedback</h4>
-              <p style="margin: 10px 0;">Your experience matters to us! Share your Home HNI journey and help others find their perfect property.</p>
-              <a href="https://homehni.com/testimonials" style="background:#28a745;color:#fff;text-decoration:none;padding:10px 20px;border-radius:5px;font-weight:bold;display:inline-block;margin-top:10px;">Leave a Review</a>
-            </div>
-
-            <div style="background: #fce4ec; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
-              <h4 style="margin: 0 0 10px; color: #c2185b;">🏠 Planning Your Next Property Investment?</h4>
-              <p style="margin: 10px 0;">Get exclusive access to premium properties and investment opportunities.</p>
-              <a href="https://homehni.com/investment-properties" style="background:#c2185b;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;margin-top:10px;">Explore Investment Options</a>
-            </div>
             
-            <p>Once again, congratulations on your successful property transaction! We're thrilled to have been part of your journey and look forward to serving you again.</p>
-            <p><strong>Warm regards,</strong><br><strong>Team Home HNI</strong><br>Your Trusted Property Partners</p>
-            
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 14px; color: #666;">
-              <p><strong>Need immediate assistance?</strong></p>
-              <p>📞 Call: +91 8074 017 388 | 📧 Email: homehni8@gmail.com</p>
-            </div>
+            <p>Once again, congratulations on your successful property transaction! We're thrilled to have been part of your journey.</p>
+            <p><strong>Best regards,</strong><br><strong>Home HNI Team</strong></p>
           </td>
         </tr>
         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Your Trusted Property Partners</td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Your Trusted Property Platform</td></tr>
       </table>
     </td></tr>
   </table>
@@ -903,43 +859,30 @@ app.post("/send-deal-closed-email", async (req, res) => {
 
 Dear ${userName || 'Valued Customer'},
 
-🏆 Fantastic news! Your property in ${locality || 'your area'} has been successfully ${dealType || 'sold/rented'} through Home HNI's premium platform.
+🏆 Fantastic news! Your property in ${locality || 'your area'} has been successfully ${dealType || 'sold/rented'} through Home HNI's platform.
 
 ${propertyValue ? `💰 Deal Summary: Property Value: ₹${propertyValue}` : ''}
 
-Complete Your Property Journey:
-Now that your deal is closed, let us help you with the next steps:
+Need Support?
+📱 Contact us: +91 8074 017 388
+📧 Email: homehni8@gmail.com
+⏰ Available: Monday - Saturday, 9 AM - 7 PM
 
-🚚 Professional Moving Services - Starting ₹5,000
-🎨 Deep Cleaning & Painting - Starting ₹8,000  
-📜 Legal Documentation Support - Starting ₹15,000
-🔧 Home Renovation Services - Starting ₹25,000
-🏠 Property Management - Starting ₹2,000/month
-💡 Smart Home Solutions - Starting ₹20,000
+Dashboard: ${postDealServicesUrl || 'https://homehni.com/dashboard'}
 
-Special Post-Deal Offers:
-✅ 20% Discount on all Home HNI services
-✅ Free Consultation for your next property investment
-✅ Priority Booking for all premium services
-✅ Exclusive Access to off-market property deals
+Once again, congratulations on your successful property transaction! We're thrilled to have been part of your journey.
 
-Explore services: ${postDealServicesUrl || 'https://homehni.com/services'}
+Best regards,
+Home HNI Team
 
-We'd Love Your Feedback: https://homehni.com/testimonials
-Planning Next Investment? https://homehni.com/investment-properties
-
-Need assistance?
-📞 Call: +91 8074 017 388 | 📧 Email: homehni8@gmail.com
-
-Warm regards,
-Team Home HNI
-Your Trusted Property Partners
-
-© 2025 Home HNI - Your Trusted Property Partners`;
+© 2025 Home HNI - Your Trusted Property Platform`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
-});
+}); 
+
+
+
 
 // 8. Help request email (Don't want to fill all details? Let us help you)
 app.post("/send-help-request-email", async (req, res) => {
