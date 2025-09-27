@@ -1452,436 +1452,402 @@ Home HNI Quality Assurance Team
   res.json(result);
 });
 
-// 12. Show interest email (Show interest button trigger)  
-app.post("/send-show-interest-email", async (req, res) => {
-  const { to, email, userEmail, ownerEmail, userName, propertyType, locality, propertyPrice, pricingPlanUrl } = req.body;
-  const resolvedTo = (to || email || userEmail || ownerEmail || "").trim();
-  const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(resolvedTo) && !/@example\.com$/i.test(resolvedTo);
-  if (!isValidEmail) {
-    return res.status(400).json({ status: "error", error: "Invalid recipient email", resolvedTo });
-  }
+// // 12. Show interest email (Show interest button trigger)  
+// app.post("/send-show-interest-email", async (req, res) => {
+//   const { to, email, userEmail, ownerEmail, userName, propertyType, locality, propertyPrice, pricingPlanUrl } = req.body;
+//   const resolvedTo = (to || email || userEmail || ownerEmail || "").trim();
+//   const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(resolvedTo) && !/@example\.com$/i.test(resolvedTo);
+//   if (!isValidEmail) {
+//     return res.status(400).json({ status: "error", error: "Invalid recipient email", resolvedTo });
+//   }
 
-  const subject = "🏠 Unlock Premium Property Access - Exclusive Plans for Serious Buyers!";
+//   const subject = "🏠 Unlock Premium Property Access - Exclusive Plans for Serious Buyers!";
   
-  const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Premium Property Access Plans</title></head>
-<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
-        <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🏠 Welcome to Home HNI Premium Property Access!</h2>
-            <p>Hi ${userName || 'Property Seeker'},</p>
-            <p>Great choice! You've shown interest in premium properties on <strong>Home HNI</strong> - India's most trusted property platform. Now unlock exclusive access to connect directly with verified property owners!</p>
+//   const html = `<!DOCTYPE html>
+// <html>
+// <head><meta charset="UTF-8"><title>Premium Property Access Plans</title></head>
+// <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+//   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+//     <tr><td align="center">
+//       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+//         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+//         <tr>
+//           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+//             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🏠 Welcome to Home HNI Premium Property Access!</h2>
+//             <p>Hi ${userName || 'Property Seeker'},</p>
+//             <p>Great choice! You've shown interest in premium properties on <strong>Home HNI</strong> - India's most trusted property platform. Now unlock exclusive access to connect directly with verified property owners!</p>
 
-            ${propertyType || locality || propertyPrice ? `
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 10px;font-size:16px;">🎯 Your Interest Profile:</h3>
-              ${propertyType ? `<p style="margin:5px 0;"><strong>Property Type:</strong> ${propertyType}</p>` : ''}
-              ${locality ? `<p style="margin:5px 0;"><strong>Preferred Location:</strong> ${locality}</p>` : ''}
-              ${propertyPrice ? `<p style="margin:5px 0;"><strong>Budget Range:</strong> ₹${propertyPrice}</p>` : ''}
-              <p style="margin:5px 0;"><strong>Status:</strong> <span style="color:#4caf50;">Ready to Connect!</span></p>
-            </div>
-            ` : ''}
+//             ${propertyType || locality || propertyPrice ? `
+//             <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 10px;font-size:16px;">🎯 Your Interest Profile:</h3>
+//               ${propertyType ? `<p style="margin:5px 0;"><strong>Property Type:</strong> ${propertyType}</p>` : ''}
+//               ${locality ? `<p style="margin:5px 0;"><strong>Preferred Location:</strong> ${locality}</p>` : ''}
+//               ${propertyPrice ? `<p style="margin:5px 0;"><strong>Budget Range:</strong> ₹${propertyPrice}</p>` : ''}
+//               <p style="margin:5px 0;"><strong>Status:</strong> <span style="color:#4caf50;">Ready to Connect!</span></p>
+//             </div>
+//             ` : ''}
 
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h3 style="color:#d32f2f;margin:0 0 10px;">🚀 Why Choose Home HNI Premium Access?</h3>
-              <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Connect with 50,000+ verified property owners</p>
-              <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Get responses 5X faster than competitors</p>
-              <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Access exclusive off-market properties</p>
-              <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Dedicated property advisor support</p>
-            </div>
+//             <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
+//               <h3 style="color:#d32f2f;margin:0 0 10px;">🚀 Why Choose Home HNI Premium Access?</h3>
+//               <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Connect with 50,000+ verified property owners</p>
+//               <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Get responses 5X faster than competitors</p>
+//               <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Access exclusive off-market properties</p>
+//               <p style="margin:5px 0;font-weight:bold;color:#4caf50;">✓ Dedicated property advisor support</p>
+//             </div>
 
-            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 20px;text-align:center;font-size:18px;">💎 Choose Your Premium Access Plan:</h3>
+//             <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 20px;text-align:center;font-size:18px;">💎 Choose Your Premium Access Plan:</h3>
               
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:20px 0;">
-                <div style="background:#fff;padding:20px;border-radius:8px;border:2px solid #e0e0e0;text-align:center;">
-                  <h4 style="color:#4caf50;margin:0 0 10px;font-size:16px;">EXPLORER</h4>
-                  <div style="font-size:24px;font-weight:bold;color:#4caf50;margin:10px 0;">FREE</div>
-                  <ul style="text-align:left;padding-left:15px;margin:15px 0;font-size:13px;">
-                    <li>View basic property details</li>
-                    <li>Limited contact attempts (3/month)</li>
-                    <li>Standard customer support</li>
-                    <li>Access to public listings only</li>
-                  </ul>
-                  <p style="font-size:12px;color:#777;margin:10px 0;">Perfect for casual browsing</p>
-                </div>
+//               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:20px 0;">
+//                 <div style="background:#fff;padding:20px;border-radius:8px;border:2px solid #e0e0e0;text-align:center;">
+//                   <h4 style="color:#4caf50;margin:0 0 10px;font-size:16px;">EXPLORER</h4>
+//                   <div style="font-size:24px;font-weight:bold;color:#4caf50;margin:10px 0;">FREE</div>
+//                   <ul style="text-align:left;padding-left:15px;margin:15px 0;font-size:13px;">
+//                     <li>View basic property details</li>
+//                     <li>Limited contact attempts (3/month)</li>
+//                     <li>Standard customer support</li>
+//                     <li>Access to public listings only</li>
+//                   </ul>
+//                   <p style="font-size:12px;color:#777;margin:10px 0;">Perfect for casual browsing</p>
+//                 </div>
                 
-                <div style="background:#fff;padding:20px;border-radius:8px;border:2px solid:#ff9800;text-align:center;position:relative;">
-                  <div style="background:#ff9800;color:#fff;padding:5px 10px;border-radius:15px;font-size:11px;position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-weight:bold;">MOST POPULAR</div>
-                  <h4 style="color:#ff9800;margin:0 0 10px;font-size:16px;">PREMIUM</h4>
-                  <div style="font-size:24px;font-weight:bold;color:#ff9800;margin:10px 0;">₹${propertyType === 'Commercial' ? '799' : propertyType === 'Industrial' ? '999' : '499'}</div>
-                  <div style="font-size:12px;color:#666;margin-bottom:15px;">per month</div>
-                  <ul style="text-align:left;padding-left:15px;margin:15px 0;font-size:13px;">
-                    <li>Unlimited property contacts</li>
-                    <li>Direct owner phone numbers</li>
-                    <li>Priority customer support</li>
-                    <li>Access to exclusive listings</li>
-                    <li>Property visit scheduling</li>
-                    <li>Market price insights</li>
-                  </ul>
-                  <p style="font-size:12px;color:#777;margin:10px 0;">For serious property seekers</p>
-                </div>
+//                 <div style="background:#fff;padding:20px;border-radius:8px;border:2px solid:#ff9800;text-align:center;position:relative;">
+//                   <div style="background:#ff9800;color:#fff;padding:5px 10px;border-radius:15px;font-size:11px;position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-weight:bold;">MOST POPULAR</div>
+//                   <h4 style="color:#ff9800;margin:0 0 10px;font-size:16px;">PREMIUM</h4>
+//                   <div style="font-size:24px;font-weight:bold;color:#ff9800;margin:10px 0;">₹${propertyType === 'Commercial' ? '799' : propertyType === 'Industrial' ? '999' : '499'}</div>
+//                   <div style="font-size:12px;color:#666;margin-bottom:15px;">per month</div>
+//                   <ul style="text-align:left;padding-left:15px;margin:15px 0;font-size:13px;">
+//                     <li>Unlimited property contacts</li>
+//                     <li>Direct owner phone numbers</li>
+//                     <li>Priority customer support</li>
+//                     <li>Access to exclusive listings</li>
+//                     <li>Property visit scheduling</li>
+//                     <li>Market price insights</li>
+//                   </ul>
+//                   <p style="font-size:12px;color:#777;margin:10px 0;">For serious property seekers</p>
+//                 </div>
                 
-                <div style="background:#fff;padding:20px;border-radius:8px;border:2px solid:#d32f2f;text-align:center;">
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:16px;">ELITE</h4>
-                  <div style="font-size:24px;font-weight:bold;color:#d32f2f;margin:10px 0;">₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1799' : '999'}</div>
-                  <div style="font-size:12px;color:#666;margin-bottom:15px;">per month</div>
-                  <ul style="text-align:left;padding-left:15px;margin:15px 0;font-size:13px;">
-                    <li>Everything in Premium</li>
-                    <li>Dedicated property advisor</li>
-                    <li>Legal documentation help</li>
-                    <li>Loan assistance & connections</li>
-                    <li>Exclusive pre-launch access</li>
-                    <li>Negotiation support</li>
-                    <li>White-glove service</li>
-                  </ul>
-                  <p style="font-size:12px;color:#777;margin:10px 0;">VIP property buying experience</p>
-                </div>
-              </div>
-            </div>
+//                 <div style="background:#fff;padding:20px;border-radius:8px;border:2px solid:#d32f2f;text-align:center;">
+//                   <h4 style="color:#d32f2f;margin:0 0 10px;font-size:16px;">ELITE</h4>
+//                   <div style="font-size:24px;font-weight:bold;color:#d32f2f;margin:10px 0;">₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1799' : '999'}</div>
+//                   <div style="font-size:12px;color:#666;margin-bottom:15px;">per month</div>
+//                   <ul style="text-align:left;padding-left:15px;margin:15px 0;font-size:13px;">
+//                     <li>Everything in Premium</li>
+//                     <li>Dedicated property advisor</li>
+//                     <li>Legal documentation help</li>
+//                     <li>Loan assistance & connections</li>
+//                     <li>Exclusive pre-launch access</li>
+//                     <li>Negotiation support</li>
+//                     <li>White-glove service</li>
+//                   </ul>
+//                   <p style="font-size:12px;color:#777;margin:10px 0;">VIP property buying experience</p>
+//                 </div>
+//               </div>
+//             </div>
 
-            <p style="text-align:center;margin:28px 0;">
-              <a href="${pricingPlanUrl || 'https://homehni.com/plans?tab=buyer'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🚀 Choose My Plan</a>
-              <a href="https://homehni.com/properties/search" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">🔍 Browse Properties</a>
-            </p>
+//             <p style="text-align:center;margin:28px 0;">
+//               <a href="${pricingPlanUrl || 'https://homehni.com/plans?tab=buyer'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🚀 Choose My Plan</a>
+//               <a href="https://homehni.com/properties/search" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">🔍 Browse Properties</a>
+//             </p>
 
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Limited Time: New Member Special!</h4>
-              <p style="margin:5px 0;"><strong>Sign up for any premium plan within 24 hours and get:</strong></p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ 30% OFF first month (Code: NEWMEMBER30)</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ FREE property market report for your area</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Priority access to new listings</p>
-            </div>
+//             <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
+//               <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Limited Time: New Member Special!</h4>
+//               <p style="margin:5px 0;"><strong>Sign up for any premium plan within 24 hours and get:</strong></p>
+//               <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ 30% OFF first month (Code: NEWMEMBER30)</p>
+//               <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ FREE property market report for your area</p>
+//               <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Priority access to new listings</p>
+//             </div>
 
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Need Help Choosing?</h4>
-              <p style="margin:5px 0;">📱 WhatsApp Advisor: +91-9876543210</p>
-              <p style="margin:5px 0;">📧 Premium Support: premium@homehni.com</p>
-              <p style="margin:5px 0;">⏰ Available: 9 AM - 9 PM (Mon-Sun)</p>
-              <p style="margin:5px 0;">🎯 <strong>Free consultation call available!</strong></p>
-            </div>
+//             <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Need Help Choosing?</h4>
+//               <p style="margin:5px 0;">📱 WhatsApp Advisor: +91-9876543210</p>
+//               <p style="margin:5px 0;">📧 Premium Support: premium@homehni.com</p>
+//               <p style="margin:5px 0;">⏰ Available: 9 AM - 9 PM (Mon-Sun)</p>
+//               <p style="margin:5px 0;">🎯 <strong>Free consultation call available!</strong></p>
+//             </div>
 
-            <p>Join thousands of satisfied property buyers who found their dream homes through Home HNI Premium. Your perfect property is just a click away!</p>
-            <p>Ready to unlock premium access?<br><strong>Home HNI Premium Access Team</strong></p>
-          </td>
-        </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Access</td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
+//             <p>Join thousands of satisfied property buyers who found their dream homes through Home HNI Premium. Your perfect property is just a click away!</p>
+//             <p>Ready to unlock premium access?<br><strong>Home HNI Premium Access Team</strong></p>
+//           </td>
+//         </tr>
+//         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+//         <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Access</td></tr>
+//       </table>
+//     </td></tr>
+//   </table>
+// </body>
+// </html>`;
 
-  const text = `🏠 Welcome to Home HNI Premium Property Access!
+//   const text = `🏠 Welcome to Home HNI Premium Property Access!
 
-Hi ${userName || 'Property Seeker'},
+// Hi ${userName || 'Property Seeker'},
 
-Great choice! You've shown interest in premium properties on Home HNI. Unlock exclusive access to connect directly with verified property owners!
+// Great choice! You've shown interest in premium properties on Home HNI. Unlock exclusive access to connect directly with verified property owners!
 
-${propertyType || locality || propertyPrice ? `
-Your Interest Profile:
-${propertyType ? `Property Type: ${propertyType}` : ''}
-${locality ? `Preferred Location: ${locality}` : ''}  
-${propertyPrice ? `Budget Range: ₹${propertyPrice}` : ''}
-Status: Ready to Connect!
-` : ''}
+// ${propertyType || locality || propertyPrice ? `
+// Your Interest Profile:
+// ${propertyType ? `Property Type: ${propertyType}` : ''}
+// ${locality ? `Preferred Location: ${locality}` : ''}  
+// ${propertyPrice ? `Budget Range: ₹${propertyPrice}` : ''}
+// Status: Ready to Connect!
+// ` : ''}
 
-Why Choose Home HNI Premium Access?
-✓ Connect with 50,000+ verified property owners
-✓ Get responses 5X faster than competitors
-✓ Access exclusive off-market properties  
-✓ Dedicated property advisor support
+// Why Choose Home HNI Premium Access?
+// ✓ Connect with 50,000+ verified property owners
+// ✓ Get responses 5X faster than competitors
+// ✓ Access exclusive off-market properties  
+// ✓ Dedicated property advisor support
 
-Choose Your Premium Access Plan:
+// Choose Your Premium Access Plan:
 
-EXPLORER - FREE
-• View basic property details
-• Limited contact attempts (3/month)
-• Standard customer support
-• Access to public listings only
+// EXPLORER - FREE
+// • View basic property details
+// • Limited contact attempts (3/month)
+// • Standard customer support
+// • Access to public listings only
 
-PREMIUM - ₹${propertyType === 'Commercial' ? '799' : propertyType === 'Industrial' ? '999' : '499'}/month [MOST POPULAR]
-• Unlimited property contacts
-• Direct owner phone numbers  
-• Priority customer support
-• Access to exclusive listings
-• Property visit scheduling
-• Market price insights
+// PREMIUM - ₹${propertyType === 'Commercial' ? '799' : propertyType === 'Industrial' ? '999' : '499'}/month [MOST POPULAR]
+// • Unlimited property contacts
+// • Direct owner phone numbers  
+// • Priority customer support
+// • Access to exclusive listings
+// • Property visit scheduling
+// • Market price insights
 
-ELITE - ₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1799' : '999'}/month
-• Everything in Premium
-• Dedicated property advisor
-• Legal documentation help
-• Loan assistance & connections
-• Exclusive pre-launch access
-• Negotiation support
-• White-glove service
+// ELITE - ₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1799' : '999'}/month
+// • Everything in Premium
+// • Dedicated property advisor
+// • Legal documentation help
+// • Loan assistance & connections
+// • Exclusive pre-launch access
+// • Negotiation support
+// • White-glove service
 
-🎁 New Member Special (24 hours):
-✓ 30% OFF first month (Code: NEWMEMBER30)
-✓ FREE property market report
-✓ Priority access to new listings
+// 🎁 New Member Special (24 hours):
+// ✓ 30% OFF first month (Code: NEWMEMBER30)
+// ✓ FREE property market report
+// ✓ Priority access to new listings
 
-Need Help Choosing?
-📱 WhatsApp: +91-9876543210
-📧 Email: premium@homehni.com
-⏰ Available: 9 AM - 9 PM (Mon-Sun)
+// Need Help Choosing?
+// 📱 WhatsApp: +91-9876543210
+// 📧 Email: premium@homehni.com
+// ⏰ Available: 9 AM - 9 PM (Mon-Sun)
 
-Choose Plan: ${pricingPlanUrl || 'https://homehni.com/plans?tab=buyer'}
-Browse Properties: https://homehni.com/properties/search
+// Choose Plan: ${pricingPlanUrl || 'https://homehni.com/plans?tab=buyer'}
+// Browse Properties: https://homehni.com/properties/search
 
-Your perfect property is just a click away!
+// Your perfect property is just a click away!
 
-Home HNI Premium Access Team
-© 2025 Home HNI - Premium Property Access`;
+// Home HNI Premium Access Team
+// © 2025 Home HNI - Premium Property Access`;
 
-  const result = await sendEmail({ to: resolvedTo, subject, html, text });
-  res.json(result);
-});
+//   const result = await sendEmail({ to: resolvedTo, subject, html, text });
+//   res.json(result);
+// });
 
-// 13. Mark as rented/sold email - CLEANED VERSION
-app.post("/send-mark-rented-sold-email", async (req, res) => {
-  const { to, userName, propertyType, status, locality, finalPrice, dealDuration } = req.body;
-  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+// // 13. Mark as rented/sold email - CLEANED VERSION
+// app.post("/send-mark-rented-sold-email", async (req, res) => {
+//   const { to, userName, propertyType, status, locality, finalPrice, dealDuration } = req.body;
+//   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const dealType = status === 'sold' ? 'Sale' : status === 'rented' ? 'Rental' : 'Deal';
-  const subject = `🎉 Congratulations! Your ${propertyType || 'Property'} ${dealType} is Complete!`;
+//   const dealType = status === 'sold' ? 'Sale' : status === 'rented' ? 'Rental' : 'Deal';
+//   const subject = `🎉 Congratulations! Your ${propertyType || 'Property'} ${dealType} is Complete!`;
   
-  const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Property Deal Successful</title></head>
-<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
-        <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Congratulations on Your Successful ${dealType}!</h2>
-            <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>🥳 <strong>Fantastic news!</strong> Your ${propertyType || 'property'} has been successfully <strong>${status || 'closed'}</strong> through Home HNI's platform!</p>
+//   const html = `<!DOCTYPE html>
+// <html>
+// <head><meta charset="UTF-8"><title>Property Deal Successful</title></head>
+// <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+//   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+//     <tr><td align="center">
+//       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+//         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+//         <tr>
+//           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+//             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Congratulations on Your Successful ${dealType}!</h2>
+//             <p>Dear ${userName || 'Valued Customer'},</p>
+//             <p>🥳 <strong>Fantastic news!</strong> Your ${propertyType || 'property'} has been successfully <strong>${status || 'closed'}</strong> through Home HNI's platform!</p>
 
-            ${locality || finalPrice || dealDuration ? `
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">📋 ${dealType} Summary:</h3>
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                <tr><td style="padding:8px 0;width:40%;"><strong>Property Type:</strong></td><td>${propertyType || 'Premium Property'}</td></tr>
-                ${locality ? `<tr><td style="padding:8px 0;"><strong>Location:</strong></td><td>${locality}</td></tr>` : ''}
-                ${finalPrice ? `<tr><td style="padding:8px 0;"><strong>${dealType} Price:</strong></td><td>₹${finalPrice}</td></tr>` : ''}
-                ${dealDuration ? `<tr><td style="padding:8px 0;"><strong>Time to Close:</strong></td><td>${dealDuration} days</td></tr>` : ''}
-                <tr><td style="padding:8px 0;"><strong>Status:</strong></td><td><span style="color:#4caf50;font-weight:bold;">✅ ${dealType} Complete</span></td></tr>
-              </table>
-            </div>
-            ` : ''}
+//             ${locality || finalPrice || dealDuration ? `
+//             <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">📋 ${dealType} Summary:</h3>
+//               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+//                 <tr><td style="padding:8px 0;width:40%;"><strong>Property Type:</strong></td><td>${propertyType || 'Premium Property'}</td></tr>
+//                 ${locality ? `<tr><td style="padding:8px 0;"><strong>Location:</strong></td><td>${locality}</td></tr>` : ''}
+//                 ${finalPrice ? `<tr><td style="padding:8px 0;"><strong>${dealType} Price:</strong></td><td>₹${finalPrice}</td></tr>` : ''}
+//                 ${dealDuration ? `<tr><td style="padding:8px 0;"><strong>Time to Close:</strong></td><td>${dealDuration} days</td></tr>` : ''}
+//                 <tr><td style="padding:8px 0;"><strong>Status:</strong></td><td><span style="color:#4caf50;font-weight:bold;">✅ ${dealType} Complete</span></td></tr>
+//               </table>
+//             </div>
+//             ` : ''}
 
-            <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 15px;">📞 Need Support?</h4>
-              <p style="margin:5px 0;">📱 Contact us: +91-9876543210</p>
-              <p style="margin:5px 0;">📧 Email: support@homehni.com</p>
-              <p style="margin:5px 0;">⏰ Available: Monday - Saturday, 9 AM - 7 PM</p>
-            </div>
+//             <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h4 style="color:#d32f2f;margin:0 0 15px;">📞 Need Support?</h4>
+//               <p style="margin:5px 0;">📱 Contact us: +91-9876543210</p>
+//               <p style="margin:5px 0;">📧 Email: support@homehni.com</p>
+//               <p style="margin:5px 0;">⏰ Available: Monday - Saturday, 9 AM - 7 PM</p>
+//             </div>
 
-            <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/dashboard" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📋 View Dashboard</a>
-            </p>
+//             <p style="text-align:center;margin:28px 0;">
+//               <a href="https://homehni.com/dashboard" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📋 View Dashboard</a>
+//             </p>
 
-            <p>Thank you for choosing Home HNI for your property ${dealType.toLowerCase()}. We're pleased to have helped you achieve a successful transaction.</p>
-            <p>Best regards,<br><strong>Home HNI Team</strong></p>
-          </td>
-        </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Your Trusted Property Platform</td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
+//             <p>Thank you for choosing Home HNI for your property ${dealType.toLowerCase()}. We're pleased to have helped you achieve a successful transaction.</p>
+//             <p>Best regards,<br><strong>Home HNI Team</strong></p>
+//           </td>
+//         </tr>
+//         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+//         <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Your Trusted Property Platform</td></tr>
+//       </table>
+//     </td></tr>
+//   </table>
+// </body>
+// </html>`;
 
-  const text = `🎉 Congratulations on Your Successful ${dealType}!
+//   const text = `🎉 Congratulations on Your Successful ${dealType}!
 
-Dear ${userName || 'Valued Customer'},
+// Dear ${userName || 'Valued Customer'},
 
-🥳 Fantastic news! Your ${propertyType || 'property'} has been successfully ${status || 'closed'} through Home HNI's platform!
+// 🥳 Fantastic news! Your ${propertyType || 'property'} has been successfully ${status || 'closed'} through Home HNI's platform!
 
-${locality || finalPrice || dealDuration ? `
-${dealType} Summary:
-Property Type: ${propertyType || 'Premium Property'}
-${locality ? `Location: ${locality}` : ''}
-${finalPrice ? `${dealType} Price: ₹${finalPrice}` : ''}
-${dealDuration ? `Time to Close: ${dealDuration} days` : ''}
-Status: ✅ ${dealType} Complete
-` : ''}
+// ${locality || finalPrice || dealDuration ? `
+// ${dealType} Summary:
+// Property Type: ${propertyType || 'Premium Property'}
+// ${locality ? `Location: ${locality}` : ''}
+// ${finalPrice ? `${dealType} Price: ₹${finalPrice}` : ''}
+// ${dealDuration ? `Time to Close: ${dealDuration} days` : ''}
+// Status: ✅ ${dealType} Complete
+// ` : ''}
 
-Need Support?
-📱 Contact us: +91-9876543210
-📧 Email: support@homehni.com
-⏰ Available: Monday - Saturday, 9 AM - 7 PM
+// Need Support?
+// 📱 Contact us: +91-9876543210
+// 📧 Email: support@homehni.com
+// ⏰ Available: Monday - Saturday, 9 AM - 7 PM
 
-Dashboard: https://homehni.com/dashboard
+// Dashboard: https://homehni.com/dashboard
 
-Thank you for choosing Home HNI for your property ${dealType.toLowerCase()}. We're pleased to have helped you achieve a successful transaction.
+// Thank you for choosing Home HNI for your property ${dealType.toLowerCase()}. We're pleased to have helped you achieve a successful transaction.
 
-Best regards,
-Home HNI Team
-© 2025 Home HNI - Your Trusted Property Platform`;
+// Best regards,
+// Home HNI Team
+// © 2025 Home HNI - Your Trusted Property Platform`;
 
-  const result = await sendEmail({ to, subject, html, text });
-  res.json(result);
-});
-
-
+//   const result = await sendEmail({ to, subject, html, text });
+//   res.json(result);
+// });
 // 14. Contact owner email (Contact owner button trigger)
 app.post("/send-contact-owner-email", async (req, res) => {
   const { to, userName, propertyAddress, propertyType, interestedUserName, interestedUserEmail, interestedUserPhone, dashboardUrl } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🔥 Hot Lead Alert! Premium Property Inquiry Received";
-  
+  const subject = "🔥 Property Inquiry Received - Connect with Your Lead";
+
   const html = `<!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Premium Property Inquiry Received</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Property Inquiry Received</title>
+</head>
 <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
-        <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🔥 Hot Lead Alert! Someone Wants Your Property!</h2>
-            <p>Hi ${userName || 'Property Owner'},</p>
-            <p>🎉 <strong>Excellent news!</strong> A serious buyer is interested in your property and wants to connect with you directly through <strong>Home HNI Premium</strong>!</p>
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+          <tr>
+            <td align="center" style="background:#d32f2f;padding:20px;">
+              <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+              <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🔥 Property Inquiry Received</h2>
+              <p>Hi ${userName || 'Property Owner'},</p>
+              <p>A potential buyer/renter has shown interest in your property listed on Home HNI.</p>
 
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h3 style="color:#d32f2f;margin:0 0 10px;font-size:18px;">⚡ URGENT: High-Quality Lead!</h3>
-              <p style="margin:5px 0;font-size:16px;font-weight:bold;">Respond within 2 hours for maximum conversion rate!</p>
-            </div>
+              <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
+                <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">Property Details:</h3>
+                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                  <tr>
+                    <td style="padding:8px 0;width:40%;"><strong>Property:</strong></td>
+                    <td>${propertyAddress || 'N/A'}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;"><strong>Type:</strong></td>
+                    <td>${propertyType || 'N/A'}</td>
+                  </tr>
+                </table>
+              </div>
 
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">🎯 Lead Details:</h3>
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                <tr><td style="padding:8px 0;width:40%;"><strong>Property:</strong></td><td>${propertyAddress || 'Your Premium Property'}</td></tr>
-                <tr><td style="padding:8px 0;"><strong>Property Type:</strong></td><td>${propertyType || 'Premium Property'}</td></tr>
-                <tr><td style="padding:8px 0;"><strong>Inquiry Time:</strong></td><td>${new Date().toLocaleString()}</td></tr>
-                <tr><td style="padding:8px 0;"><strong>Lead Source:</strong></td><td>Home HNI Premium Platform</td></tr>
-                <tr><td style="padding:8px 0;"><strong>Lead Quality:</strong></td><td><span style="color:#4caf50;font-weight:bold;">🔥 HOT LEAD</span></td></tr>
-              </table>
-            </div>
+              <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
+                <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">Inquirer Details:</h3>
+                <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                  <tr>
+                    <td style="padding:8px 0;width:40%;"><strong>Name:</strong></td>
+                    <td>${interestedUserName || 'N/A'}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;"><strong>Email:</strong></td>
+                    <td>${interestedUserEmail || 'N/A'}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;"><strong>Phone:</strong></td>
+                    <td>${interestedUserPhone || 'N/A'}</td>
+                  </tr>
+                </table>
+              </div>
 
-            ${interestedUserName || interestedUserEmail || interestedUserPhone ? `
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">👤 Interested Party Information:</h3>
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                ${interestedUserName ? `<tr><td style="padding:6px 0;width:30%;"><strong>Name:</strong></td><td>${interestedUserName}</td></tr>` : ''}
-                ${interestedUserEmail ? `<tr><td style="padding:6px 0;"><strong>Email:</strong></td><td>${interestedUserEmail}</td></tr>` : ''}
-                ${interestedUserPhone ? `<tr><td style="padding:6px 0;"><strong>Phone:</strong></td><td>${interestedUserPhone}</td></tr>` : ''}
-                <tr><td style="padding:6px 0;"><strong>Verification:</strong></td><td><span style="color:#4caf50;">✅ Home HNI Verified User</span></td></tr>
-              </table>
-            </div>
-            ` : ''}
+              <p style="text-align:center;margin:28px 0;">
+                <a href="${dashboardUrl || 'https://homehni.com/dashboard/leads'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">View Lead Details</a>
+              </p>
 
-            <div style="background:#f0f8ff;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">🚀 Recommended Next Steps:</h3>
-              <ul style="padding-left:20px;margin:10px 0;">
-                <li>📞 <strong>Call immediately</strong> - Strike while the iron is hot!</li>
-                <li>📱 <strong>WhatsApp follow-up</strong> - Send property details & photos</li>
-                <li>📅 <strong>Schedule site visit</strong> - Convert interest into commitment</li>
-                <li>💼 <strong>Prepare documents</strong> - Have all papers ready for quick closure</li>
-                <li>🎯 <strong>Negotiate smartly</strong> - Use Home HNI market insights</li>
-              </ul>
-            </div>
-
-            <p style="text-align:center;margin:28px 0;">
-              <a href="${dashboardUrl || 'https://homehni.com/dashboard/leads'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">👁️ View Full Lead Details</a>
-              <a href="https://homehni.com/dashboard/responses" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">💬 Quick Response Tool</a>
-            </p>
-
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">💡 Pro Tips for Higher Conversion:</h4>
-              <p style="margin:5px 0;font-size:14px;">✓ Respond within 2 hours (75% higher conversion rate)</p>
-              <p style="margin:5px 0;font-size:14px;">✓ Share additional property photos via WhatsApp</p>
-              <p style="margin:5px 0;font-size:14px;">✓ Offer virtual tour or video call walkthrough</p>
-              <p style="margin:5px 0;font-size:14px;">✓ Mention Home HNI premium verification for trust</p>
-            </div>
-
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Need Support? We're Here to Help!</h4>
-              <p style="margin:5px 0;">📱 Owner Support WhatsApp: +91-9876543210</p>
-              <p style="margin:5px 0;">📧 Premium Support: owners@homehni.com</p>
-              <p style="margin:5px 0;">⏰ Available: 9 AM - 9 PM (Mon-Sun)</p>
-              <p style="margin:5px 0;">🎯 <strong>Lead conversion coaching available!</strong></p>
-            </div>
-
-            <p><strong>Statistical Insight:</strong> Properties that respond to inquiries within 2 hours have a <span style="color:#4caf50;font-weight:bold;">75% higher chance</span> of conversion. Don't let this hot lead cool down!</p>
-            <p>Best of luck with your property deal!<br><strong>Home HNI Lead Management Team</strong></p>
-          </td>
-        </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Lead Generation Platform</td></tr>
-      </table>
-    </td></tr>
+              <p>Thank you for using Home HNI!</p>
+              <p><strong>Home HNI Team</strong></p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 40px;">
+              <hr style="border:none;border-top:1px solid #eee;margin:0;">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">
+              &copy; 2025 Home HNI - Premium Property Platform
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
   </table>
 </body>
 </html>`;
 
-  const text = `🔥 Hot Lead Alert! Someone Wants Your Property!
+  const text = `🔥 Property Inquiry Received
 
 Hi ${userName || 'Property Owner'},
 
-🎉 Excellent news! A serious buyer is interested in your property and wants to connect directly through Home HNI Premium!
+A potential buyer/renter has shown interest in your property listed on Home HNI.
 
-⚡ URGENT: High-Quality Lead!
-Respond within 2 hours for maximum conversion rate!
+Property Details:
+- Property: ${propertyAddress || 'N/A'}
+- Type: ${propertyType || 'N/A'}
 
-Lead Details:
-Property: ${propertyAddress || 'Your Premium Property'}
-Property Type: ${propertyType || 'Premium Property'}
-Inquiry Time: ${new Date().toLocaleString()}
-Lead Source: Home HNI Premium Platform
-Lead Quality: 🔥 HOT LEAD
-
-${interestedUserName || interestedUserEmail || interestedUserPhone ? `
-Interested Party Information:
-${interestedUserName ? `Name: ${interestedUserName}` : ''}
-${interestedUserEmail ? `Email: ${interestedUserEmail}` : ''}
-${interestedUserPhone ? `Phone: ${interestedUserPhone}` : ''}
-Verification: ✅ Home HNI Verified User
-` : ''}
-
-Recommended Next Steps:
-• 📞 Call immediately - Strike while the iron is hot!
-• 📱 WhatsApp follow-up - Send property details & photos
-• 📅 Schedule site visit - Convert interest into commitment
-• 💼 Prepare documents - Have all papers ready
-• 🎯 Negotiate smartly - Use Home HNI market insights
-
-💡 Pro Tips for Higher Conversion:
-✓ Respond within 2 hours (75% higher conversion)
-✓ Share additional property photos via WhatsApp
-✓ Offer virtual tour or video call walkthrough
-✓ Mention Home HNI premium verification for trust
-
-Need Support?
-📱 WhatsApp: +91-9876543210
-📧 Email: owners@homehni.com
-⏰ Available: 9 AM - 9 PM (Mon-Sun)
+Inquirer Details:
+- Name: ${interestedUserName || 'N/A'}
+- Email: ${interestedUserEmail || 'N/A'}
+- Phone: ${interestedUserPhone || 'N/A'}
 
 View Lead Details: ${dashboardUrl || 'https://homehni.com/dashboard/leads'}
-Quick Response: https://homehni.com/dashboard/responses
 
-Properties that respond within 2 hours have 75% higher conversion rate!
+Thank you for using Home HNI!
 
-Home HNI Lead Management Team
-© 2025 Home HNI - Premium Lead Generation Platform`;
+Home HNI Team
+© 2025 Home HNI - Premium Property Platform`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+
+
+
 
 // 15. Visit scheduled email (Show Interest form submission)
 app.post("/send-visit-scheduled-email", async (req, res) => {
