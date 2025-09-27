@@ -1734,7 +1734,7 @@ Home HNI Premium Access Team
   res.json(result);
 });
 
-// 13. Mark as rented/sold email
+// 13. Mark as rented/sold email - CLEANED VERSION
 app.post("/send-mark-rented-sold-email", async (req, res) => {
   const { to, userName, propertyType, status, locality, finalPrice, dealDuration } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
@@ -1754,7 +1754,7 @@ app.post("/send-mark-rented-sold-email", async (req, res) => {
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Congratulations on Your Successful ${dealType}!</h2>
             <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>🥳 <strong>Fantastic news!</strong> Your ${propertyType || 'property'} has been successfully <strong>${status || 'closed'}</strong> through Home HNI's premium platform!</p>
+            <p>🥳 <strong>Fantastic news!</strong> Your ${propertyType || 'property'} has been successfully <strong>${status || 'closed'}</strong> through Home HNI's platform!</p>
 
             ${locality || finalPrice || dealDuration ? `
             <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
@@ -1769,75 +1769,23 @@ app.post("/send-mark-rented-sold-email", async (req, res) => {
             </div>
             ` : ''}
 
-            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">🏆 Success Story Achieved!</h3>
-              <p style="margin:10px 0;font-size:16px;">You've joined our community of successful property owners who trust Home HNI for premium results!</p>
-              <div style="background:#fff;padding:15px;border-radius:5px;margin:15px 0;">
-                <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Average ${dealType.toLowerCase()} time: ${dealDuration ? `${dealDuration} days` : '45 days faster'} than market average</p>
-                <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Premium platform advantage achieved</p>
-                <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Professional service delivery completed</p>
-              </div>
-            </div>
-
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">🎁 Exclusive Post-${dealType} Services:</h3>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🚚 Premium Moving Services</strong><br>
-                  <small>Professional packing, moving & unpacking</small><br>
-                  <span style="color:#4caf50;font-weight:bold;">20% OFF for Home HNI customers</span>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid:#4caf50;">
-                  <strong>🎨 Property Makeover</strong><br>
-                  <small>Painting, cleaning & home staging</small><br>
-                  <span style="color:#4caf50;font-weight:bold;">Special rates available</span>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid:#4caf50;">
-                  <strong>📜 Legal Support</strong><br>
-                  <small>Documentation & agreement assistance</small><br>
-                  <span style="color:#4caf50;font-weight:bold;">FREE consultation included</span>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid:#4caf50;">
-                  <strong>💰 Investment Advisory</strong><br>
-                  <small>Next property investment guidance</small><br>
-                  <span style="color:#4caf50;font-weight:bold;">Exclusive member rates</span>
-                </div>
-              </div>
+            <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
+              <h4 style="color:#d32f2f;margin:0 0 15px;">📞 Need Support?</h4>
+              <p style="margin:5px 0;">📱 Contact us: +91-9876543210</p>
+              <p style="margin:5px 0;">📧 Email: support@homehni.com</p>
+              <p style="margin:5px 0;">⏰ Available: Monday - Saturday, 9 AM - 7 PM</p>
             </div>
 
             <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/services/post-deal" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🛍️ Explore Services</a>
-              <a href="https://homehni.com/list-new-property" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">🏠 List Next Property</a>
+              <a href="https://homehni.com/dashboard" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📋 View Dashboard</a>
             </p>
 
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">💝 Thank You Bonus!</h4>
-              <p style="margin:5px 0;">As a token of appreciation for your successful deal:</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ FREE premium listing for your next property (₹1999 value)</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ VIP customer status with priority support</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Exclusive access to off-market properties</p>
-              <p style="margin:10px 0;font-size:14px;"><strong>Valid for 6 months</strong></p>
-            </div>
-
-            <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Your Dedicated Success Team:</h4>
-              <p style="margin:5px 0;">📱 WhatsApp VIP Line: +91-9876543210</p>
-              <p style="margin:5px 0;">📧 VIP Email: vip@homehni.com</p>
-              <p style="margin:5px 0;">⏰ Priority Support: 24/7 availability</p>
-              <p style="margin:5px 0;">🎯 <strong>Your success manager will contact you within 24 hours</strong></p>
-            </div>
-
-            <p><strong>Help Us Celebrate Your Success!</strong> We'd love to hear about your Home HNI experience. Your success story could inspire thousands of other property owners!</p>
-            <p style="text-align:center;margin:20px 0;">
-              <a href="https://homehni.com/testimonials/add" style="background:#ff9800;color:#fff;text-decoration:none;padding:12px 25px;border-radius:5px;font-weight:bold;font-size:14px;display:inline-block;">⭐ Share Your Success Story</a>
-            </p>
-
-            <p>Thank you for trusting Home HNI with your property journey. Here's to your continued success and many more profitable deals ahead!</p>
-            <p>Congratulations once again!<br><strong>Home HNI Success Team</strong></p>
+            <p>Thank you for choosing Home HNI for your property ${dealType.toLowerCase()}. We're pleased to have helped you achieve a successful transaction.</p>
+            <p>Best regards,<br><strong>Home HNI Team</strong></p>
           </td>
         </tr>
         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Success Platform</td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Your Trusted Property Platform</td></tr>
       </table>
     </td></tr>
   </table>
@@ -1848,7 +1796,7 @@ app.post("/send-mark-rented-sold-email", async (req, res) => {
 
 Dear ${userName || 'Valued Customer'},
 
-🥳 Fantastic news! Your ${propertyType || 'property'} has been successfully ${status || 'closed'} through Home HNI's premium platform!
+🥳 Fantastic news! Your ${propertyType || 'property'} has been successfully ${status || 'closed'} through Home HNI's platform!
 
 ${locality || finalPrice || dealDuration ? `
 ${dealType} Summary:
@@ -1859,42 +1807,22 @@ ${dealDuration ? `Time to Close: ${dealDuration} days` : ''}
 Status: ✅ ${dealType} Complete
 ` : ''}
 
-Success Story Achieved!
-✓ Average ${dealType.toLowerCase()} time: ${dealDuration ? `${dealDuration} days` : '45 days faster'} than market
-✓ Premium platform advantage achieved
-✓ Professional service delivery completed
+Need Support?
+📱 Contact us: +91-9876543210
+📧 Email: support@homehni.com
+⏰ Available: Monday - Saturday, 9 AM - 7 PM
 
-Exclusive Post-${dealType} Services:
-🚚 Premium Moving Services (20% OFF)
-🎨 Property Makeover (Special rates)  
-📜 Legal Support (FREE consultation)
-💰 Investment Advisory (Exclusive rates)
+Dashboard: https://homehni.com/dashboard
 
-Thank You Bonus!
-✓ FREE premium listing for next property (₹1999 value)
-✓ VIP customer status with priority support
-✓ Exclusive access to off-market properties
-Valid for 6 months
+Thank you for choosing Home HNI for your property ${dealType.toLowerCase()}. We're pleased to have helped you achieve a successful transaction.
 
-Your Dedicated Success Team:
-📱 WhatsApp VIP: +91-9876543210
-📧 VIP Email: vip@homehni.com
-⏰ Priority Support: 24/7 available
-
-Explore Services: https://homehni.com/services/post-deal
-List Next Property: https://homehni.com/list-new-property
-Share Success Story: https://homehni.com/testimonials/add
-
-Thank you for trusting Home HNI with your property journey!
-
-Home HNI Success Team
-© 2025 Home HNI - Premium Property Success Platform`;
+Best regards,
+Home HNI Team
+© 2025 Home HNI - Your Trusted Property Platform`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
-
-
 
 
 // 14. Contact owner email (Contact owner button trigger)
