@@ -111,8 +111,7 @@ Visit homehni.com • Contact Support`;
   res.json(result);
 });
 
-// 2. Property listing live email
-// Property listing live email
+// 2. Property live email
 app.post("/send-listing-live-email", async (req, res) => {
   const { to, userName, price, bhkDetails, locality, phone, propertyUrl, planType } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
@@ -510,7 +509,7 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🏦 Welcome to Home HNI Premium Loan Services</h2>
             <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>Thank you for choosing <strong>Home HNI</strong> for your <strong>${displayType}</strong> requirements. We've successfully received your application and our premium loan specialists will contact you within <strong>4 hours</strong>.</p>
+            <p>Thank you for choosing <strong>Home HNI</strong> for your <strong>${displayType}</strong> requirements. We've successfully received your application and our premium loan specialists will contact you within <strong>12 hours</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #d32f2f;">
               <h3 style="margin: 0 0 15px; color: #d32f2f;">🎯 Your Premium Loan Benefits</h3>
@@ -1193,144 +1192,144 @@ Home HNI Painting Services Team
   res.json(result); 
 });
 
-// 10. Property submitted email (Submit property trigger)
-app.post("/send-property-submitted-email", async (req, res) => {
-  const { to, userName, propertyType, locality, propertyValue, pricingPlanUrl } = req.body;
-  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+// // 10. Property submitted email (Submit property trigger)
+// app.post("/send-property-submitted-email", async (req, res) => {
+//   const { to, userName, propertyType, locality, propertyValue, pricingPlanUrl } = req.body;
+//   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🎉 Welcome to Home HNI Premium! Your Property is Under Review";
+//   const subject = "🎉 Welcome to Home HNI Premium! Your Property is Under Review";
   
-  const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Welcome to Home HNI Premium</title></head>
-<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
-        <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Welcome to Home HNI Premium Property Services!</h2>
-            <p>Hi ${userName || 'there'},</p>
-            <p>Congratulations! You've successfully submitted your <strong>${propertyType || 'premium property'}</strong> to India's most trusted property platform. Your property is now in our expert review queue.</p>
+//   const html = `<!DOCTYPE html>
+// <html>
+// <head><meta charset="UTF-8"><title>Welcome to Home HNI Premium</title></head>
+// <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+//   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+//     <tr><td align="center">
+//       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+//         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+//         <tr>
+//           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+//             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Welcome to Home HNI Premium Property Services!</h2>
+//             <p>Hi ${userName || 'there'},</p>
+//             <p>Congratulations! You've successfully submitted your <strong>${propertyType || 'premium property'}</strong> to India's most trusted property platform. Your property is now in our expert review queue.</p>
 
-            ${locality || propertyValue ? `
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 10px;font-size:16px;">📋 Your Property Summary:</h3>
-              <p style="margin:5px 0;"><strong>Property Type:</strong> ${propertyType || 'Premium Property'}</p>
-              ${locality ? `<p style="margin:5px 0;"><strong>Location:</strong> ${locality}</p>` : ''}
-              ${propertyValue ? `<p style="margin:5px 0;"><strong>Value:</strong> ₹${propertyValue}</p>` : ''}
-              <p style="margin:5px 0;"><strong>Status:</strong> <span style="color:#ff9800;">Under Premium Review</span></p>
-            </div>
-            ` : ''}
+//             ${locality || propertyValue ? `
+//             <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 10px;font-size:16px;">📋 Your Property Summary:</h3>
+//               <p style="margin:5px 0;"><strong>Property Type:</strong> ${propertyType || 'Premium Property'}</p>
+//               ${locality ? `<p style="margin:5px 0;"><strong>Location:</strong> ${locality}</p>` : ''}
+//               ${propertyValue ? `<p style="margin:5px 0;"><strong>Value:</strong> ₹${propertyValue}</p>` : ''}
+//               <p style="margin:5px 0;"><strong>Status:</strong> <span style="color:#ff9800;">Under Premium Review</span></p>
+//             </div>
+//             ` : ''}
 
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">⚡ What Happens Next? (Premium Process)</h3>
-              <ul style="padding-left:20px;margin:10px 0;">
-                <li>🔍 <strong>Expert Review (6-8 hours):</strong> Our property specialists verify all details</li>
-                <li>📸 <strong>Photo Enhancement:</strong> Professional touch-ups for maximum appeal</li>
-                <li>🎯 <strong>Market Analysis:</strong> Optimal pricing & positioning recommendations</li>
-                <li>✅ <strong>Premium Go-Live:</strong> Featured placement across all channels</li>
-                <li>📱 <strong>Instant Notifications:</strong> Real-time updates on interest & inquiries</li>
-              </ul>
-            </div>
+//             <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">⚡ What Happens Next? (Premium Process)</h3>
+//               <ul style="padding-left:20px;margin:10px 0;">
+//                 <li>🔍 <strong>Expert Review (6-8 hours):</strong> Our property specialists verify all details</li>
+//                 <li>📸 <strong>Photo Enhancement:</strong> Professional touch-ups for maximum appeal</li>
+//                 <li>🎯 <strong>Market Analysis:</strong> Optimal pricing & positioning recommendations</li>
+//                 <li>✅ <strong>Premium Go-Live:</strong> Featured placement across all channels</li>
+//                 <li>📱 <strong>Instant Notifications:</strong> Real-time updates on interest & inquiries</li>
+//               </ul>
+//             </div>
 
-            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">🚀 Boost Your Property's Performance!</h3>
-              <p style="margin:10px 0;">Upgrade now and get <strong>3X more visibility</strong> + <strong>50% faster deals</strong></p>
+//             <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
+//               <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">🚀 Boost Your Property's Performance!</h3>
+//               <p style="margin:10px 0;">Upgrade now and get <strong>3X more visibility</strong> + <strong>50% faster deals</strong></p>
               
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:20px 0;">
-                <div style="background:#fff;padding:15px;border-radius:8px;border:2px solid #e0e0e0;">
-                  <h4 style="color:#4caf50;margin:0 0 8px;font-size:14px;">FREE</h4>
-                  <p style="margin:0;font-size:12px;font-weight:bold;">Basic Listing</p>
-                  <p style="margin:5px 0;font-size:11px;">Standard visibility</p>
-                  <p style="margin:5px 0;font-size:11px;">30-day listing</p>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:8px;border:2px solid #ff9800;position:relative;">
-                  <div style="background:#ff9800;color:#fff;padding:3px 8px;border-radius:3px;font-size:10px;position:absolute;top:-8px;left:50%;transform:translateX(-50%);">POPULAR</div>
-                  <h4 style="color:#ff9800;margin:0 0 8px;font-size:14px;">₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1999' : '999'}</h4>
-                  <p style="margin:0;font-size:12px;font-weight:bold;">Premium Plan</p>
-                  <p style="margin:5px 0;font-size:11px;">5X more visibility</p>
-                  <p style="margin:5px 0;font-size:11px;">Verified contacts</p>
-                  <p style="margin:5px 0;font-size:11px;">Priority support</p>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:8px;border:2px solid #d32f2f;">
-                  <h4 style="color:#d32f2f;margin:0 0 8px;font-size:14px;">₹${propertyType === 'Commercial' ? '2499' : propertyType === 'Industrial' ? '2999' : '1999'}</h4>
-                  <p style="margin:0;font-size:12px;font-weight:bold;">Elite Plan</p>
-                  <p style="margin:5px 0;font-size:11px;">Featured listings</p>
-                  <p style="margin:5px 0;font-size:11px;">Dedicated advisor</p>
-                  <p style="margin:5px 0;font-size:11px;">Legal support</p>
-                </div>
-              </div>
-            </div>
+//               <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;margin:20px 0;">
+//                 <div style="background:#fff;padding:15px;border-radius:8px;border:2px solid #e0e0e0;">
+//                   <h4 style="color:#4caf50;margin:0 0 8px;font-size:14px;">FREE</h4>
+//                   <p style="margin:0;font-size:12px;font-weight:bold;">Basic Listing</p>
+//                   <p style="margin:5px 0;font-size:11px;">Standard visibility</p>
+//                   <p style="margin:5px 0;font-size:11px;">30-day listing</p>
+//                 </div>
+//                 <div style="background:#fff;padding:15px;border-radius:8px;border:2px solid #ff9800;position:relative;">
+//                   <div style="background:#ff9800;color:#fff;padding:3px 8px;border-radius:3px;font-size:10px;position:absolute;top:-8px;left:50%;transform:translateX(-50%);">POPULAR</div>
+//                   <h4 style="color:#ff9800;margin:0 0 8px;font-size:14px;">₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1999' : '999'}</h4>
+//                   <p style="margin:0;font-size:12px;font-weight:bold;">Premium Plan</p>
+//                   <p style="margin:5px 0;font-size:11px;">5X more visibility</p>
+//                   <p style="margin:5px 0;font-size:11px;">Verified contacts</p>
+//                   <p style="margin:5px 0;font-size:11px;">Priority support</p>
+//                 </div>
+//                 <div style="background:#fff;padding:15px;border-radius:8px;border:2px solid #d32f2f;">
+//                   <h4 style="color:#d32f2f;margin:0 0 8px;font-size:14px;">₹${propertyType === 'Commercial' ? '2499' : propertyType === 'Industrial' ? '2999' : '1999'}</h4>
+//                   <p style="margin:0;font-size:12px;font-weight:bold;">Elite Plan</p>
+//                   <p style="margin:5px 0;font-size:11px;">Featured listings</p>
+//                   <p style="margin:5px 0;font-size:11px;">Dedicated advisor</p>
+//                   <p style="margin:5px 0;font-size:11px;">Legal support</p>
+//                 </div>
+//               </div>
+//             </div>
 
-            <p style="text-align:center;margin:28px 0;">
-              <a href="${pricingPlanUrl || 'https://homehni.com/plans?tab=seller'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🚀 Upgrade Now</a>
-              <a href="https://homehni.com/dashboard" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📊 Track Status</a>
-            </p>
+//             <p style="text-align:center;margin:28px 0;">
+//               <a href="${pricingPlanUrl || 'https://homehni.com/plans?tab=seller'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🚀 Upgrade Now</a>
+//               <a href="https://homehni.com/dashboard" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📊 Track Status</a>
+//             </p>
 
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Limited Time: First-Time Listing Bonus!</h4>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">Upgrade within 24 hours and get 20% OFF + FREE property photography!</p>
-              <p style="margin:5px 0;font-size:14px;">Code: WELCOME20 (Auto-applied)</p>
-            </div>
+//             <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
+//               <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Limited Time: First-Time Listing Bonus!</h4>
+//               <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">Upgrade within 24 hours and get 20% OFF + FREE property photography!</p>
+//               <p style="margin:5px 0;font-size:14px;">Code: WELCOME20 (Auto-applied)</p>
+//             </div>
 
-            <p>Get ready to experience the Home HNI advantage - where premium properties meet premium service!</p>
-            <p>Best regards,<br><strong>Home HNI Premium Review Team</strong></p>
-          </td>
-        </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Platform</td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
+//             <p>Get ready to experience the Home HNI advantage - where premium properties meet premium service!</p>
+//             <p>Best regards,<br><strong>Home HNI Premium Review Team</strong></p>
+//           </td>
+//         </tr>
+//         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+//         <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Platform</td></tr>
+//       </table>
+//     </td></tr>
+//   </table>
+// </body>
+// </html>`;
 
-  const text = `🎉 Welcome to Home HNI Premium Property Services!
+//   const text = `🎉 Welcome to Home HNI Premium Property Services!
 
-Hi ${userName || 'there'},
+// Hi ${userName || 'there'},
 
-Congratulations! You've successfully submitted your ${propertyType || 'premium property'} to India's most trusted property platform.
+// Congratulations! You've successfully submitted your ${propertyType || 'premium property'} to India's most trusted property platform.
 
-${locality || propertyValue ? `
-Your Property Summary:
-Property Type: ${propertyType || 'Premium Property'}
-${locality ? `Location: ${locality}` : ''}
-${propertyValue ? `Value: ₹${propertyValue}` : ''}
-Status: Under Premium Review
-` : ''}
+// ${locality || propertyValue ? `
+// Your Property Summary:
+// Property Type: ${propertyType || 'Premium Property'}
+// ${locality ? `Location: ${locality}` : ''}
+// ${propertyValue ? `Value: ₹${propertyValue}` : ''}
+// Status: Under Premium Review
+// ` : ''}
 
-What Happens Next? (Premium Process)
-• 🔍 Expert Review (6-8 hours): Property specialists verify details
-• 📸 Photo Enhancement: Professional touch-ups
-• 🎯 Market Analysis: Optimal pricing recommendations  
-• ✅ Premium Go-Live: Featured placement across channels
-• 📱 Instant Notifications: Real-time updates on inquiries
+// What Happens Next? (Premium Process)
+// • 🔍 Expert Review (6-8 hours): Property specialists verify details
+// • 📸 Photo Enhancement: Professional touch-ups
+// • 🎯 Market Analysis: Optimal pricing recommendations  
+// • ✅ Premium Go-Live: Featured placement across channels
+// • 📱 Instant Notifications: Real-time updates on inquiries
 
-Boost Your Property's Performance!
-Upgrade now and get 3X more visibility + 50% faster deals
+// Boost Your Property's Performance!
+// Upgrade now and get 3X more visibility + 50% faster deals
 
-Plans Available:
-FREE - Basic Listing (Standard visibility, 30 days)
-₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1999' : '999'} - Premium Plan (5X visibility, verified contacts, priority support)
-₹${propertyType === 'Commercial' ? '2499' : propertyType === 'Industrial' ? '2999' : '1999'} - Elite Plan (Featured listings, dedicated advisor, legal support)
+// Plans Available:
+// FREE - Basic Listing (Standard visibility, 30 days)
+// ₹${propertyType === 'Commercial' ? '1499' : propertyType === 'Industrial' ? '1999' : '999'} - Premium Plan (5X visibility, verified contacts, priority support)
+// ₹${propertyType === 'Commercial' ? '2499' : propertyType === 'Industrial' ? '2999' : '1999'} - Elite Plan (Featured listings, dedicated advisor, legal support)
 
-🎁 Limited Time Bonus: Upgrade within 24 hours - 20% OFF + FREE photography!
-Code: WELCOME20
+// 🎁 Limited Time Bonus: Upgrade within 24 hours - 20% OFF + FREE photography!
+// Code: WELCOME20
 
-Upgrade: ${pricingPlanUrl || 'https://homehni.com/plans?tab=seller'}
-Track Status: https://homehni.com/dashboard
+// Upgrade: ${pricingPlanUrl || 'https://homehni.com/plans?tab=seller'}
+// Track Status: https://homehni.com/dashboard
 
-Get ready to experience the Home HNI advantage!
+// Get ready to experience the Home HNI advantage!
 
-Best regards,
-Home HNI Premium Review Team
-© 2025 Home HNI - Premium Property Platform`;
+// Best regards,
+// Home HNI Premium Review Team
+// © 2025 Home HNI - Premium Property Platform`;
 
-  const result = await sendEmail({ to, subject, html, text });
-  res.json(result);
-});
+//   const result = await sendEmail({ to, subject, html, text });
+//   res.json(result);
+// });
 
 // 11. Property rejected email (Admin reject button)
 app.post("/send-property-rejected-email", async (req, res) => {
