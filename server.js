@@ -690,13 +690,12 @@ Your Premium Property Partner
   res.json(result);
 });
 
-// 6. Plan upgrade suggestion email - COMMENTED OUT TO PREVENT INTERFERENCE WITH PRICE SUGGESTIONS EMAIL
-/*
+// 6. Plan upgrade suggestion email - Updated with price suggestions content
 app.post("/send-plan-upgrade-email", async (req, res) => {
-  const { to, userName, upgradePlanUrl, currentPlan = 'Basic' } = req.body;
+  const { to, userName, locality, rangeMin, rangeMax, yourPrice, updatePriceUrl, propertyType = 'residential', listingType = 'sell', userType = 'seller' } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🚀 Unlock Premium Success - Upgrade Your Home HNI Plan Today!";
+  const subject = "� Market Insights & Premium Plans for " + (locality || 'Your Area');
   
   const upgradeReasons = [
     { icon: "📈", title: "3X Faster Results", desc: "Premium listings close deals 3X faster than basic listings" },
@@ -800,7 +799,6 @@ Your Success Partners
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
-*/
 
 // 7. Deal closed email
 app.post("/send-deal-closed-email", async (req, res) => {
