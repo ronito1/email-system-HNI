@@ -136,7 +136,7 @@ app.post("/send-listing-live-email", async (req, res) => {
             <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
               <h3 style="margin:0 0 15px;color:#d32f2f;font-size:18px;">📋 Your Property Details</h3>
               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                <tr><td style="padding:8px 0;"><strong>💰 Rent/Sale Price:</strong> ₹${price || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>💰 Rent/Sale Price:</strong> ${price || 'N/A'}</td></tr>
                 <tr><td style="padding:8px 0;"><strong>🏠 Property Type:</strong> ${bhkDetails || 'N/A'}</td></tr>
                 <tr><td style="padding:8px 0;"><strong>📍 Locality:</strong> ${locality || 'N/A'}</td></tr>
                 <tr><td style="padding:8px 0;"><strong>📞 Contact:</strong> ${phone || 'N/A'}</td></tr>
@@ -152,13 +152,10 @@ app.post("/send-listing-live-email", async (req, res) => {
               <li>✅ Professional documentation support</li>
             </ul>
 
-            <p style="text-align:center;margin:30px 0;">
-              <a href="${propertyUrl || 'https://homehni.com'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:6px;font-weight:bold;font-size:18px;display:inline-block;">👉 View My Premium Property</a>
-            </p>
-
+            
             <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:25px 0;">
               <h3 style="margin:0 0 15px;color:#2e7d32;font-size:18px;">🎯 Want Even Faster Results?</h3>
-              <p style="margin:0;">Upgrade to our <strong>Diamond Plan</strong> for guaranteed tenant matching, personal field assistant, and 90-day validity!</p>
+              <p style="margin:0;">Upgrade to our <strong>Premium Plans</strong> for guaranteed Buyer/Tenant matching, personal field assistant, and more!</p>
               <p style="text-align:center;margin:20px 0 10px;">
                 <a href="https://homehni.com/plans?tab=owner" style="background:#2e7d32;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">🔥 Upgrade Now</a>
               </p>
@@ -217,94 +214,220 @@ India's Premium Property Platform
 });
 
 // 3. Price suggestions email
-// 3. Price suggestions email
 app.post("/send-price-suggestions-email", async (req, res) => {
-  const { to, userName, locality, rangeMin, rangeMax, yourPrice, updatePriceUrl, propertyType = 'residential' } = req.body;
+  const { to, userName, locality, rangeMin, rangeMax, yourPrice, updatePriceUrl, propertyType = 'residential', listingType = 'sell', userType = 'seller' } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
   const subject = "💰 Market Insights & Premium Plans for " + (locality || 'Your Area');
   
-  // Define pricing plans based on property type
+  // Define pricing plans based on property type, listing type, and user type
   const pricingPlans = {
-    residential: [
-      { name: "Starter", price: "₹299", duration: "7 days", features: ["Basic listing", "Standard visibility", "Email support"] },
-      { name: "Professional", price: "₹599", duration: "15 days", features: ["Featured listing", "Priority placement", "WhatsApp support", "Analytics"] },
-      { name: "Premium", price: "₹999", duration: "30 days", features: ["Top listing", "Maximum visibility", "Dedicated support", "Advanced analytics", "Social media promotion"] }
-    ],
-    commercial: [
-      { name: "Business Basic", price: "₹799", duration: "10 days", features: ["Business listing", "Commercial visibility", "Email support"] },
-      { name: "Business Pro", price: "₹1,499", duration: "20 days", features: ["Featured commercial listing", "Priority placement", "Business support", "Market insights"] },
-      { name: "Enterprise", price: "₹2,499", duration: "45 days", features: ["Premium commercial listing", "Maximum exposure", "Dedicated account manager", "Custom marketing"] }
-    ],
-    industrial: [
-      { name: "Industrial Basic", price: "₹1,299", duration: "15 days", features: ["Industrial listing", "Sector visibility", "Technical support"] },
-      { name: "Industrial Pro", price: "₹2,299", duration: "30 days", features: ["Featured industrial listing", "Industry networks", "Expert consultation", "Market analysis"] },
-      { name: "Industrial Elite", price: "₹3,999", duration: "60 days", features: ["Premium industrial listing", "Maximum industry reach", "Dedicated specialist", "Custom solutions"] }
-    ],
-    agricultural: [
-      { name: "Farm Basic", price: "₹599", duration: "10 days", features: ["Agricultural listing", "Rural visibility", "Farmer support"] },
-      { name: "Farm Pro", price: "₹1,199", duration: "25 days", features: ["Featured farm listing", "Agricultural networks", "Expert advice", "Crop insights"] },
-      { name: "Agri Premium", price: "₹1,999", duration: "45 days", features: ["Premium agricultural listing", "Maximum rural reach", "Agricultural expert", "Market trends"] }
-    ]
+    // SELLER PLANS
+    seller: {
+      residential: [
+        { name: "Silver Plan", price: "₹999", duration: "Basic promotion", features: ["Basic listing visibility", "Standard support", "Email assistance"], url: "/plans?tab=seller" },
+        { name: "Gold Plan", price: "₹9,999", duration: "Social boost", features: ["Featured listing", "Social media promotion", "Priority support", "Enhanced visibility"], url: "/plans?tab=seller" },
+        { name: "Platinum Plan", price: "₹14,999", duration: "Expert guidance", features: ["Top listing placement", "Expert property guidance", "Premium support", "Advanced analytics"], url: "/plans?tab=seller" },
+        { name: "Diamond Plan", price: "₹20,000", duration: "Personal field assistant", features: ["Personal field assistant", "Maximum visibility", "Dedicated support", "Priority processing"], url: "/plans?tab=seller" }
+      ],
+      commercial: [
+        { name: "Business Silver", price: "₹999", duration: "Commercial marketing", features: ["Basic commercial listing", "Business visibility", "Email support"], url: "/plans?tab=seller" },
+        { name: "Business Gold", price: "₹18,999", duration: "Premium business boost", features: ["Featured commercial listing", "Premium marketing", "Business networks", "Priority support"], url: "/plans?tab=seller" },
+        { name: "Business Platinum", price: "₹25,999", duration: "Business expert", features: ["Top commercial placement", "Business expert assistance", "Maximum exposure", "Dedicated account manager"], url: "/plans?tab=seller" }
+      ],
+      industrial: [
+        { name: "Industrial Basic", price: "₹999", duration: "Industrial promotion", features: ["Industrial listing", "Sector visibility", "Technical support"], url: "/plans?tab=seller" },
+        { name: "Industrial Pro", price: "₹28,999", duration: "Industrial expert", features: ["Featured industrial listing", "Expert consultation", "Industry networks", "Priority placement"], url: "/plans?tab=seller" },
+        { name: "Industrial Elite", price: "₹35,999", duration: "Premium industrial", features: ["Premium industrial listing", "Maximum exposure", "Dedicated specialist", "Custom solutions"], url: "/plans?tab=seller" }
+      ],
+      agricultural: [
+        { name: "Agricultural Basic", price: "₹999", duration: "Farm promotion", features: ["Agricultural listing", "Rural visibility", "Farmer support"], url: "/plans?tab=seller" },
+        { name: "Agricultural Pro", price: "₹18,999", duration: "Farm expert", features: ["Featured farm listing", "Agricultural networks", "Expert advice", "Market insights"], url: "/plans?tab=seller" },
+        { name: "Agricultural Elite", price: "₹25,999", duration: "Premium agricultural", features: ["Premium farm listing", "Maximum rural reach", "Agricultural expert", "Custom marketing"], url: "/plans?tab=seller" }
+      ]
+    },
+    
+    // BUYER PLANS
+    buyer: {
+      residential: [
+        { name: "Silver Plan", price: "₹999", duration: "Basic search", features: ["Basic property search", "Email alerts", "Standard support"], url: "/plans?tab=buyer" },
+        { name: "Gold Plan", price: "₹2,499", duration: "Expert assistance", features: ["Expert property assistance", "Priority viewing", "Dedicated support", "Market insights"], url: "/plans?tab=buyer" },
+        { name: "Platinum Plan", price: "₹4,999", duration: "Exclusive support", features: ["Exclusive property access", "Personal property consultant", "Premium support", "Custom search"], url: "/plans?tab=buyer" }
+      ],
+      commercial: [
+        { name: "Business Explorer", price: "₹999", duration: "Commercial search", features: ["Commercial property search", "Business alerts", "Email support"], url: "/plans?tab=buyer" },
+        { name: "Business Pro", price: "₹8,999", duration: "Commercial expert", features: ["Expert commercial assistance", "Priority access", "Business consultation", "Market analysis"], url: "/plans?tab=buyer" },
+        { name: "Business Elite", price: "₹12,999", duration: "VIP commercial", features: ["VIP commercial access", "Dedicated business consultant", "Premium networking", "Custom solutions"], url: "/plans?tab=buyer" }
+      ],
+      industrial: [
+        { name: "Industrial Basic", price: "₹999", duration: "Industrial search", features: ["Industrial property search", "Technical alerts", "Industry support"], url: "/plans?tab=buyer" },
+        { name: "Industrial Pro", price: "₹15,999", duration: "Industrial expert", features: ["Expert industrial assistance", "Technical consultation", "Industry networks", "Site analysis"], url: "/plans?tab=buyer" },
+        { name: "Industrial Elite", price: "₹22,999", duration: "VIP industrial", features: ["VIP industrial access", "Dedicated industrial expert", "Custom requirements", "Priority processing"], url: "/plans?tab=buyer" }
+      ]
+    },
+    
+    // OWNER PLANS (for rental properties)
+    owner: {
+      residential: [
+        { name: "Silver", price: "₹100", duration: "On call assistance", features: ["Basic rental assistance", "Phone support", "Tenant matching"], url: "/plans?tab=owner" },
+        { name: "Gold", price: "₹5,899", duration: "House visit assistance", features: ["Property visit coordination", "Tenant screening", "Documentation help", "Expert guidance"], url: "/plans?tab=owner" },
+        { name: "Platinum", price: "₹6,999", duration: "Expert guidance", features: ["Expert rental guidance", "Premium tenant matching", "Legal assistance", "Priority support"], url: "/plans?tab=owner" },
+        { name: "Diamond", price: "₹10,999", duration: "Personal field assistant", features: ["Personal field assistant", "Complete property management", "Dedicated support", "Premium services"], url: "/plans?tab=owner" }
+      ],
+      commercial: [
+        { name: "Business Basic", price: "₹999", duration: "Commercial support", features: ["Basic commercial rental", "Business tenant matching", "Email support"], url: "/plans?tab=commercial-owner" },
+        { name: "Business Pro", price: "₹15,999", duration: "Premium marketing", features: ["Premium commercial marketing", "Quality tenant screening", "Business consultation", "Priority placement"], url: "/plans?tab=commercial-owner" },
+        { name: "Business Elite", price: "₹25,999", duration: "Dedicated manager", features: ["Dedicated account manager", "Complete rental management", "Premium services", "Custom solutions"], url: "/plans?tab=commercial-owner" }
+      ]
+    },
+    
+    // TENANT PLANS
+    tenant: {
+      residential: [
+        { name: "Basic", price: "₹99", duration: "Search assistance", features: ["Basic property search", "Rental alerts", "Email support"], url: "/plans?tab=rental" },
+        { name: "Standard", price: "₹499", duration: "Visit coordination", features: ["Property visit coordination", "Shortlisting assistance", "Documentation help", "Phone support"], url: "/plans?tab=rental" },
+        { name: "Premium", price: "₹999", duration: "Expert assistance", features: ["Expert rental assistance", "Premium property access", "Negotiation support", "Dedicated consultant"], url: "/plans?tab=rental" }
+      ],
+      commercial: [
+        { name: "Business Basic", price: "₹1,499", duration: "Commercial search", features: ["Commercial property search", "Business space alerts", "Email support"], url: "/plans?tab=rental" },
+        { name: "Business Standard", price: "₹2,499", duration: "Office coordination", features: ["Office visit coordination", "Business consultation", "Documentation help", "Priority support"], url: "/plans?tab=rental" },
+        { name: "Business Premium", price: "₹3,999", duration: "Corporate assistance", features: ["Corporate rental assistance", "Premium office access", "Business expert", "Dedicated manager"], url: "/plans?tab=rental" }
+      ]
+    },
+    
+    // BUILDER PLANS (for developers/land plots)
+    builder: {
+      residential: [
+        { name: "Lifetime Standard", price: "₹1,49,999", duration: "Lifetime project showcase", features: ["Project showcase platform", "Builder profile", "Basic marketing", "Email support"], url: "/plans?tab=builder-lifetime" },
+        { name: "Lifetime Platinum", price: "₹2,49,999", duration: "Enhanced marketing", features: ["Enhanced project marketing", "Featured placement", "Social media promotion", "Priority support"], url: "/plans?tab=builder-lifetime" },
+        { name: "Lifetime VIP", price: "₹3,99,999", duration: "Premium showcase", features: ["Premium project showcase", "Maximum visibility", "Dedicated manager", "Custom marketing"], url: "/plans?tab=builder-lifetime" }
+      ],
+      commercial: [
+        { name: "Commercial Standard", price: "₹2,49,999", duration: "Commercial projects", features: ["Commercial project showcase", "Business networks", "Industry marketing", "Business support"], url: "/plans?tab=builder-lifetime" },
+        { name: "Commercial Platinum", price: "₹3,49,999", duration: "Business growth", features: ["Enhanced commercial marketing", "Premium business networks", "Growth consultation", "Priority placement"], url: "/plans?tab=builder-lifetime" },
+        { name: "Commercial VIP", price: "₹4,99,999", duration: "Enterprise level", features: ["Enterprise-level showcase", "Maximum business exposure", "Dedicated account manager", "Custom solutions"], url: "/plans?tab=builder-lifetime" }
+      ]
+    },
+    
+    // AGENT PLANS
+    agent: {
+      basic: [
+        { name: "Basic Monthly", price: "₹999/month", duration: "Getting started", features: ["Up to 10 listings", "Basic marketing", "Email support", "Property alerts"], url: "/plans?tab=agent" },
+        { name: "Basic Quarterly", price: "₹7,999/quarter", duration: "Popular choice", features: ["Up to 50 listings", "Enhanced marketing", "Phone support", "Analytics dashboard"], url: "/plans?tab=agent" },
+        { name: "Basic Yearly", price: "₹24,999/year", duration: "Best value", features: ["Up to 200 listings", "Premium marketing", "Priority support", "Lead generation tools"], url: "/plans?tab=agent" }
+      ],
+      lifetime: [
+        { name: "Lifetime Standard", price: "₹79,999", duration: "For new agents", features: ["Unlimited listings", "Agent profile", "Basic marketing tools", "Standard support"], url: "/plans?tab=agent" },
+        { name: "Lifetime Platinum", price: "₹1,49,999", duration: "Enhanced visibility", features: ["Premium agent profile", "Enhanced marketing", "Priority placement", "Advanced tools"], url: "/plans?tab=agent" },
+        { name: "Lifetime VIP", price: "₹2,49,999", duration: "Exclusive services", features: ["VIP agent status", "Maximum visibility", "Exclusive services", "Dedicated support"], url: "/plans?tab=agent" }
+      ]
+    }
   };
 
-  const currentPlans = pricingPlans[propertyType] || pricingPlans.residential;
-  
+  // Determine the correct plan category based on user type, property type, and listing type
+  let currentPlans = [];
+  let planCategory = 'seller'; // default
+  let propertyCategory = propertyType || 'residential';
+
+  // Map user intentions to plan categories
+  if (userType === 'buyer' || userType === 'purchase') {
+    planCategory = 'buyer';
+    currentPlans = pricingPlans.buyer[propertyCategory] || pricingPlans.buyer.residential;
+  } else if (userType === 'tenant' || listingType === 'rent') {
+    if (userType === 'owner' || userType === 'landlord') {
+      planCategory = 'owner';
+      currentPlans = pricingPlans.owner[propertyCategory] || pricingPlans.owner.residential;
+    } else {
+      planCategory = 'tenant';
+      currentPlans = pricingPlans.tenant[propertyCategory] || pricingPlans.tenant.residential;
+    }
+  } else if (userType === 'builder' || propertyType === 'land' || propertyType === 'plot') {
+    planCategory = 'builder';
+    currentPlans = pricingPlans.builder[propertyCategory] || pricingPlans.builder.residential;
+  } else if (userType === 'agent') {
+    planCategory = 'agent';
+    currentPlans = pricingPlans.agent.basic; // default to basic plans
+  } else {
+    // Default to seller plans
+    planCategory = 'seller';
+    currentPlans = pricingPlans.seller[propertyCategory] || pricingPlans.seller.residential;
+  }
+
   const plansHtml = currentPlans.map(plan => `
-    <div style="border: 2px solid #e0e0e0; border-radius: 8px; padding: 20px; margin: 15px 0; text-align: center; background: #fff;">
-      <h3 style="color: #d32f2f; margin: 0 0 10px; font-size: 20px;">${plan.name}</h3>
-      <div style="font-size: 24px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>
-      <div style="color: #666; margin-bottom: 15px;">Valid for ${plan.duration}</div>
-      <ul style="list-style: none; padding: 0; margin: 15px 0;">
-        ${plan.features.map(feature => `<li style="padding: 5px 0; color: #555;">✓ ${feature}</li>`).join('')}
+    <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin: 15px 0; text-align: center; background: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <h3 style="color: #d32f2f; margin: 0 0 10px; font-size: 20px; font-weight: bold;">${plan.name}</h3>
+      <div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>
+      <div style="color: #666; margin-bottom: 15px; font-style: italic;">${plan.duration}</div>
+      <ul style="list-style: none; padding: 0; margin: 15px 0; text-align: left;">
+        ${plan.features.map(feature => `<li style="padding: 5px 0; color: #555; font-size: 14px;">✓ ${feature}</li>`).join('')}
       </ul>
-      <a href="${updatePriceUrl || 'https://homehni.com/plans'}" style="background: #d32f2f; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; display: inline-block; margin-top: 10px;">Choose ${plan.name}</a>
+      <a href="https://homehni.com${plan.url}" style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; box-shadow: 0 3px 6px rgba(211,47,47,0.3); transition: all 0.3s ease;">Choose ${plan.name}</a>
     </div>
   `).join('');
   
   const html = `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><title>Market Insights & Premium Plans</title></head>
-<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);padding:25px;"><img src="https://homehni.com/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="filter: brightness(0) invert(1);"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">💰 Market Insights for ${locality || 'Your Area'}</h2>
-            <p>Hello ${userName || 'there'},</p>
-            <p>Great news! We've analyzed recent market trends in <strong>${locality || 'your area'}</strong>.</p>
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:26px;text-align:center;">💰 Market Insights for ${locality || 'Your Area'}</h2>
+            <p style="font-size:18px;">Hello <strong>${userName || 'there'}</strong>,</p>
+            <p>Great news! We've analyzed recent market trends in <strong>${locality || 'your area'}</strong> and have personalized recommendations for your <strong>${propertyType || 'residential'} ${listingType || 'sale'}</strong> property.</p>
             
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #d32f2f;">
-              <h3 style="margin: 0 0 10px; color: #d32f2f;">📊 Market Analysis</h3>
-              <p style="margin: 5px 0;">Properties in your area recently closed between <strong>₹${rangeMin || 'N/A'} – ₹${rangeMax || 'N/A'}</strong></p>
-              <p style="margin: 5px 0;">Your current listing price: <strong>₹${yourPrice || 'N/A'}</strong></p>
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #d32f2f;">
+              <h3 style="margin: 0 0 15px; color: #d32f2f; font-size: 20px;">📊 Market Analysis</h3>
+              <p style="margin: 8px 0; font-size: 16px;">Properties in your area recently closed between <strong style="color:#2e7d32;">₹${rangeMin || 'N/A'} – ₹${rangeMax || 'N/A'}</strong></p>
+              <p style="margin: 8px 0; font-size: 16px;">Your current listing price: <strong style="color:#d32f2f;">₹${yourPrice || 'N/A'}</strong></p>
             </div>
 
-            <h3 style="color: #d32f2f; margin: 30px 0 20px;">🚀 Boost Your Property's Visibility</h3>
-            <p>Upgrade to our premium plans for <strong>3X faster results</strong> and maximum exposure:</p>
+            <h3 style="color: #d32f2f; margin: 35px 0 25px; text-align: center; font-size: 22px;">🚀 Boost Your Property's Success Rate</h3>
+            <p style="text-align: center; font-size: 17px; margin-bottom: 30px;">Upgrade to our premium plans designed specifically for <strong>${planCategory}s</strong> and achieve <strong>3X faster results</strong>:</p>
             
             ${plansHtml}
             
-            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
-              <h4 style="margin: 0 0 10px; color: #2e7d32;">🎯 Why Upgrade?</h4>
-              <p style="margin: 5px 0;">✓ Premium listings get <strong>5X more views</strong></p>
-              <p style="margin: 5px 0;">✓ Featured properties close <strong>3X faster</strong></p>
-              <p style="margin: 5px 0;">✓ Priority customer support</p>
-              <p style="margin: 5px 0;">✓ Advanced analytics & insights</p>
+            <div style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%); padding: 25px; border-radius: 12px; margin: 30px 0; text-align: center;">
+              <h4 style="margin: 0 0 15px; color: #2e7d32; font-size: 20px;">🎯 Why Choose Home HNI Premium?</h4>
+              <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px;">
+                <p style="margin: 5px; background: white; padding: 10px 15px; border-radius: 20px; display: inline-block; font-size: 14px;">✓ Premium listings get <strong>5X more views</strong></p>
+                <p style="margin: 5px; background: white; padding: 10px 15px; border-radius: 20px; display: inline-block; font-size: 14px;">✓ Featured properties close <strong>3X faster</strong></p>
+                <p style="margin: 5px; background: white; padding: 10px 15px; border-radius: 20px; display: inline-block; font-size: 14px;">✓ Dedicated expert support</p>
+                <p style="margin: 5px; background: white; padding: 10px 15px; border-radius: 20px; display: inline-block; font-size: 14px;">✓ Advanced analytics & insights</p>
+              </div>
             </div>
 
-            <p style="text-align:center;margin:30px 0;">
-              <a href="${updatePriceUrl || 'https://homehni.com/plans'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;">🎯 Upgrade Now & Sell Faster</a>
+            <p style="text-align:center;margin:35px 0;">
+              <a href="https://homehni.com/plans?tab=${planCategory}" style="background:linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);color:#fff;text-decoration:none;padding:18px 36px;border-radius:10px;font-weight:bold;font-size:18px;display:inline-block;box-shadow: 0 4px 12px rgba(211,47,47,0.4);">🎯 View All ${planCategory.charAt(0).toUpperCase() + planCategory.slice(1)} Plans</a>
             </p>
             
-            <p>Need help choosing the right plan? Our property experts are here to assist!</p>
-            <p><strong>Team Home HNI</strong><br>Your Premium Property Partner</p>
+            <div style="text-align: center; margin: 30px 0; padding: 20px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+              <p style="margin: 0; color: #856404;"><strong>Need help choosing the right plan?</strong></p>
+              <p style="margin: 5px 0 0; color: #856404;">Our property experts are here to provide personalized recommendations!</p>
+              <p style="margin: 10px 0 0;"><a href="https://homehni.com/contact-us" style="color: #d32f2f; font-weight: bold;">Contact Our Experts →</a></p>
+            </div>
+            
+            <p style="font-size: 16px; margin-top: 30px;">Best regards,<br><strong>Team Home HNI</strong><br><em>Your Premium Property Partner</em></p>
+            
+            <div style="margin-top: 25px; padding: 15px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+              <p style="margin: 0; font-size: 14px; color: #666;">Follow us for more property insights:</p>
+              <p style="margin: 10px 0 0; font-size: 12px; color: #888;">
+                <a href="#" style="color: #d32f2f; text-decoration: none;">Website</a> • 
+                <a href="#" style="color: #d32f2f; text-decoration: none;">Facebook</a> • 
+                <a href="#" style="color: #d32f2f; text-decoration: none;">LinkedIn</a> • 
+                <a href="#" style="color: #d32f2f; text-decoration: none;">Twitter</a>
+              </p>
+            </div>
           </td>
         </tr>
         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Solutions</td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">
+          <p style="margin:0;">&copy; 2025 Home HNI - Premium Property Solutions | All Rights Reserved</p>
+          <p style="margin:5px 0 0;"><a href="https://homehni.com/privacy-policy" style="color:#d32f2f;">Privacy Policy</a> • <a href="https://homehni.com/terms-and-conditions" style="color:#d32f2f;">Terms of Service</a></p>
+        </td></tr>
       </table>
     </td></tr>
   </table>
@@ -315,36 +438,44 @@ app.post("/send-price-suggestions-email", async (req, res) => {
 
 Hello ${userName || 'there'},
 
-Great news! We've analyzed recent market trends in ${locality || 'your area'}.
+Great news! We've analyzed recent market trends in ${locality || 'your area'} and have personalized recommendations for your ${propertyType || 'residential'} ${listingType || 'sale'} property.
 
-Market Analysis:
+MARKET ANALYSIS:
 Properties in your area recently closed between ₹${rangeMin || 'N/A'} – ₹${rangeMax || 'N/A'}
 Your current listing price: ₹${yourPrice || 'N/A'}
 
-Boost Your Property's Visibility:
-Upgrade to our premium plans for 3X faster results and maximum exposure.
+BOOST YOUR PROPERTY'S SUCCESS RATE:
+Upgrade to our premium plans designed specifically for ${planCategory}s and achieve 3X faster results:
 
 ${currentPlans.map(plan => `
 ${plan.name} - ${plan.price} (${plan.duration})
 ${plan.features.map(feature => `• ${feature}`).join('\n')}
+Choose this plan: https://homehni.com${plan.url}
 `).join('\n')}
 
-Why Upgrade?
+WHY CHOOSE HOME HNI PREMIUM?
 ✓ Premium listings get 5X more views
 ✓ Featured properties close 3X faster  
-✓ Priority customer support
+✓ Dedicated expert support
 ✓ Advanced analytics & insights
 
-Upgrade now: ${updatePriceUrl || 'https://homehni.com/plans'}
+View all ${planCategory} plans: https://homehni.com/plans?tab=${planCategory}
 
+Need help choosing the right plan? Contact our property experts: https://homehni.com/contact-us
+
+Best regards,
 Team Home HNI
 Your Premium Property Partner
 
-© 2025 Home HNI - Premium Property Solutions`;
+© 2025 Home HNI - Premium Property Solutions | All Rights Reserved
+Privacy Policy: https://homehni.com/privacy-policy
+Terms of Service: https://homehni.com/terms-and-conditions`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+
+
 
 // 4. Loan enquiry email
 app.post("/send-loan-enquiry-email", async (req, res) => {
@@ -408,7 +539,6 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
               <p style="margin: 5px 0;">• Property search and verification services</p>
               <p style="margin: 5px 0;">• Legal documentation and registration support</p>
               <p style="margin: 5px 0;">• Property valuation and market insights</p>
-              <a href="https://homehni.com/plans" style="background:#f57c00;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;margin-top:15px;">Explore Premium Plans</a>
             </div>
             
             <p>Thank you for choosing <strong>Home HNI</strong> - Your trusted partner for premium property and financial solutions.</p>
@@ -607,7 +737,7 @@ app.post("/send-plan-upgrade-email", async (req, res) => {
               `).join('')}
             </div>
 
-            <h3 style="color: #d32f2f; margin: 30px 0 20px; text-align: center;">💎 Choose Your Premium Plan</h3>
+            <h3 style="color: #d32f2f; margin: 30px 0 20px; text-align: center;">💎Upgrade Your Plan</h3>
             
             ${plans.map(plan => `
               <div style="border: ${plan.highlight ? '3px solid #d32f2f' : '2px solid #e0e0e0'}; border-radius: 8px; padding: 20px; margin: 15px 0; text-align: center; background: ${plan.highlight ? '#fff8f8' : '#fff'}; position: relative;">
@@ -621,15 +751,12 @@ app.post("/send-plan-upgrade-email", async (req, res) => {
 
             <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
               <h4 style="margin: 0 0 10px; color: #2e7d32;">🔥 Limited Time Benefits</h4>
-              <p style="margin: 8px 0;">✓ <strong>Free Property Photography</strong> worth ₹2,000</p>
+              <p style="margin: 8px 0;">✓ <strong>Free Property Photography</strong></p>
               <p style="margin: 8px 0;">✓ <strong>Dedicated Account Manager</strong> for personalized support</p>
               <p style="margin: 8px 0;">✓ <strong>Legal Document Assistance</strong> for smooth transactions</p>
-              <p style="margin: 8px 0;">✓ <strong>Market Insights Report</strong> for better pricing strategy</p>
             </div>
 
-            <p style="text-align:center;margin:30px 0;">
-              <a href="${upgradePlanUrl || 'https://homehni.com/plans'}" style="background:linear-gradient(135deg, #d32f2f, #f44336);color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;box-shadow:0 4px 12px rgba(211,47,47,0.3);">💎 Upgrade Now & Sell 3X Faster</a>
-            </p>
+           
 
             <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; color: #666; text-align: center;">
               <p style="margin: 0;">💬 Questions about upgrading? Our team is here to help!</p>
@@ -659,17 +786,6 @@ Why Premium Users Win Big:
 👁️ 5X More Visibility: Featured placement gets more buyers
 🎯 Priority Support: Dedicated assistance from experts
 📊 Advanced Analytics: Track and optimize performance
-
-Choose Your Premium Plan:
-• Professional: ₹599 (15 days)
-• Premium: ₹999 (30 days) - MOST POPULAR
-• Elite: ₹1,499 (45 days)
-
-Limited Time Benefits:
-✓ Free Property Photography worth ₹2,000
-✓ Dedicated Account Manager for personalized support
-✓ Legal Document Assistance for smooth transactions
-✓ Market Insights Report for better pricing strategy
 
 Upgrade now: ${upgradePlanUrl || 'https://homehni.com/plans'}
 
