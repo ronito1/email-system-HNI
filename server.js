@@ -690,7 +690,8 @@ Your Premium Property Partner
   res.json(result);
 });
 
-// 6. Plan upgrade suggestion email
+// 6. Plan upgrade suggestion email - COMMENTED OUT TO PREVENT INTERFERENCE WITH PRICE SUGGESTIONS EMAIL
+/*
 app.post("/send-plan-upgrade-email", async (req, res) => {
   const { to, userName, upgradePlanUrl, currentPlan = 'Basic' } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
@@ -799,6 +800,7 @@ Your Success Partners
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+*/
 
 // 7. Deal closed email
 app.post("/send-deal-closed-email", async (req, res) => {
