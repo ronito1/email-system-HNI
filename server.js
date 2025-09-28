@@ -495,9 +495,9 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
   };
   const displayType = typeMap[normalizedType] || normalizedType;
 
-  const subject = `🏦 ${displayType} Application Received - Premium Loan Services by Home HNI`;
-  
-  const html = `<!DOCTYPE html>
+const subject = `🏦 ${displayType} Application Received - Explore All Loan Services at Home HNI`;
+
+const html = `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><title>Premium Loan Services Application</title></head>
 <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
@@ -529,7 +529,7 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
             </div>
 
             <p style="text-align:center;margin:30px 0;">
-              <a href="${loanEligibilityUrl || 'https://homehni.com/loan-eligibility'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;">📊 Check Eligibility & Prepare Documents</a>
+              <a href="${loanEligibilityUrl || 'https://homehni.in/services?tab=loans'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;">📊 Explore All Loan Services</a>
             </p>
 
             <div style="background: #fff3e0; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
@@ -552,7 +552,7 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
 </body>
 </html>`;
 
-  const text = `🏦 Welcome to Home HNI Premium Loan Services
+const text = `🏦 Welcome to Home HNI Premium Loan Services
 
 Dear ${userName || 'Valued Customer'},
 
@@ -571,7 +571,7 @@ Step 2: Eligibility assessment and rate comparison
 Step 3: Document collection and verification
 Step 4: Fast-track approval and disbursement
 
-Check eligibility: ${loanEligibilityUrl || 'https://homehni.com/loan-eligibility'}
+Explore all loan services: ${loanEligibilityUrl || 'https://homehni.in/services?tab=loans'}
 
 Need Property Services Too?
 Upgrade to our Premium Property Plans: https://homehni.com/plans
@@ -1850,194 +1850,195 @@ Home HNI Team
 
 
 
-// 15. Visit scheduled email (Show Interest form submission)
-app.post("/send-visit-scheduled-email", async (req, res) => {
-  const { to, userName, propertyAddress, propertyType, visitorName, visitorPhone, visitorEmail, visitDate, visitTime, message } = req.body;
-  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+// // 15. Visit scheduled email (Show Interest form submission)
+// app.post("/send-visit-scheduled-email", async (req, res) => {
+//   const { to, userName, propertyAddress, propertyType, visitorName, visitorPhone, visitorEmail, visitDate, visitTime, message } = req.body;
+//   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🏠 Property Visit Scheduled - Prepare for Success!";
+//   const subject = "🏠 Property Visit Scheduled - Prepare for Success!";
   
-  const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Premium Property Visit Scheduled</title></head>
-<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
-        <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🏠 Property Visit Scheduled - Get Ready to Close!</h2>
-            <p>Dear ${userName || 'Property Owner'},</p>
-            <p>🎉 <strong>Outstanding news!</strong> You've got a confirmed property visit scheduled. This is your golden opportunity to convert interest into a successful deal!</p>
+//   const html = `<!DOCTYPE html>
+// <html>
+// <head><meta charset="UTF-8"><title>Premium Property Visit Scheduled</title></head>
+// <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+//   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+//     <tr><td align="center">
+//       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+//         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+//         <tr>
+//           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+//             <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🏠 Property Visit Scheduled - Get Ready to Close!</h2>
+//             <p>Dear ${userName || 'Property Owner'},</p>
+//             <p>🎉 <strong>Outstanding news!</strong> You've got a confirmed property visit scheduled. This is your golden opportunity to convert interest into a successful deal!</p>
 
-            <div style="background:#e8f5e8;padding:25px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;text-align:center;font-size:18px;">📅 Visit Appointment Details</h3>
+//             <div style="background:#e8f5e8;padding:25px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 15px;text-align:center;font-size:18px;">📅 Visit Appointment Details</h3>
               
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#fff;border-radius:5px;overflow:hidden;">
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;width:35%;"><strong>Property:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${propertyAddress || 'Your Premium Property'}</td>
-                </tr>
-                <tr>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Property Type:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${propertyType || 'Premium Property'}</td>
-                </tr>
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Visitor Name:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${visitorName || 'Interested Buyer'}</td>
-                </tr>
-                <tr>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Contact Phone:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${visitorPhone || 'Available in dashboard'}</td>
-                </tr>
-                ${visitorEmail ? `
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Email:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${visitorEmail}</td>
-                </tr>
-                ` : ''}
-                <tr>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Visit Date:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><span style="color:#d32f2f;font-weight:bold;">${visitDate || 'To be confirmed'}</span></td>
-                </tr>
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;"><strong>Visit Time:</strong></td>
-                  <td style="padding:12px;"><span style="color:#d32f2f;font-weight:bold;">${visitTime || 'To be confirmed'}</span></td>
-                </tr>
-              </table>
+//               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#fff;border-radius:5px;overflow:hidden;">
+//                 <tr style="background:#f8f9fa;">
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;width:35%;"><strong>Property:</strong></td>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${propertyAddress || 'Your Premium Property'}</td>
+//                 </tr>
+//                 <tr>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Property Type:</strong></td>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${propertyType || 'Premium Property'}</td>
+//                 </tr>
+//                 <tr style="background:#f8f9fa;">
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Visitor Name:</strong></td>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${visitorName || 'Interested Buyer'}</td>
+//                 </tr>
+//                 <tr>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Contact Phone:</strong></td>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${visitorPhone || 'Available in dashboard'}</td>
+//                 </tr>
+//                 ${visitorEmail ? `
+//                 <tr style="background:#f8f9fa;">
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Email:</strong></td>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${visitorEmail}</td>
+//                 </tr>
+//                 ` : ''}
+//                 <tr>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Visit Date:</strong></td>
+//                   <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><span style="color:#d32f2f;font-weight:bold;">${visitDate || 'To be confirmed'}</span></td>
+//                 </tr>
+//                 <tr style="background:#f8f9fa;">
+//                   <td style="padding:12px;"><strong>Visit Time:</strong></td>
+//                   <td style="padding:12px;"><span style="color:#d32f2f;font-weight:bold;">${visitTime || 'To be confirmed'}</span></td>
+//                 </tr>
+//               </table>
               
-              ${message ? `
-              <div style="background:#fff3cd;padding:15px;border-radius:5px;margin:15px 0;">
-                <strong>📝 Special Message from Visitor:</strong><br>
-                "${message}"
-              </div>
-              ` : ''}
-            </div>
+//               ${message ? `
+//               <div style="background:#fff3cd;padding:15px;border-radius:5px;margin:15px 0;">
+//                 <strong>📝 Special Message from Visitor:</strong><br>
+//                 "${message}"
+//               </div>
+//               ` : ''}
+//             </div>
 
-            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">🎯 Pre-Visit Success Checklist:</h3>
+//             <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;">
+//               <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">🎯 Pre-Visit Success Checklist:</h3>
               
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🏠 Property Preparation</strong><br>
-                  <small>• Deep clean all rooms<br>• Enhance lighting & ventilation<br>• Remove clutter & personal items<br>• Fix minor repairs if any</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>📋 Documentation Ready</strong><br>
-                  <small>• Property documents<br>• NOC certificates<br>• Recent photos/videos<br>• Price negotiation strategy</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🗣️ Communication Prep</strong><br>
-                  <small>• Highlight unique features<br>• Know neighborhood benefits<br>• Prepare FAQs answers<br>• Set clear next steps</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🤝 Closing Strategy</strong><br>
-                  <small>• Know your bottom price<br>• Flexible payment terms<br>• Quick decision incentives<br>• Follow-up plan ready</small>
-                </div>
-              </div>
-            </div>
+//               <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
+//                 <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
+//                   <strong>🏠 Property Preparation</strong><br>
+//                   <small>• Deep clean all rooms<br>• Enhance lighting & ventilation<br>• Remove clutter & personal items<br>• Fix minor repairs if any</small>
+//                 </div>
+//                 <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
+//                   <strong>📋 Documentation Ready</strong><br>
+//                   <small>• Property documents<br>• NOC certificates<br>• Recent photos/videos<br>• Price negotiation strategy</small>
+//                 </div>
+//                 <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
+//                   <strong>🗣️ Communication Prep</strong><br>
+//                   <small>• Highlight unique features<br>• Know neighborhood benefits<br>• Prepare FAQs answers<br>• Set clear next steps</small>
+//                 </div>
+//                 <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
+//                   <strong>🤝 Closing Strategy</strong><br>
+//                   <small>• Know your bottom price<br>• Flexible payment terms<br>• Quick decision incentives<br>• Follow-up plan ready</small>
+//                 </div>
+//               </div>
+//             </div>
 
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">⚡ Visit Day Success Tips:</h4>
-              <p style="margin:5px 0;font-weight:bold;">✓ Arrive 15 minutes early to prepare</p>
-              <p style="margin:5px 0;font-weight:bold;">✓ Greet warmly & build rapport first</p>
-              <p style="margin:5px 0;font-weight:bold;">✓ Share neighborhood stories & benefits</p>
-              <p style="margin:5px 0;font-weight:bold;">✓ Address concerns proactively</p>
-              <p style="margin:5px 0;font-weight:bold;">✓ Ask for commitment before they leave</p>
-            </div>
+//             <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
+//               <h4 style="color:#d32f2f;margin:0 0 10px;">⚡ Visit Day Success Tips:</h4>
+//               <p style="margin:5px 0;font-weight:bold;">✓ Arrive 15 minutes early to prepare</p>
+//               <p style="margin:5px 0;font-weight:bold;">✓ Greet warmly & build rapport first</p>
+//               <p style="margin:5px 0;font-weight:bold;">✓ Share neighborhood stories & benefits</p>
+//               <p style="margin:5px 0;font-weight:bold;">✓ Address concerns proactively</p>
+//               <p style="margin:5px 0;font-weight:bold;">✓ Ask for commitment before they leave</p>
+//             </div>
 
-            <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/dashboard/visits" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">📅 Manage Visits</a>
-              <a href="https://homehni.com/visit-preparation-guide" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📖 Visit Guide</a>
-            </p>
+//             <p style="text-align:center;margin:28px 0;">
+//               <a href="https://homehni.com/dashboard/visits" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">📅 Manage Visits</a>
+//               <a href="https://homehni.com/visit-preparation-guide" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📖 Visit Guide</a>
+//             </p>
 
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Visit Day Support Available:</h4>
-              <p style="margin:5px 0;">📱 Emergency Support: +91-9876543210</p>
-              <p style="margin:5px 0;">📧 Visit Coordinator: visits@homehni.com</p>
-              <p style="margin:5px 0;">⏰ Available: 24/7 on visit days</p>
-              <p style="margin:5px 0;">🎯 <strong>Call us if visitor doesn't show up!</strong></p>
-            </div>
+//             <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
+//               <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Visit Day Support Available:</h4>
+//               <p style="margin:5px 0;">📱 Emergency Support: +91-9876543210</p>
+//               <p style="margin:5px 0;">📧 Visit Coordinator: visits@homehni.com</p>
+//               <p style="margin:5px 0;">⏰ Available: 24/7 on visit days</p>
+//               <p style="margin:5px 0;">🎯 <strong>Call us if visitor doesn't show up!</strong></p>
+//             </div>
 
-            <p><strong>Statistical Fact:</strong> Well-prepared property visits have an <span style="color:#4caf50;font-weight:bold;">85% higher conversion rate</span>. You're just one great visit away from closing your deal!</p>
-            <p>Wishing you a successful property visit and deal closure!<br><strong>Home HNI Visit Coordination Team</strong></p>
-          </td>
-        </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Visit Management</td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
+//             <p><strong>Statistical Fact:</strong> Well-prepared property visits have an <span style="color:#4caf50;font-weight:bold;">85% higher conversion rate</span>. You're just one great visit away from closing your deal!</p>
+//             <p>Wishing you a successful property visit and deal closure!<br><strong>Home HNI Visit Coordination Team</strong></p>
+//           </td>
+//         </tr>
+//         <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+//         <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Visit Management</td></tr>
+//       </table>
+//     </td></tr>
+//   </table>
+// </body>
+// </html>`;
 
-  const text = `🏠 Property Visit Scheduled - Get Ready to Close!
+//   const text = `🏠 Property Visit Scheduled - Get Ready to Close!
 
-Dear ${userName || 'Property Owner'},
+// Dear ${userName || 'Property Owner'},
 
-🎉 Outstanding news! You've got a confirmed property visit scheduled. This is your opportunity to convert interest into a successful deal!
+// 🎉 Outstanding news! You've got a confirmed property visit scheduled. This is your opportunity to convert interest into a successful deal!
 
-📅 Visit Appointment Details:
-Property: ${propertyAddress || 'Your Premium Property'}
-Property Type: ${propertyType || 'Premium Property'}
-Visitor Name: ${visitorName || 'Interested Buyer'}
-Contact Phone: ${visitorPhone || 'Available in dashboard'}
-${visitorEmail ? `Email: ${visitorEmail}` : ''}
-Visit Date: ${visitDate || 'To be confirmed'}
-Visit Time: ${visitTime || 'To be confirmed'}
+// 📅 Visit Appointment Details:
+// Property: ${propertyAddress || 'Your Premium Property'}
+// Property Type: ${propertyType || 'Premium Property'}
+// Visitor Name: ${visitorName || 'Interested Buyer'}
+// Contact Phone: ${visitorPhone || 'Available in dashboard'}
+// ${visitorEmail ? `Email: ${visitorEmail}` : ''}
+// Visit Date: ${visitDate || 'To be confirmed'}
+// Visit Time: ${visitTime || 'To be confirmed'}
 
-${message ? `📝 Special Message from Visitor: "${message}"` : ''}
+// ${message ? `📝 Special Message from Visitor: "${message}"` : ''}
 
-🎯 Pre-Visit Success Checklist:
+// 🎯 Pre-Visit Success Checklist:
 
-🏠 Property Preparation:
-• Deep clean all rooms
-• Enhance lighting & ventilation  
-• Remove clutter & personal items
-• Fix minor repairs if any
+// 🏠 Property Preparation:
+// • Deep clean all rooms
+// • Enhance lighting & ventilation  
+// • Remove clutter & personal items
+// • Fix minor repairs if any
 
-📋 Documentation Ready:
-• Property documents
-• NOC certificates
-• Recent photos/videos
-• Price negotiation strategy
+// 📋 Documentation Ready:
+// • Property documents
+// • NOC certificates
+// • Recent photos/videos
+// • Price negotiation strategy
 
-🗣️ Communication Prep:
-• Highlight unique features
-• Know neighborhood benefits
-• Prepare FAQs answers
-• Set clear next steps
+// 🗣️ Communication Prep:
+// • Highlight unique features
+// • Know neighborhood benefits
+// • Prepare FAQs answers
+// • Set clear next steps
 
-🤝 Closing Strategy:
-• Know your bottom price
-• Flexible payment terms
-• Quick decision incentives
-• Follow-up plan ready
+// 🤝 Closing Strategy:
+// • Know your bottom price
+// • Flexible payment terms
+// • Quick decision incentives
+// • Follow-up plan ready
 
-⚡ Visit Day Success Tips:
-✓ Arrive 15 minutes early to prepare
-✓ Greet warmly & build rapport first
-✓ Share neighborhood stories & benefits
-✓ Address concerns proactively
-✓ Ask for commitment before they leave
+// ⚡ Visit Day Success Tips:
+// ✓ Arrive 15 minutes early to prepare
+// ✓ Greet warmly & build rapport first
+// ✓ Share neighborhood stories & benefits
+// ✓ Address concerns proactively
+// ✓ Ask for commitment before they leave
 
-Visit Day Support:
-📱 Emergency Support: +91-9876543210
-📧 Visit Coordinator: visits@homehni.com
-⏰ Available: 24/7 on visit days
+// Visit Day Support:
+// 📱 Emergency Support: +91-9876543210
+// 📧 Visit Coordinator: visits@homehni.com
+// ⏰ Available: 24/7 on visit days
 
-Manage Visits: https://homehni.com/dashboard/visits
-Visit Guide: https://homehni.com/visit-preparation-guide
+// Manage Visits: https://homehni.com/dashboard/visits
+// Visit Guide: https://homehni.com/visit-preparation-guide
 
-Well-prepared visits have 85% higher conversion rate!
+// Well-prepared visits have 85% higher conversion rate!
 
-Home HNI Visit Coordination Team
-© 2025 Home HNI - Premium Property Visit Management`;
+// Home HNI Visit Coordination Team
+// © 2025 Home HNI - Premium Property Visit Management`;
 
-  const result = await sendEmail({ to, subject, html, text });
-  res.json(result);
-});
+//   const result = await sendEmail({ to, subject, html, text });
+//   res.json(result);
+// });
+
 
 // 16. Payment success email
 app.post("/send-payment-success-email", async (req, res) => {
@@ -2228,6 +2229,7 @@ Home HNI Premium Success Team
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+
 
 // 17. Payment invoice email
 app.post("/send-payment-invoice-email", async (req, res) => {
@@ -2428,6 +2430,8 @@ Home HNI Billing & Accounts Team
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+
+
 
 // 18. Services application email (Services tab form submission)
 app.post("/send-services-application-email", async (req, res) => {
