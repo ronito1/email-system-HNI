@@ -1797,7 +1797,7 @@ app.post("/send-contact-owner-email", async (req, res) => {
               </div>
 
               <p style="text-align:center;margin:28px 0;">
-                <a href="${dashboardUrl || 'https://homehni.com/dashboard/leads'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">View Lead Details</a>
+                <a href="${dashboardUrl || 'https://homehni.in/dashboard?tab=leads'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">View Lead Details</a>
               </p>
 
               <p>Thank you for using Home HNI!</p>
