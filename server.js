@@ -474,7 +474,6 @@ Terms of Service: https://homehni.com/terms-and-conditions`;
   res.json(result);
 });
 
-
 // 4. Loan confirmation email
 app.post("/send-loan-enquiry-email", async (req, res) => {
   console.log("Received body:", req.body); // Debug: log incoming request
@@ -510,6 +509,7 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🏦 Welcome to Home HNI Premium Loan Services</h2>
+            <p><strong>Loan Type:</strong> ${displayType}</p>
             <p>Dear ${userName || 'Valued Customer'},</p>
             <p>Thank you for choosing <strong>Home HNI</strong> for your <strong>${displayType}</strong> requirements. We've successfully received your application and our premium loan specialists will contact you within <strong>12 hours</strong>.</p>
             
@@ -556,6 +556,8 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
 
   const text = `🏦 Welcome to Home HNI Premium Loan Services
 
+Loan Type: ${displayType}
+
 Dear ${userName || 'Valued Customer'},
 
 Thank you for choosing Home HNI for your ${displayType} requirements. We've successfully received your application and our premium loan specialists will contact you within 4 hours.
@@ -586,6 +588,7 @@ Premium Property & Loan Services
   const result = await sendEmail({ to: resolvedTo, subject, html, text });
   res.json(result);
 });
+
 
 // 5. Premium plan activated email
 app.post("/send-plan-activated-email", async (req, res) => {
