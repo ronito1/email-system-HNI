@@ -824,7 +824,7 @@ Your Success Partners
 //             <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
 //               <h4 style="color:#d32f2f;margin:0 0 15px;">📞 Need Support?</h4>
 //               <p style="margin:5px 0;">📱 Contact us: +91 8074 017 388</p>
-//               <p style="margin:5px 0;">📧 Email: homehni8@gmail.com</p>
+//               <p style="margin:5px 0;">📧 Email: homehni@gmail.com</p>
 //               <p style="margin:5px 0;">⏰ Available: Monday - Saturday, 9 AM - 7 PM</p>
 //             </div>
 
@@ -854,7 +854,7 @@ Your Success Partners
 
 // Need Support?
 // 📱 Contact us: +91 8074 017 388
-// 📧 Email: homehni8@gmail.com
+// 📧 Email: homehni@gmail.com
 // ⏰ Available: Monday - Saturday, 9 AM - 7 PM
 
 // Dashboard: ${postDealServicesUrl || 'https://homehni.com/dashboard'}
@@ -907,7 +907,7 @@ app.post("/send-help-request-email", async (req, res) => {
             <div style="background:#e3f2fd;padding:20px;border-radius:8px;margin:20px 0;">
               <h4 style="color:#d32f2f;margin:0 0 15px;">📞 Need Immediate Support?</h4>
               <p style="margin:5px 0;">📱 Contact us: +91 8074 017 388</p>
-              <p style="margin:5px 0;">📧 Email: homehni8@gmail.com</p>
+              <p style="margin:5px 0;">📧 Email: homehni@gmail.com</p>
               <p style="margin:5px 0;">⏰ Available: Monday - Saturday, 9 AM - 7 PM</p>
             </div>
 
@@ -941,7 +941,7 @@ What Happens Next:
 
 Need Immediate Support?
 📱 Contact us: +91 8074 017 388
-📧 Email: homehni8@gmail.com
+📧 Email: homehni@gmail.com
 ⏰ Available: Monday - Saturday, 9 AM - 7 PM
 
 Dashboard: https://homehni.com/dashboard
@@ -2248,7 +2248,7 @@ GST: ${gstNumber}
 
 Bill To:
 ${userName}
-${billingAddress || ''}
+
 
 Description:
 ${planName} (${planType})
@@ -2272,6 +2272,8 @@ support@homehni.com | +91-9876543210`;
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+
+
 
 
 
