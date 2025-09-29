@@ -1162,18 +1162,11 @@ ${budget ? `Budget Range: ₹${budget}` : ''}
 Service: Premium Painting & Touch-up
 ` : ''}
 
-🎁 Limited Time Offer (48 hours):
-✓ 15% OFF on painting costs
-✓ FREE primer coat worth ₹5,000  
-✓ Complimentary minor repairs
-
 Connect with Our Experts:
 📱 WhatsApp: +91-9876543210
 📧 Email: painting@homehni.com
 ⏰ Available: 8 AM - 8 PM (Mon-Sun)
 
-View Gallery: https://homehni.com/services/painting
-Get Quote: https://homehni.com/get-quote
 
 Transform your property into a premium showcase!
 
