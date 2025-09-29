@@ -2012,14 +2012,28 @@ Home HNI Team
 
 // 16. Payment success email
 app.post("/send-payment-success-email", async (req, res) => {
-  const { to, userName, planName, planType, amount, transactionId, planDuration, nextBillingDate } = req.body;
+  const { 
+    to, 
+    userName, 
+    planName, 
+    planType, 
+    amount, 
+    transactionId, 
+    planDuration, 
+    nextBillingDate,
+    paymentDate = new Date().toLocaleDateString(),
+    gstAmount,
+    totalAmount,
+    features = [] // Array of plan features
+  } = req.body;
+
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🎉 Welcome to Home HNI Premium! Payment Successful";
+  const subject = `🎉 Payment Successful - Welcome to ${planName}!`;
   
   const html = `<!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Welcome to Home HNI Premium</title></head>
+<head><meta charset="UTF-8"><title>Payment Successful - ${planName}</title></head>
 <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
@@ -2027,190 +2041,126 @@ app.post("/send-payment-success-email", async (req, res) => {
         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎉 Welcome to Home HNI Premium! Your Journey Begins Now</h2>
-            <p>Hi ${userName || 'Valued Member'},</p>
-            <p>🥳 <strong>Congratulations!</strong> Your payment has been successfully processed and you're now officially a <strong>Home HNI Premium member</strong>! Welcome to India's most exclusive property platform.</p>
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🎉 Payment Successful!</h2>
+            <p>Dear ${userName || 'Valued Member'},</p>
+            <p>Thank you for subscribing to <strong>${planName}</strong>. Your payment has been successfully processed.</p>
 
-            <div style="background:#e8f5e8;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">✅ Payment Confirmation</h3>
-              
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#fff;border-radius:8px;overflow:hidden;margin:10px 0;">
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;width:40%;"><strong>Plan Selected:</strong></td>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;color:#d32f2f;font-weight:bold;">${planName || 'Premium Plan'}</td>
+            <div style="background:#e8f5e8;padding:25px;border-radius:8px;margin:20px 0;">
+              <h3 style="color:#d32f2f;margin:0 0 15px;">Payment Details</h3>
+              <table style="width:100%;border-collapse:collapse;">
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">Plan Name:</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;font-weight:bold;">${planName}</td>
                 </tr>
                 <tr>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;"><strong>Plan Type:</strong></td>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;">${planType || 'Monthly Subscription'}</td>
-                </tr>
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;"><strong>Amount Paid:</strong></td>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;color:#4caf50;font-weight:bold;">₹${amount || 'N/A'}</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">Plan Type:</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">${planType}</td>
                 </tr>
                 <tr>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;"><strong>Transaction ID:</strong></td>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;font-family:monospace;">${transactionId || 'TXN_XXXXXXXX'}</td>
-                </tr>
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;"><strong>Plan Duration:</strong></td>
-                  <td style="padding:15px;border-bottom:1px solid #e0e0e0;">${planDuration || '30 days'}</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">Duration:</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">${planDuration}</td>
                 </tr>
                 <tr>
-                  <td style="padding:15px;"><strong>Payment Date:</strong></td>
-                  <td style="padding:15px;">${new Date().toLocaleDateString()}</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">Base Amount:</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">₹${amount}</td>
+                </tr>
+                ${gstAmount ? `
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">GST (18%):</td>
+                  <td style="padding:8px 0;border-bottom:1px solid #ddd;">₹${gstAmount}</td>
+                </tr>` : ''}
+                <tr>
+                  <td style="padding:8px 0;font-weight:bold;">Total Amount:</td>
+                  <td style="padding:8px 0;font-weight:bold;color:#d32f2f;">₹${totalAmount || amount}</td>
                 </tr>
               </table>
             </div>
 
-            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 20px;text-align:center;font-size:18px;">🚀 Your Premium Benefits Are Now Active!</h3>
-              
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🎯 Enhanced Visibility</strong><br>
-                  <small>• 5X more property views<br>• Featured listing placement<br>• Homepage highlighting<br>• Social media promotion</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>📞 Priority Support</strong><br>
-                  <small>• Dedicated account manager<br>• 24/7 premium helpline<br>• WhatsApp priority support<br>• Same-day issue resolution</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>📊 Advanced Analytics</strong><br>
-                  <small>• Detailed view statistics<br>• Lead conversion tracking<br>• Market price insights<br>• Competition analysis</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🔗 Direct Connections</strong><br>
-                  <small>• Unlimited verified contacts<br>• Direct owner connections<br>• Premium badge display<br>• Trust score enhancement</small>
-                </div>
-              </div>
+            <div style="background:#f0f8ff;padding:20px;border-radius:8px;margin:20px 0;">
+              <h4 style="color:#d32f2f;margin:0 0 15px;">Subscription Details</h4>
+              <p style="margin:5px 0;">🗓️ Start Date: ${paymentDate}</p>
+              ${nextBillingDate ? `<p style="margin:5px 0;">🔄 Next Billing: ${nextBillingDate}</p>` : ''}
+              <p style="margin:5px 0;">🆔 Transaction ID: ${transactionId}</p>
             </div>
 
-            <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/dashboard/premium" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🚀 Access Premium Dashboard</a>
-              <a href="https://homehni.com/premium-guide" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">📖 Premium Guide</a>
-            </p>
-
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Exclusive Welcome Bonuses!</h4>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ FREE professional property photography (₹2,000 value)</p>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ FREE property description optimization</p>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ Priority listing approval (under 2 hours)</p>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ Dedicated success manager assignment</p>
+            <div style="text-align:center;margin:30px 0;">
+              <a href="https://homehni.com/dashboard" style="background:#d32f2f;color:#fff;text-decoration:none;padding:15px 30px;border-radius:5px;font-weight:bold;display:inline-block;margin:10px;">Access Dashboard</a>
             </div>
 
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📅 Important Subscription Details:</h4>
-              <p style="margin:5px 0;">📧 <strong>Invoice:</strong> Detailed invoice sent to your email</p>
-              <p style="margin:5px 0;">🔄 <strong>Auto-renewal:</strong> ${nextBillingDate ? `Next billing on ${nextBillingDate}` : 'Manage in dashboard settings'}</p>
-              <p style="margin:5px 0;">⚙️ <strong>Manage Plan:</strong> Upgrade/downgrade anytime from dashboard</p>
-              <p style="margin:5px 0;">📞 <strong>Premium Support:</strong> +91-9876543210 (VIP Line)</p>
-            </div>
-
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">🎯 Quick Start Action Items:</h4>
-              <ul style="padding-left:20px;margin:10px 0;">
-                <li>📸 <strong>Upload premium photos</strong> - Use our free photography service</li>
-                <li>📝 <strong>Optimize descriptions</strong> - Get free professional help</li>
-                <li>🔍 <strong>Enable notifications</strong> - Never miss a lead or inquiry</li>
-                <li>📊 <strong>Review analytics</strong> - Track your property performance</li>
-                <li>🤝 <strong>Connect with manager</strong> - Schedule your success call</li>
-              </ul>
-            </div>
-
-            <p><strong>What to Expect Next:</strong> Your dedicated success manager will contact you within 24 hours to help you maximize your premium benefits and achieve faster property sales/rentals.</p>
-            <p>Thank you for choosing Home HNI Premium. Let's make your property dreams come true!<br><strong>Home HNI Premium Success Team</strong></p>
+            <p style="color:#666;font-size:14px;">A detailed invoice will be sent to your email shortly.</p>
+            
+            <p>Thank you for choosing Home HNI!</p>
+            <p><strong>Home HNI Team</strong></p>
           </td>
         </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Success Platform</td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">
+          © 2025 Home HNI - All rights reserved
+        </td></tr>
       </table>
     </td></tr>
   </table>
 </body>
 </html>`;
 
-  const text = `🎉 Welcome to Home HNI Premium! Your Journey Begins Now
+  const text = `🎉 Payment Successful!
 
-Hi ${userName || 'Valued Member'},
+Dear ${userName || 'Valued Member'},
 
-🥳 Congratulations! Your payment has been successfully processed and you're now officially a Home HNI Premium member!
+Thank you for subscribing to ${planName}. Your payment has been successfully processed.
 
-✅ Payment Confirmation:
-Plan Selected: ${planName || 'Premium Plan'}
-Plan Type: ${planType || 'Monthly Subscription'}
-Amount Paid: ₹${amount || 'N/A'}
-Transaction ID: ${transactionId || 'TXN_XXXXXXXX'}
-Plan Duration: ${planDuration || '30 days'}
-Payment Date: ${new Date().toLocaleDateString()}
+Payment Details:
+---------------
+Plan Name: ${planName}
+Plan Type: ${planType}
+Duration: ${planDuration}
+Base Amount: ₹${amount}
+${gstAmount ? `GST (18%): ₹${gstAmount}
+` : ''}Total Amount: ₹${totalAmount || amount}
 
-🚀 Your Premium Benefits Are Now Active!
+Subscription Details:
+-------------------
+Start Date: ${paymentDate}
+${nextBillingDate ? `Next Billing: ${nextBillingDate}
+` : ''}Transaction ID: ${transactionId}
 
-🎯 Enhanced Visibility:
-• 5X more property views
-• Featured listing placement
-• Homepage highlighting
-• Social media promotion
+Access your dashboard: https://homehni.com/dashboard
 
-📞 Priority Support:
-• Dedicated account manager
-• 24/7 premium helpline
-• WhatsApp priority support
-• Same-day issue resolution
+A detailed invoice will be sent to your email shortly.
 
-📊 Advanced Analytics:
-• Detailed view statistics
-• Lead conversion tracking
-• Market price insights
-• Competition analysis
+Thank you for choosing Home HNI!
 
-🔗 Direct Connections:
-• Unlimited verified contacts
-• Direct owner connections
-• Premium badge display
-• Trust score enhancement
-
-🎁 Exclusive Welcome Bonuses!
-✓ FREE professional property photography (₹2,000 value)
-✓ FREE property description optimization
-✓ Priority listing approval (under 2 hours)
-✓ Dedicated success manager assignment
-
-📅 Subscription Details:
-📧 Invoice sent to your email
-🔄 Auto-renewal: ${nextBillingDate ? `Next billing on ${nextBillingDate}` : 'Manage in dashboard'}
-⚙️ Manage plan anytime from dashboard
-📞 Premium Support: +91-9876543210 (VIP Line)
-
-🎯 Quick Start Actions:
-• Upload premium photos with free service
-• Optimize descriptions with professional help
-• Enable notifications for leads
-• Review analytics dashboard
-• Connect with your success manager
-
-Access Premium Dashboard: https://homehni.com/dashboard/premium
-Premium Guide: https://homehni.com/premium-guide
-
-Your success manager will contact you within 24 hours!
-
-Home HNI Premium Success Team
-© 2025 Home HNI - Premium Property Success Platform`;
+Home HNI Team
+© 2025 Home HNI - All rights reserved`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
 
-
 // 17. Payment invoice email
 app.post("/send-payment-invoice-email", async (req, res) => {
-  const { to, userName, planName, planType, amount, transactionId, planDetails, invoiceNumber, taxAmount, totalAmount, invoiceUrl, billingAddress } = req.body;
+  const { 
+    to, 
+    userName, 
+    invoiceNumber,
+    planName, 
+    planType, 
+    amount,
+    gstAmount,
+    totalAmount,
+    transactionId,
+    paymentDate = new Date().toLocaleDateString(),
+    billingAddress,
+    planDuration,
+    gstNumber = '27AAAAA0000A1Z5'
+  } = req.body;
+
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = `📄 Home HNI Invoice ${invoiceNumber || '#INV-' + Date.now()} - Payment Confirmation`;
+  const subject = `Invoice #${invoiceNumber} - Home HNI ${planName}`;
   
   const html = `<!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Home HNI Premium Invoice</title></head>
+<head><meta charset="UTF-8"><title>Invoice - Home HNI</title></head>
 <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
@@ -2218,184 +2168,106 @@ app.post("/send-payment-invoice-email", async (req, res) => {
         <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">📄 Official Invoice - Home HNI Premium Services</h2>
-            <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>Thank you for your payment! Please find below your official invoice for Home HNI Premium services. This invoice serves as your payment confirmation and receipt.</p>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:30px;">
+              <tr>
+                <td>
+                  <h2 style="margin:0;color:#d32f2f;">TAX INVOICE</h2>
+                  <p style="margin:5px 0;color:#666;">Invoice Date: ${paymentDate}</p>
+                </td>
+                <td align="right">
+                  <p style="margin:0;font-weight:bold;">Invoice #${invoiceNumber}</p>
+                  <p style="margin:5px 0;color:#666;">GST: ${gstNumber}</p>
+                </td>
+              </tr>
+            </table>
 
-            <div style="background:#f8f9fa;padding:25px;border-radius:8px;margin:20px 0;">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-                <div>
-                  <h3 style="color:#d32f2f;margin:0;font-size:18px;">Invoice Details</h3>
-                  <p style="margin:5px 0;color:#666;">Invoice Date: ${new Date().toLocaleDateString()}</p>
-                </div>
-                <div style="text-align:right;">
-                  <h4 style="margin:0;color:#d32f2f;font-size:16px;">Invoice ${invoiceNumber || '#INV-' + Date.now()}</h4>
-                  <p style="margin:5px 0;color:#666;">Transaction: ${transactionId || 'TXN_XXXXXXXX'}</p>
-                </div>
+            <div style="margin-bottom:30px;">
+              <div style="background:#f8f9fa;padding:20px;border-radius:8px;">
+                <h3 style="margin:0 0 10px;font-size:16px;">Bill To:</h3>
+                <p style="margin:0;">${userName}</p>
+                ${billingAddress ? `<p style="margin:5px 0;color:#666;">${billingAddress}</p>` : ''}
               </div>
-
-              ${billingAddress ? `
-              <div style="background:#fff;padding:15px;border-radius:5px;margin:15px 0;">
-                <h4 style="margin:0 0 10px;color:#333;">Bill To:</h4>
-                <p style="margin:2px 0;">${userName || 'Customer Name'}</p>
-                <p style="margin:2px 0;color:#666;">${billingAddress}</p>
-              </div>
-              ` : ''}
             </div>
 
-            <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;margin:20px 0;overflow:hidden;">
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
-                <thead>
-                  <tr style="background:#d32f2f;color:#fff;">
-                    <th style="padding:15px;text-align:left;font-weight:bold;">Description</th>
-                    <th style="padding:15px;text-align:center;font-weight:bold;">Duration</th>
-                    <th style="padding:15px;text-align:right;font-weight:bold;">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style="padding:15px;border-bottom:1px solid #e0e0e0;">
-                      <strong>${planName || 'Home HNI Premium Plan'}</strong><br>
-                      <small style="color:#666;">${planType || 'Monthly Subscription'}</small>
-                      ${planDetails ? `<br><small style="color:#888;">${planDetails}</small>` : ''}
-                    </td>
-                    <td style="padding:15px;border-bottom:1px solid #e0e0e0;text-align:center;">1 Month</td>
-                    <td style="padding:15px;border-bottom:1px solid #e0e0e0;text-align:right;">₹${amount || '0'}</td>
-                  </tr>
-                  
-                  <tr>
-                    <td colspan="2" style="padding:15px;border-bottom:1px solid #e0e0e0;text-align:right;"><strong>Subtotal:</strong></td>
-                    <td style="padding:15px;border-bottom:1px solid #e0e0e0;text-align:right;">₹${amount || '0'}</td>
-                  </tr>
-                  
-                  ${taxAmount ? `
-                  <tr>
-                    <td colspan="2" style="padding:15px;border-bottom:1px solid #e0e0e0;text-align:right;">GST (18%):</td>
-                    <td style="padding:15px;border-bottom:1px solid #e0e0e0;text-align:right;">₹${taxAmount}</td>
-                  </tr>
-                  ` : ''}
-                  
-                  <tr style="background:#f8f9fa;">
-                    <td colspan="2" style="padding:15px;text-align:right;"><strong style="color:#d32f2f;font-size:16px;">Total Amount Paid:</strong></td>
-                    <td style="padding:15px;text-align:right;"><strong style="color:#d32f2f;font-size:16px;">₹${totalAmount || amount || '0'}</strong></td>
-                  </tr>
-                </tbody>
-              </table>
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:30px;">
+              <tr style="background:#f8f9fa;">
+                <th style="padding:10px;text-align:left;border-bottom:2px solid #ddd;">Description</th>
+                <th style="padding:10px;text-align:center;border-bottom:2px solid #ddd;">Duration</th>
+                <th style="padding:10px;text-align:right;border-bottom:2px solid #ddd;">Amount</th>
+              </tr>
+              <tr>
+                <td style="padding:15px 10px;border-bottom:1px solid #ddd;">
+                  ${planName}<br>
+                  <small style="color:#666;">${planType}</small>
+                </td>
+                <td style="padding:15px 10px;text-align:center;border-bottom:1px solid #ddd;">${planDuration}</td>
+                <td style="padding:15px 10px;text-align:right;border-bottom:1px solid #ddd;">₹${amount}</td>
+              </tr>
+              <tr>
+                <td colspan="2" style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">Subtotal:</td>
+                <td style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">₹${amount}</td>
+              </tr>
+              ${gstAmount ? `
+              <tr>
+                <td colspan="2" style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">GST (18%):</td>
+                <td style="padding:10px;text-align:right;border-bottom:1px solid #ddd;">₹${gstAmount}</td>
+              </tr>` : ''}
+              <tr>
+                <td colspan="2" style="padding:15px 10px;text-align:right;font-weight:bold;">Total:</td>
+                <td style="padding:15px 10px;text-align:right;font-weight:bold;color:#d32f2f;">₹${totalAmount || amount}</td>
+              </tr>
+            </table>
+
+            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin-bottom:30px;">
+              <h4 style="margin:0 0 10px;color:#d32f2f;">Payment Information</h4>
+              <p style="margin:5px 0;">Status: <strong style="color:#4caf50;">PAID</strong></p>
+              <p style="margin:5px 0;">Transaction ID: ${transactionId}</p>
+              <p style="margin:5px 0;">Payment Date: ${paymentDate}</p>
             </div>
 
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 15px;font-size:16px;">✅ Payment Status: PAID</h4>
-              <p style="margin:5px 0;"><strong>Payment Method:</strong> Online Payment</p>
-              <p style="margin:5px 0;"><strong>Payment Date:</strong> ${new Date().toLocaleDateString()}</p>
-              <p style="margin:5px 0;"><strong>Transaction ID:</strong> ${transactionId || 'TXN_XXXXXXXX'}</p>
-              <p style="margin:5px 0;"><strong>Status:</strong> <span style="color:#4caf50;font-weight:bold;">Successfully Processed</span></p>
-            </div>
+            <hr style="border:none;border-top:1px solid #eee;margin:30px 0;">
 
-            <div style="background:#f0f8ff;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📋 Service Inclusions:</h4>
-              <ul style="padding-left:20px;margin:10px 0;columns:2;column-gap:20px;">
-                <li>Enhanced property visibility</li>
-                <li>Featured listing placement</li>
-                <li>Priority customer support</li>
-                <li>Advanced analytics dashboard</li>
-                <li>Unlimited verified contacts</li>
-                <li>Direct owner connections</li>
-                <li>Premium badge display</li>
-                <li>Market insights access</li>
-              </ul>
-            </div>
-
-            <p style="text-align:center;margin:28px 0;">
-              <a href="${invoiceUrl || 'https://homehni.com/invoice'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 30px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">📥 Download Invoice</a>
-              <a href="https://homehni.com/dashboard/billing" style="background:#4caf50;color:#fff;text-decoration:none;padding:16px 30px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">💳 Billing History</a>
-            </p>
-
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📌 Important Notes:</h4>
-              <ul style="padding-left:20px;margin:10px 0;">
-                <li>Please retain this invoice for your accounting records</li>
-                <li>Services are active immediately after payment confirmation</li>
-                <li>For GST/Tax purposes, this serves as your official receipt</li>
-                <li>Contact support for any billing inquiries or disputes</li>
-              </ul>
-            </div>
-
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Billing Support:</h4>
-              <p style="margin:5px 0;">📱 WhatsApp Support: +91-9876543210</p>
-              <p style="margin:5px 0;">📧 Billing Email: billing@homehni.com</p>
-              <p style="margin:5px 0;">⏰ Support Hours: 9 AM - 9 PM (Mon-Sun)</p>
-              <p style="margin:5px 0;">🌐 Help Center: https://homehni.com/help</p>
-            </div>
-
-            <p>Thank you for choosing Home HNI Premium! We're committed to helping you achieve your property goals with our premium services.</p>
-            <p>Best regards,<br><strong>Home HNI Billing & Accounts Team</strong></p>
+            <p style="font-size:14px;color:#666;text-align:center;">This is a computer-generated invoice and does not require a signature.</p>
           </td>
         </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI Premium Services Pvt. Ltd. | GST: 27AAAAA0000A1Z5</td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">
+          © 2025 Home HNI | GST: ${gstNumber}<br>
+          support@homehni.com | +91-9876543210
+        </td></tr>
       </table>
     </td></tr>
   </table>
 </body>
 </html>`;
 
-  const text = `📄 Home HNI Invoice ${invoiceNumber || '#INV-' + Date.now()} - Payment Confirmation
+  const text = `TAX INVOICE
 
-Dear ${userName || 'Valued Customer'},
+Invoice #${invoiceNumber}
+Date: ${paymentDate}
+GST: ${gstNumber}
 
-Thank you for your payment! Please find below your official invoice for Home HNI Premium services.
+Bill To:
+${userName}
+${billingAddress || ''}
 
-Invoice Details:
-Invoice: ${invoiceNumber || '#INV-' + Date.now()}
-Invoice Date: ${new Date().toLocaleDateString()}
-Transaction: ${transactionId || 'TXN_XXXXXXXX'}
+Description:
+${planName} (${planType})
+Duration: ${planDuration}
+Amount: ₹${amount}
 
-${billingAddress ? `Bill To: ${userName || 'Customer Name'}\n${billingAddress}\n` : ''}
+${gstAmount ? `GST (18%): ₹${gstAmount}
+` : ''}Total Amount: ₹${totalAmount || amount}
 
-Service Details:
-${planName || 'Home HNI Premium Plan'} - ${planType || 'Monthly Subscription'}
-Duration: 1 Month
-Amount: ₹${amount || '0'}
+Payment Information:
+-------------------
+Status: PAID
+Transaction ID: ${transactionId}
+Payment Date: ${paymentDate}
 
-Subtotal: ₹${amount || '0'}
-${taxAmount ? `GST (18%): ₹${taxAmount}\n` : ''}
-Total Amount Paid: ₹${totalAmount || amount || '0'}
+This is a computer-generated invoice and does not require a signature.
 
-✅ Payment Status: PAID
-Payment Method: Online Payment
-Payment Date: ${new Date().toLocaleDateString()}
-Transaction ID: ${transactionId || 'TXN_XXXXXXXX'}
-Status: Successfully Processed
-
-📋 Service Inclusions:
-• Enhanced property visibility
-• Featured listing placement
-• Priority customer support
-• Advanced analytics dashboard
-• Unlimited verified contacts
-• Direct owner connections
-• Premium badge display
-• Market insights access
-
-📌 Important Notes:
-• Please retain this invoice for your records
-• Services are active immediately after payment
-• This serves as your official GST receipt
-• Contact support for billing inquiries
-
-Billing Support:
-📱 WhatsApp: +91-9876543210
-📧 Email: billing@homehni.com
-⏰ Hours: 9 AM - 9 PM (Mon-Sun)
-
-Download Invoice: ${invoiceUrl || 'https://homehni.com/invoice'}
-Billing History: https://homehni.com/dashboard/billing
-
-Thank you for choosing Home HNI Premium!
-
-Home HNI Billing & Accounts Team
-© 2025 Home HNI Premium Services Pvt. Ltd. | GST: 27AAAAA0000A1Z5`;
+© 2025 Home HNI | GST: ${gstNumber}
+support@homehni.com | +91-9876543210`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
