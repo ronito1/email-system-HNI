@@ -874,8 +874,9 @@ Your Success Partners
 
 // Help Request Email Template - "I'm interested / Let us help you"
 app.post("/send-help-request-email", async (req, res) => {
-  const { to, userName, propertyType, phone, adminEmail, customerPhone } = req.body;
-  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+  const { to, email, userEmail, userName, propertyType, phone, adminEmail, customerPhone } = req.body;
+  const resolvedTo = (to || email || userEmail || "").trim();
+  if (!resolvedTo) return res.status(400).json({ status: "error", error: "Email address required" });
 
   const subject = "🚀 Home HNI Assistance Request - We'll Help You!";
   
@@ -952,7 +953,8 @@ Home HNI Team
 
 © 2025 Home HNI - Your Trusted Property Platform`;
 
-  const result = await sendEmail({ to, subject, html, text });
+  const result = await sendEmail({ to: resolvedTo, subject, html, text });
+  res.json(result);
 
   // Enhanced admin notification
   if (adminEmail) {
@@ -1321,7 +1323,10 @@ Home HNI Painting Services Team
 //   res.json(result);
 // });
 
-// 11. Property rejected email (Admin reject button)
+
+
+
+////// 11. Property rejected email (Admin reject button)
 app.post("/send-property-rejected-email", async (req, res) => {
   const { to, userName, rejectionReasons, propertyType, adminContact } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
