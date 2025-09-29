@@ -478,25 +478,12 @@ Terms of Service: https://homehni.com/terms-and-conditions`;
 app.post("/send-loan-enquiry-email", async (req, res) => {
   console.log("Received body:", req.body); // Debug: log incoming request
 
-  const { to, email, userEmail, userName, loanType, loanEligibilityUrl } = req.body;
+  const { to, email, userEmail, userName, loanEligibilityUrl } = req.body;
   const resolvedTo = (to || email || userEmail || "").trim();
   const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(resolvedTo) && !/@example\.com$/i.test(resolvedTo);
   if (!isValidEmail) return res.status(400).json({ status: "error", error: "Invalid recipient email", resolvedTo });
 
-  // Ensure loanType is a non-empty string, fallback to 'Home Loan' if missing or invalid
-  const normalizedType = typeof loanType === "string" && loanType.trim() ? loanType.trim() : 'Home Loan';
-  const typeMap = {
-    'Home Loan': 'Home Loan',
-    'Loan Against Property': 'Loan Against Property',
-    'Balance Transfer': 'Balance Transfer',
-    'Top-up Loan': 'Top-up Loan',
-    'Construction Loan': 'Construction Loan',
-    'Business Loan': 'Business Loan',
-    'Others': 'Loan',
-  };
-  const displayType = typeMap[normalizedType] || 'Home Loan';
-
-  const subject = `🏦 ${displayType} Application Received - Explore All Loan Services at Home HNI`;
+  const subject = `🏦 Loan Application Received - Explore All Loan Services at Home HNI`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -509,9 +496,8 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
             <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🏦 Welcome to Home HNI Premium Loan Services</h2>
-            <p><strong>Loan Type:</strong> ${displayType}</p>
             <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>Thank you for choosing <strong>Home HNI</strong> for your <strong>${displayType}</strong> requirements. We've successfully received your application and our premium loan specialists will contact you within <strong>12 hours</strong>.</p>
+            <p>Thank you for choosing <strong>Home HNI</strong>. We've successfully received your application and our premium loan specialists will contact you within <strong>12 hours</strong>.</p>
             
             <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #d32f2f;">
               <h3 style="margin: 0 0 15px; color: #d32f2f;">🎯 Your Premium Loan Benefits</h3>
@@ -554,13 +540,12 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
 </body>
 </html>`;
 
-  const text = `🏦 Welcome to Home HNI Premium Loan Services
 
-Loan Type: ${displayType}
+  const text = `🏦 Welcome to Home HNI Premium Loan Services
 
 Dear ${userName || 'Valued Customer'},
 
-Thank you for choosing Home HNI for your ${displayType} requirements. We've successfully received your application and our premium loan specialists will contact you within 4 hours.
+Thank you for choosing Home HNI. We've successfully received your application and our premium loan specialists will contact you within 4 hours.
 
 Your Premium Loan Benefits:
 ✓ Best Interest Rates: Exclusive rates through our banking partners
