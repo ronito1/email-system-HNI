@@ -476,14 +476,16 @@ Terms of Service: https://homehni.com/terms-and-conditions`;
 
 
 
-// 4. Loan enquiry email
+// 4. Loan confirmation email
 app.post("/send-loan-enquiry-email", async (req, res) => {
+  console.log("Received body:", req.body); // Add this line for debugging
+
   const { to, email, userEmail, userName, loanType, loanEligibilityUrl } = req.body;
   const resolvedTo = (to || email || userEmail || "").trim();
   const isValidEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(resolvedTo) && !/@example\.com$/i.test(resolvedTo);
   if (!isValidEmail) return res.status(400).json({ status: "error", error: "Invalid recipient email", resolvedTo });
 
-  const normalizedType = String(loanType || 'Home Loan').trim();
+  const normalizedType = String(loanType).trim() || 'Home Loan'; // <-- Fix: only default if missing
   const typeMap = {
     'Home Loan': 'Home Loan',
     'Loan Against Property': 'Loan Against Property',
@@ -493,6 +495,7 @@ app.post("/send-loan-enquiry-email", async (req, res) => {
     'Business Loan': 'Business Loan',
     'Others': 'Loan',
   };
+
   const displayType = typeMap[normalizedType] || normalizedType;
 
 const subject = `🏦 ${displayType} Application Received - Explore All Loan Services at Home HNI`;
