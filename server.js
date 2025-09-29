@@ -1073,10 +1073,6 @@ app.post("/send-freshly-painted-email", async (req, res) => {
                   <small>Certified professionals with 5+ years experience</small>
                 </div>
                 <div style="padding:10px;background:#fff;border-radius:5px;border-left:3px solid #4caf50;">
-                  <strong>🛡️ 2-Year Warranty</strong><br>
-                  <small>Complete coverage on workmanship</small>
-                </div>
-                <div style="padding:10px;background:#fff;border-radius:5px;border-left:3px solid #4caf50;">
                   <strong>🧹 Complete Cleanup</strong><br>
                   <small>Leave your property spotless</small>
                 </div>
@@ -1097,23 +1093,9 @@ app.post("/send-freshly-painted-email", async (req, res) => {
               <strong>🏠 Your Property Details:</strong><br>
               Property Type: ${propertyType}<br>
               ${locality ? `Location: ${locality}<br>` : ''}
-              ${budget ? `Budget Range: ₹${budget}<br>` : ''}
-              Service: Premium Painting & Touch-up
             </div>
             ` : ''}
 
-            <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/services/painting" style="background:#d32f2f;color:#fff;text-decoration:none;padding:14px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">🎨 View Painting Gallery</a>
-              <a href="https://homehni.com/get-quote" style="background:#4caf50;color:#fff;text-decoration:none;padding:14px 25px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">💰 Get Instant Quote</a>
-            </p>
-
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Limited Time Offer!</h4>
-              <p style="margin:5px 0;font-size:16px;"><strong>Book within 48 hours and get:</strong></p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ 15% OFF on painting costs</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ FREE primer coat worth ₹5,000</p>
-              <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✓ Complimentary minor repairs</p>
-            </div>
 
             <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
               <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Connect with Our Painting Experts:</h4>
