@@ -592,6 +592,122 @@ Premium Property & Loan Services
 });
 
 
+
+
+// 6. Plan upgrade suggestion email - Updated with price suggestions content
+app.post("/send-plan-upgrade-email", async (req, res) => {
+  const { to, userName, locality, rangeMin, rangeMax, yourPrice, updatePriceUrl, propertyType = 'residential', listingType = 'sell', userType = 'seller' } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "� Market Insights & Premium Plans for " + (locality || 'Your Area');
+  
+  const upgradeReasons = [
+    { icon: "📈", title: "3X Faster Results", desc: "Premium listings close deals 3X faster than basic listings" },
+    { icon: "👁️", title: "5X More Visibility", desc: "Featured placement gets your property seen by more buyers" },
+    { icon: "🎯", title: "Priority Support", desc: "Get dedicated assistance from our property experts" },
+    { icon: "📊", title: "Advanced Analytics", desc: "Track performance and optimize your listings" }
+  ];
+
+  const plans = [
+    { name: "Professional", price: "₹599", duration: "15 days", highlight: false },
+    { name: "Premium", price: "₹999", duration: "30 days", highlight: true },
+    { name: "Elite", price: "₹1,499", duration: "45 days", highlight: false }
+  ];
+
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Upgrade to Premium Success</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🚀 Ready to Accelerate Your Property Success?</h2>
+            <p>Hi ${userName || 'there'},</p>
+            <p>You're currently using our <strong>${currentPlan} Plan</strong>. While you're getting great results, our data shows that Premium users achieve significantly better outcomes.</p>
+            
+            <div style="background: linear-gradient(135deg, #fff3e0, #f3e5f5); padding: 25px; border-radius: 8px; margin: 25px 0;">
+              <h3 style="margin: 0 0 20px; color: #d32f2f; text-align: center;">🎯 Why Premium Users Win Big</h3>
+              ${upgradeReasons.map(reason => `
+                <div style="display: flex; align-items: center; margin: 15px 0;">
+                  <span style="font-size: 24px; margin-right: 15px;">${reason.icon}</span>
+                  <div>
+                    <strong style="color: #d32f2f;">${reason.title}:</strong>
+                    <span style="color: #555;"> ${reason.desc}</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <h3 style="color: #d32f2f; margin: 30px 0 20px; text-align: center;">💎Upgrade Your Plan</h3>
+            
+            ${plans.map(plan => `
+              <div style="border: ${plan.highlight ? '3px solid #d32f2f' : '2px solid #e0e0e0'}; border-radius: 8px; padding: 20px; margin: 15px 0; text-align: center; background: ${plan.highlight ? '#fff8f8' : '#fff'}; position: relative;">
+                ${plan.highlight ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #d32f2f; color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; font-weight: bold;">MOST POPULAR</div>' : ''}
+                <h4 style="color: #d32f2f; margin: 0 0 10px; font-size: 20px;">${plan.name}</h4>
+                <div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>
+                <div style="color: #666; margin-bottom: 15px;">Valid for ${plan.duration}</div>
+                <a href="${upgradePlanUrl || `https://homehni.com/plans?upgrade=${plan.name.toLowerCase()}`}" style="background: ${plan.highlight ? '#d32f2f' : '#666'}; color: #fff; text-decoration: none; padding: 12px 24px; border-radius: 5px; font-weight: bold; display: inline-block; margin-top: 10px;">Upgrade to ${plan.name}</a>
+              </div>
+            `).join('')}
+
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
+              <h4 style="margin: 0 0 10px; color: #2e7d32;">🔥 Limited Time Benefits</h4>
+              <p style="margin: 8px 0;">✓ <strong>Free Property Photography</strong></p>
+              <p style="margin: 8px 0;">✓ <strong>Dedicated Account Manager</strong> for personalized support</p>
+              <p style="margin: 8px 0;">✓ <strong>Legal Document Assistance</strong> for smooth transactions</p>
+            </div>
+
+           
+
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; font-size: 14px; color: #666; text-align: center;">
+              <p style="margin: 0;">💬 Questions about upgrading? Our team is here to help!</p>
+              <p style="margin: 5px 0;">Call us at <strong>+91 8074 017 388</strong> or reply to this email.</p>
+            </div>
+            
+            <p>Don't let your property sit idle when you could be closing deals faster. Upgrade today!</p>
+            <p><strong>Team Home HNI</strong><br>Your Success Partners</p>
+          </td>
+        </tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Accelerating Property Success</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `🚀 Ready to Accelerate Your Property Success?
+
+Hi ${userName || 'there'},
+
+You're currently using our ${currentPlan} Plan. While you're getting great results, our data shows that Premium users achieve significantly better outcomes.
+
+Why Premium Users Win Big:
+📈 3X Faster Results: Premium listings close deals 3X faster
+👁️ 5X More Visibility: Featured placement gets more buyers
+🎯 Priority Support: Dedicated assistance from experts
+📊 Advanced Analytics: Track and optimize performance
+
+Upgrade now: ${upgradePlanUrl || 'https://homehni.com/plans'}
+
+Questions? Call us at +91 8074 017 388
+
+Team Home HNI
+Your Success Partners
+
+© 2025 Home HNI - Accelerating Property Success`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+
+
+
+
 // 5. Premium plan activated email
 app.post("/send-plan-activated-email", async (req, res) => {
   const { to, userName, startUsingPlanUrl, planExpiryDate, planName = 'Premium' } = req.body;
