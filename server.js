@@ -353,33 +353,17 @@ app.post("/send-price-suggestions-email", async (req, res) => {
     currentPlans = pricingPlans.seller[propertyCategory] || pricingPlans.seller.residential;
   }
 
-  const plansHtml = currentPlans.map((plan, index) => {
-    // Determine if this is a basic/silver plan that should be FREE
-    const isBasicPlan = (
-      (plan.name.includes('Silver') || plan.name.includes('Basic') || plan.name === 'Basic') &&
-      !(planCategory === 'seller' && propertyCategory === 'commercial') && // Exclude commercial seller
-      !(planCategory === 'builder') && // Exclude builder plans
-      !(planCategory === 'tenant' && ['commercial', 'industrial', 'agricultural'].includes(propertyCategory)) // Exclude tenant commercial/industrial/agricultural
-    );
-    
-    return `
+  const plansHtml = currentPlans.map(plan => `
     <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin: 15px 0; text-align: center; background: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
       <h3 style="color: #d32f2f; margin: 0 0 10px; font-size: 20px; font-weight: bold;">${plan.name}</h3>
-      ${isBasicPlan ? 
-        `<div style="margin: 10px 0;">
-          <span style="font-size: 18px; color: #999; text-decoration: line-through;">${plan.price}</span>
-          <div style="font-size: 28px; font-weight: bold; color: #4caf50; margin: 5px 0;">FREE</div>
-        </div>` :
-        `<div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>`
-      }
+      <div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>
       <div style="color: #666; margin-bottom: 15px; font-style: italic;">${plan.duration}</div>
       <ul style="list-style: none; padding: 0; margin: 15px 0; text-align: left;">
         ${plan.features.map(feature => `<li style="padding: 5px 0; color: #555; font-size: 14px;">✓ ${feature}</li>`).join('')}
       </ul>
-      <a href="https://homehni.com${plan.url}" style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; box-shadow: 0 3px 6px rgba(211,47,47,0.3); transition: all 0.3s ease;">${isBasicPlan ? 'Get Started - FREE' : `Choose ${plan.name}`}</a>
+      <a href="https://homehni.com${plan.url}" style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; box-shadow: 0 3px 6px rgba(211,47,47,0.3); transition: all 0.3s ease;">Choose ${plan.name}</a>
     </div>
-  `;
-  }).join('');
+  `).join('');
   
   const html = `<!DOCTYPE html>
 <html>
@@ -592,6 +576,109 @@ Premium Property & Loan Services
 });
 
 
+// 5. Premium plan activated email
+app.post("/send-plan-activated-email", async (req, res) => {
+  const { to, userName, startUsingPlanUrl, planExpiryDate, planName = 'Premium' } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = `🎉 Welcome to Home HNI ${planName} - Your Premium Features Are Now Active!`;
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Premium Plan Activated</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🎉 Welcome to Home HNI ${planName}!</h2>
+            <p>Dear ${userName || 'Valued Customer'},</p>
+            <p>Congratulations! Your <strong>Home HNI ${planName} Plan</strong> is now active and ready to supercharge your property journey.</p>
+            
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #4caf50;">
+              <h3 style="margin: 0 0 15px; color: #2e7d32;">🚀 Your Premium Features Are Now Live</h3>
+              <p style="margin: 8px 0;">✅ <strong>Featured Listings:</strong> Your properties get 5X more visibility</p>
+              <p style="margin: 8px 0;">✅ <strong>Priority Support:</strong> Dedicated customer success manager</p>
+              <p style="margin: 8px 0;">✅ <strong>Advanced Analytics:</strong> Detailed insights on property performance</p>
+              <p style="margin: 8px 0;">✅ <strong>Unlimited Contact Access:</strong> Connect with verified property seekers</p>
+              <p style="margin: 8px 0;">✅ <strong>Premium Badge:</strong> Enhanced credibility and trust</p>
+              <p style="margin: 8px 0;">✅ <strong>Early Access:</strong> New features and exclusive opportunities</p>
+            </div>
+
+            <div style="background: #f3e5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h4 style="margin: 0 0 10px; color: #7b1fa2;">💡 Pro Tips to Maximize Your Plan</h4>
+              <p style="margin: 8px 0;">• Upload high-quality images for better engagement</p>
+              <p style="margin: 8px 0;">• Use detailed descriptions with key amenities</p>
+              <p style="margin: 8px 0;">• Update your property status regularly</p>
+              <p style="margin: 8px 0;">• Respond quickly to inquiries for faster deals</p>
+            </div>
+
+            <p style="text-align:center;margin:30px 0;">
+              <a href="${startUsingPlanUrl || 'https://homehni.com/dashboard'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;">🏠 Access My Premium Dashboard</a>
+            </p>
+
+            <div style="background: #fff8e1; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
+              <p style="margin: 0 0 10px; font-weight: bold; color: #f57c00;">⏰ Plan Valid Till: ${planExpiryDate || 'N/A'}</p>
+              <p style="margin: 10px 0; font-size: 14px; color: #666;">Get notified before expiry to continue enjoying premium benefits</p>
+            </div>
+
+            <div style="background: #e1f5fe; padding: 20px; border-radius: 8px; margin: 25px 0;">
+              <h4 style="margin: 0 0 10px; color: #0277bd;">🎯 Need Additional Services?</h4>
+              <p style="margin: 10px 0;">• Property photography and virtual tours</p>
+              <p style="margin: 5px 0;">• Legal documentation and verification</p>
+              <p style="margin: 5px 0;">• Home loans and financial services</p>
+              <p style="margin: 5px 0;">• Property management solutions</p>
+              <a href="https://homehni.com/services" style="background:#0277bd;color:#fff;text-decoration:none;padding:10px 20px;border-radius:5px;font-weight:bold;display:inline-block;margin-top:10px;">Explore Services</a>
+            </div>
+            
+            <p>Thank you for choosing <strong>Home HNI ${planName}</strong>. We're committed to helping you achieve faster, better property deals.</p>
+            <p><strong>Team Home HNI</strong><br>Your Premium Property Partner</p>
+          </td>
+        </tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Solutions</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `🎉 Welcome to Home HNI ${planName}!
+
+Dear ${userName || 'Valued Customer'},
+
+Congratulations! Your Home HNI ${planName} Plan is now active and ready to supercharge your property journey.
+
+Your Premium Features Are Now Live:
+✅ Featured Listings: Your properties get 5X more visibility
+✅ Priority Support: Dedicated customer success manager
+✅ Advanced Analytics: Detailed insights on property performance
+✅ Unlimited Contact Access: Connect with verified property seekers
+✅ Premium Badge: Enhanced credibility and trust
+✅ Early Access: New features and exclusive opportunities
+
+Pro Tips to Maximize Your Plan:
+• Upload high-quality images for better engagement
+• Use detailed descriptions with key amenities
+• Update your property status regularly
+• Respond quickly to inquiries for faster deals
+
+Access your dashboard: ${startUsingPlanUrl || 'https://homehni.com/dashboard'}
+
+Plan Valid Till: ${planExpiryDate || 'N/A'}
+
+Need Additional Services? https://homehni.com/services
+
+Team Home HNI
+Your Premium Property Partner
+
+© 2025 Home HNI - Premium Property Solutions`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
 
 
 // 6. Plan upgrade suggestion email - Updated with price suggestions content
@@ -704,113 +791,6 @@ Your Success Partners
   res.json(result);
 });
 
-
-
-
-
-// 5. Premium plan activated email
-app.post("/send-plan-activated-email", async (req, res) => {
-  const { to, userName, startUsingPlanUrl, planExpiryDate, planName = 'Premium' } = req.body;
-  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
-
-  const subject = `🎉 Welcome to Home HNI ${planName} - Your Premium Features Are Now Active!`;
-  
-  const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Premium Plan Activated</title></head>
-<body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
-        <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">🎉 Welcome to Home HNI ${planName}!</h2>
-            <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>Congratulations! Your <strong>Home HNI ${planName} Plan</strong> is now active and ready to supercharge your property journey.</p>
-            
-            <div style="background: #e8f5e8; padding: 25px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #4caf50;">
-              <h3 style="margin: 0 0 15px; color: #2e7d32;">🚀 Your Premium Features Are Now Live</h3>
-              <p style="margin: 8px 0;">✅ <strong>Featured Listings:</strong> Your properties get 5X more visibility</p>
-              <p style="margin: 8px 0;">✅ <strong>Priority Support:</strong> Dedicated customer success manager</p>
-              <p style="margin: 8px 0;">✅ <strong>Advanced Analytics:</strong> Detailed insights on property performance</p>
-              <p style="margin: 8px 0;">✅ <strong>Unlimited Contact Access:</strong> Connect with verified property seekers</p>
-              <p style="margin: 8px 0;">✅ <strong>Premium Badge:</strong> Enhanced credibility and trust</p>
-              <p style="margin: 8px 0;">✅ <strong>Early Access:</strong> New features and exclusive opportunities</p>
-            </div>
-
-            <div style="background: #f3e5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h4 style="margin: 0 0 10px; color: #7b1fa2;">💡 Pro Tips to Maximize Your Plan</h4>
-              <p style="margin: 8px 0;">• Upload high-quality images for better engagement</p>
-              <p style="margin: 8px 0;">• Use detailed descriptions with key amenities</p>
-              <p style="margin: 8px 0;">• Update your property status regularly</p>
-              <p style="margin: 8px 0;">• Respond quickly to inquiries for faster deals</p>
-            </div>
-
-            <p style="text-align:center;margin:30px 0;">
-              <a href="${startUsingPlanUrl || 'https://homehni.com/dashboard'}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;">🏠 Access My Premium Dashboard</a>
-            </p>
-
-            <div style="background: #fff8e1; padding: 20px; border-radius: 8px; margin: 25px 0; text-align: center;">
-              <p style="margin: 0 0 10px; font-weight: bold; color: #f57c00;">⏰ Plan Valid Till: ${planExpiryDate || 'N/A'}</p>
-              <p style="margin: 10px 0; font-size: 14px; color: #666;">Get notified before expiry to continue enjoying premium benefits</p>
-            </div>
-
-            <div style="background: #e1f5fe; padding: 20px; border-radius: 8px; margin: 25px 0;">
-              <h4 style="margin: 0 0 10px; color: #0277bd;">🎯 Need Additional Services?</h4>
-              <p style="margin: 10px 0;">• Property photography and virtual tours</p>
-              <p style="margin: 5px 0;">• Legal documentation and verification</p>
-              <p style="margin: 5px 0;">• Home loans and financial services</p>
-              <p style="margin: 5px 0;">• Property management solutions</p>
-              <a href="https://homehni.com/services" style="background:#0277bd;color:#fff;text-decoration:none;padding:10px 20px;border-radius:5px;font-weight:bold;display:inline-block;margin-top:10px;">Explore Services</a>
-            </div>
-            
-            <p>Thank you for choosing <strong>Home HNI ${planName}</strong>. We're committed to helping you achieve faster, better property deals.</p>
-            <p><strong>Team Home HNI</strong><br>Your Premium Property Partner</p>
-          </td>
-        </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Solutions</td></tr>
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
-
-  const text = `🎉 Welcome to Home HNI ${planName}!
-
-Dear ${userName || 'Valued Customer'},
-
-Congratulations! Your Home HNI ${planName} Plan is now active and ready to supercharge your property journey.
-
-Your Premium Features Are Now Live:
-✅ Featured Listings: Your properties get 5X more visibility
-✅ Priority Support: Dedicated customer success manager
-✅ Advanced Analytics: Detailed insights on property performance
-✅ Unlimited Contact Access: Connect with verified property seekers
-✅ Premium Badge: Enhanced credibility and trust
-✅ Early Access: New features and exclusive opportunities
-
-Pro Tips to Maximize Your Plan:
-• Upload high-quality images for better engagement
-• Use detailed descriptions with key amenities
-• Update your property status regularly
-• Respond quickly to inquiries for faster deals
-
-Access your dashboard: ${startUsingPlanUrl || 'https://homehni.com/dashboard'}
-
-Plan Valid Till: ${planExpiryDate || 'N/A'}
-
-Need Additional Services? https://homehni.com/services
-
-Team Home HNI
-Your Premium Property Partner
-
-© 2025 Home HNI - Premium Property Solutions`;
-
-  const result = await sendEmail({ to, subject, html, text });
-  res.json(result);
-});
 
 // // 7. Deal closed email - CLEANED VERSION
 // app.post("/send-deal-closed-email", async (req, res) => {
