@@ -393,7 +393,7 @@ app.post("/send-price-suggestions-email", async (req, res) => {
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
 
             <p style="font-size:18px;">Hello <strong>${userName || 'there'}</strong>,</p>
-            <p>Here is the pricing plan you requested in<strong>${locality || 'your area'}</strong> for your <strong>${propertyType || 'residential'} ${listingType || 'sale'}</strong> property.</p>
+            <p>Here is the pricing plan you requested in <strong>${locality || 'your area'}</strong> for your <strong>${propertyType || 'residential'} ${listingType || 'sale'}</strong> property.</p>
             
           
 
