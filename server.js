@@ -269,10 +269,10 @@ app.post("/send-price-suggestions-email", async (req, res) => {
     // OWNER PLANS (for rental properties)
     owner: {
       residential: [
-        { name: "Silver", price: "₹100", duration: "On call assistance", features: ["Basic rental assistance", "Phone support", "Tenant matching"], url: "/plans?tab=owner" },
-        { name: "Gold", price: "₹5,899", duration: "House visit assistance", features: ["Property visit coordination", "Tenant screening", "Documentation help", "Expert guidance"], url: "/plans?tab=owner" },
-        { name: "Platinum", price: "₹6,999", duration: "Expert guidance", features: ["Expert rental guidance", "Premium tenant matching", "Legal assistance", "Priority support"], url: "/plans?tab=owner" },
-        { name: "Diamond", price: "₹10,999", duration: "Personal field assistant", features: ["Personal field assistant", "Complete property management", "Dedicated support", "Premium services"], url: "/plans?tab=owner" }
+        { name: "Silver", price: "₹100", duration: "On call assistance", features: ["Basic rental assistance", "Phone support", "Tenant matching"], url: "/plans?tab=rental" },
+        { name: "Gold", price: "₹5,899", duration: "House visit assistance", features: ["Property visit coordination", "Tenant screening", "Documentation help", "Expert guidance"], url: "/plans?tab=rental" },
+        { name: "Platinum", price: "₹6,999", duration: "Expert guidance", features: ["Expert rental guidance", "Premium tenant matching", "Legal assistance", "Priority support"], url: "/plans?tab=rental" },
+        { name: "Diamond", price: "₹10,999", duration: "Personal field assistant", features: ["Personal field assistant", "Complete property management", "Dedicated support", "Premium services"], url: "/plans?tab=rental" }
       ],
       commercial: [
         { name: "Business Basic", price: "₹999", duration: "Commercial support", features: ["Basic commercial rental", "Business tenant matching", "Email support"], url: "/plans?tab=commercial-owner" },
@@ -353,17 +353,33 @@ app.post("/send-price-suggestions-email", async (req, res) => {
     currentPlans = pricingPlans.seller[propertyCategory] || pricingPlans.seller.residential;
   }
 
-  const plansHtml = currentPlans.map(plan => `
+  const plansHtml = currentPlans.map((plan, index) => {
+    // Determine if this is a basic/silver plan that should be FREE
+    const isBasicPlan = index === 0; // First plan is always basic/silver
+    const shouldBeFree = isBasicPlan && 
+      !(planCategory === 'seller' && propertyCategory === 'commercial') && // Not commercial seller
+      !(planCategory === 'builder') && // Not builder plans
+      !(planCategory === 'tenant' && ['commercial', 'industrial', 'agricultural'].includes(propertyCategory)); // Not tenant commercial/industrial/agricultural
+    
+    const priceDisplay = shouldBeFree ? 
+      `<div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">
+        <span style="text-decoration: line-through; color: #999; font-size: 18px;">${plan.price}</span>
+        <span style="color: #4caf50; margin-left: 10px;">FREE</span>
+      </div>` :
+      `<div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>`;
+    
+    return `
     <div style="border: 2px solid #e0e0e0; border-radius: 12px; padding: 20px; margin: 15px 0; text-align: center; background: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
       <h3 style="color: #d32f2f; margin: 0 0 10px; font-size: 20px; font-weight: bold;">${plan.name}</h3>
-      <div style="font-size: 28px; font-weight: bold; color: #333; margin: 10px 0;">${plan.price}</div>
+      ${priceDisplay}
       <div style="color: #666; margin-bottom: 15px; font-style: italic;">${plan.duration}</div>
       <ul style="list-style: none; padding: 0; margin: 15px 0; text-align: left;">
         ${plan.features.map(feature => `<li style="padding: 5px 0; color: #555; font-size: 14px;">✓ ${feature}</li>`).join('')}
       </ul>
-      <a href="https://homehni.com${plan.url}" style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; box-shadow: 0 3px 6px rgba(211,47,47,0.3); transition: all 0.3s ease;">Choose ${plan.name}</a>
+      <a href="https://homehni.com${plan.url}" style="background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%); color: #fff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: bold; display: inline-block; margin-top: 15px; box-shadow: 0 3px 6px rgba(211,47,47,0.3); transition: all 0.3s ease;">${shouldBeFree ? 'Get Started - FREE' : `Choose ${plan.name}`}</a>
     </div>
-  `).join('');
+  `;
+  }).join('');
   
   const html = `<!DOCTYPE html>
 <html>
@@ -447,11 +463,21 @@ Your current listing price: ₹${yourPrice || 'N/A'}
 BOOST YOUR PROPERTY'S SUCCESS RATE:
 Upgrade to our premium plans designed specifically for ${planCategory}s and achieve 3X faster results:
 
-${currentPlans.map(plan => `
-${plan.name} - ${plan.price} (${plan.duration})
+${currentPlans.map((plan, index) => {
+  const isBasicPlan = index === 0;
+  const shouldBeFree = isBasicPlan && 
+    !(planCategory === 'seller' && propertyCategory === 'commercial') &&
+    !(planCategory === 'builder') &&
+    !(planCategory === 'tenant' && ['commercial', 'industrial', 'agricultural'].includes(propertyCategory));
+  
+  const priceText = shouldBeFree ? `${plan.price} -> FREE` : plan.price;
+  
+  return `
+${plan.name} - ${priceText} (${plan.duration})
 ${plan.features.map(feature => `• ${feature}`).join('\n')}
 Choose this plan: https://homehni.com${plan.url}
-`).join('\n')}
+`;
+}).join('\n')}
 
 WHY CHOOSE HOME HNI PREMIUM?
 ✓ Premium listings get 5X more views
