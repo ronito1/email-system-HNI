@@ -2275,280 +2275,131 @@ support@homehni.com | +91-9876543210`;
 
 
 
-
-
 // 18. Services application email (Services tab form submission)
 app.post("/send-services-application-email", async (req, res) => {
-  const { to, userName, serviceType, serviceCategory, propertyType, locality, budget, urgency, applicationDetails, contactPreference } = req.body;
+  const { to, userName, serviceType } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "🎯 Home HNI Premium Services - Your Application is Confirmed!";
+  // Map service IDs to display names
+  const serviceNames = {
+    'loans': 'Loans Service',
+    'home-security': 'Home Security Service',
+    'packers-movers': 'Packers & Movers Service',
+    'legal-services': 'Legal Service',
+    'handover-services': 'Handover Service',
+    'property-management': 'Property Management Service',
+    'architects': 'Architects Service',
+    'painting-cleaning': 'Painting & Cleaning Service',
+    'interior-design': 'Interior Design Service'
+  };
+
+  const serviceName = serviceNames[serviceType] || serviceType || 'Premium Service';
+  const subject = `🎯 Thank You for Booking ${serviceName} - Home HNI`;
   
   const html = `<!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"><title>Premium Services Application Confirmed</title></head>
+<head>
+  <meta charset="UTF-8">
+  <title>Service Booking Confirmation</title>
+</head>
 <body style="margin:0;padding:0;background:#f9f9f9;font-family:Arial,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
-        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        
+        <!-- Header -->
         <tr>
-          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">🎯 Welcome to Home HNI Premium Services!</h2>
-            <p>Dear ${userName || 'Valued Customer'},</p>
-            <p>🎉 <strong>Excellent choice!</strong> Your application for <strong>${serviceType || 'Premium Property Services'}</strong> has been successfully received. You've just taken the first step towards experiencing India's most trusted property service network!</p>
-
-            <div style="background:#e8f5e8;padding:25px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 15px;text-align:center;font-size:18px;">📋 Your Service Application Summary</h3>
-              
-              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;background:#fff;border-radius:8px;overflow:hidden;">
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;width:35%;"><strong>Service Requested:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;color:#d32f2f;font-weight:bold;">${serviceType || 'Premium Property Service'}</td>
-                </tr>
-                ${serviceCategory ? `
-                <tr>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Category:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${serviceCategory}</td>
-                </tr>
-                ` : ''}
-                ${propertyType ? `
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Property Type:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${propertyType}</td>
-                </tr>
-                ` : ''}
-                ${locality ? `
-                <tr>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Location:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${locality}</td>
-                </tr>
-                ` : ''}
-                ${budget ? `
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Budget Range:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">₹${budget}</td>
-                </tr>
-                ` : ''}
-                <tr>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Application Date:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">${new Date().toLocaleDateString()}</td>
-                </tr>
-                <tr style="background:#f8f9fa;">
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;"><strong>Priority Level:</strong></td>
-                  <td style="padding:12px;border-bottom:1px solid #e0e0e0;">
-                    <span style="color:#d32f2f;font-weight:bold;">${urgency === 'urgent' ? '🔥 URGENT' : urgency === 'asap' ? '⚡ ASAP' : '📅 Standard'}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:12px;"><strong>Status:</strong></td>
-                  <td style="padding:12px;"><span style="color:#4caf50;font-weight:bold;">✅ Confirmed & Under Review</span></td>
-                </tr>
-              </table>
-            </div>
-
-            <div style="background:#fff3cd;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h3 style="color:#d32f2f;margin:0 0 10px;font-size:18px;">⚡ What Happens Next?</h3>
-              <p style="margin:10px 0;font-size:16px;font-weight:bold;">Our premium service process ensures you get the best results!</p>
-              
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:15px 0;">
-                <div style="background:#fff;padding:15px;border-radius:5px;text-align:center;">
-                  <strong style="color:#d32f2f;">📞 Step 1: Contact (${urgency === 'urgent' ? '2 Hours' : urgency === 'asap' ? '4 Hours' : '12 Hours'})</strong><br>
-                  <small>Expert consultation call to understand your needs</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;text-align:center;">
-                  <strong style="color:#d32f2f;">📋 Step 2: Assessment</strong><br>
-                  <small>Site visit & detailed requirement analysis</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;text-align:center;">
-                  <strong style="color:#d32f2f;">💰 Step 3: Quotation</strong><br>
-                  <small>Transparent pricing with no hidden costs</small>
-                </div>
-                <div style="background:#fff;padding:15px;border-radius:5px;text-align:center;">
-                  <strong style="color:#d32f2f;">✅ Step 4: Execution</strong><br>
-                  <small>Professional service delivery with quality assurance</small>
-                </div>
-              </div>
-            </div>
-
-            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;">
-              <h3 style="color:#d32f2f;margin:0 0 20px;text-align:center;font-size:18px;">🏆 Our Complete Property Services Portfolio</h3>
-              
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
-                <div>
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:14px;">🏠 Property Management</h4>
-                  <ul style="padding-left:15px;margin:5px 0;font-size:13px;">
-                    <li>Tenant management & rent collection</li>
-                    <li>Property maintenance & repairs</li>
-                    <li>Legal compliance & documentation</li>
-                    <li>Regular property inspections</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:14px;">🎨 Renovation & Interior</h4>
-                  <ul style="padding-left:15px;margin:5px 0;font-size:13px;">
-                    <li>Complete home renovation</li>
-                    <li>Interior design & decoration</li>
-                    <li>Modular kitchen & wardrobes</li>
-                    <li>Bathroom & flooring upgrades</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:14px;">🧹 Cleaning & Maintenance</h4>
-                  <ul style="padding-left:15px;margin:5px 0;font-size:13px;">
-                    <li>Deep cleaning & sanitization</li>
-                    <li>Regular housekeeping services</li>
-                    <li>Post-construction cleaning</li>
-                    <li>Carpet & upholstery cleaning</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:14px;">📜 Legal & Documentation</h4>
-                  <ul style="padding-left:15px;margin:5px 0;font-size:13px;">
-                    <li>Property registration & transfer</li>
-                    <li>Rental agreement drafting</li>
-                    <li>NOC & clearance certificates</li>
-                    <li>Property title verification</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:14px;">🚚 Moving & Packers</h4>
-                  <ul style="padding-left:15px;margin:5px 0;font-size:13px;">
-                    <li>Professional packing & moving</li>
-                    <li>Local & intercity relocation</li>
-                    <li>Office shifting services</li>
-                    <li>Storage & warehousing</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 style="color:#d32f2f;margin:0 0 10px;font-size:14px;">🔧 Technical Services</h4>
-                  <ul style="padding-left:15px;margin:5px 0;font-size:13px;">
-                    <li>Electrical & plumbing work</li>
-                    <li>AC installation & repair</li>
-                    <li>Pest control & fumigation</li>
-                    <li>Security system installation</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            <div style="background:#e8f5e8;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 15px;text-align:center;">🌟 Why 50,000+ Customers Choose Home HNI Services?</h4>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;">
-                <div style="text-align:center;">
-                  <p style="margin:5px 0;color:#4caf50;font-weight:bold;">✅ 100% Verified Professionals</p>
-                  <p style="margin:5px 0;color:#4caf50;font-weight:bold;">💰 Competitive & Transparent Pricing</p>
-                  <p style="margin:5px 0;color:#4caf50;font-weight:bold;">🛡️ Quality Guarantee & Insurance</p>
-                </div>
-                <div style="text-align:center;">
-                  <p style="margin:5px 0;color:#4caf50;font-weight:bold;">📞 24/7 Customer Support</p>
-                  <p style="margin:5px 0;color:#4caf50;font-weight:bold;">⚡ Quick Response & Delivery</p>
-                  <p style="margin:5px 0;color:#4caf50;font-weight:bold;">🏆 4.8/5 Customer Rating</p>
-                </div>
-              </div>
-            </div>
-
-            <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/dashboard/services" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 28px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;margin-right:10px;">📊 Track My Application</a>
-              <a href="https://homehni.com/services/emergency" style="background:#ff9800;color:#fff;text-decoration:none;padding:16px 28px;border-radius:5px;font-weight:bold;font-size:16px;display:inline-block;">🚨 Emergency Services</a>
-            </p>
-
-            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Your Dedicated Service Team:</h4>
-              <p style="margin:5px 0;">📱 <strong>WhatsApp Support:</strong> +91-9876543210 (Instant response)</p>
-              <p style="margin:5px 0;">📧 <strong>Service Email:</strong> services@homehni.com</p>
-              <p style="margin:5px 0;">⏰ <strong>Service Hours:</strong> 8 AM - 8 PM (Mon-Sun)</p>
-              <p style="margin:5px 0;">🆘 <strong>Emergency Line:</strong> +91-9876543211 (24/7)</p>
-              <p style="margin:10px 0;"><strong>Preferred Contact:</strong> ${contactPreference || 'Phone & WhatsApp'}</p>
-            </div>
-
-            ${applicationDetails ? `
-            <div style="background:#fff3cd;padding:15px;border-radius:5px;margin:20px 0;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">📝 Your Special Requirements:</h4>
-              <p style="margin:5px 0;font-style:italic;">"${applicationDetails}"</p>
-              <p style="margin:10px 0 5px;font-size:14px;color:#666;">Our team will address these specific requirements during the consultation call.</p>
-            </div>
-            ` : ''}
-
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
-              <h4 style="color:#d32f2f;margin:0 0 10px;">🎁 Special Welcome Offer!</h4>
-              <p style="margin:5px 0;"><strong>As a new Home HNI Services customer, you get:</strong></p>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ FREE consultation & site visit (₹500 value)</p>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ 10% OFF on first service booking</p>
-              <p style="margin:5px 0;color:#d32f2f;font-weight:bold;">✓ Priority scheduling for future services</p>
-              <p style="margin:10px 0;font-size:14px;"><strong>Valid for 7 days from application date</strong></p>
-            </div>
-
-            <p>Get ready to experience the Home HNI difference - where premium service meets unmatched reliability. Our expert team is already preparing to exceed your expectations!</p>
-            <p>Looking forward to serving you,<br><strong>Home HNI Premium Services Team</strong></p>
+          <td align="center" style="background:#d32f2f;padding:20px;">
+            <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI">
           </td>
         </tr>
-        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
-        <tr><td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">&copy; 2025 Home HNI - Premium Property Services Network</td></tr>
+        
+        <!-- Main Content -->
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;text-align:center;">
+              🎉 Thank You for Booking Our ${serviceName}!
+            </h2>
+            
+            <p style="font-size:18px;margin-bottom:20px;">Dear ${userName || 'Valued Customer'},</p>
+            
+            <div style="background:#e8f5e8;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
+              <h3 style="color:#d32f2f;margin:0 0 15px;font-size:20px;">✅ Your Service Request is Confirmed!</h3>
+              <p style="font-size:18px;margin:10px 0;font-weight:bold;">Service Selected: <span style="color:#d32f2f;">${serviceName}</span></p>
+              <p style="font-size:16px;margin:15px 0;">Our expert agents will contact you within <strong style="color:#d32f2f;">12 hours</strong> to discuss your requirements and schedule the service.</p>
+            </div>
+
+            <div style="background:#f0f8ff;padding:25px;border-radius:8px;margin:20px 0;text-align:center;">
+              <h4 style="color:#d32f2f;margin:0 0 15px;font-size:18px;">🕐 What Happens Next?</h4>
+              <p style="margin:10px 0;font-size:16px;">📞 Our service expert will call you within 12 hours</p>
+              <p style="margin:10px 0;font-size:16px;">📋 We'll understand your specific requirements</p>
+              <p style="margin:10px 0;font-size:16px;">💰 You'll receive a transparent quotation</p>
+              <p style="margin:10px 0;font-size:16px;">✅ Professional service delivery begins</p>
+            </div>
+
+            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
+              <h4 style="color:#d32f2f;margin:0 0 10px;">🌟 Meanwhile, Explore More!</h4>
+              <p style="margin:15px 0;">
+                <a href="https://homehni.com/properties" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 20px;border-radius:5px;font-weight:bold;margin:5px;display:inline-block;">🏠 Browse Properties</a>
+                <a href="https://homehni.com/plans" style="background:#ff9800;color:#fff;text-decoration:none;padding:12px 20px;border-radius:5px;font-weight:bold;margin:5px;display:inline-block;">📋 View Plans</a>
+              </p>
+            </div>
+
+            <div style="background:#f9f9f9;padding:20px;border-radius:8px;margin:20px 0;">
+              <h4 style="color:#d32f2f;margin:0 0 10px;">📞 Need Immediate Assistance?</h4>
+              <p style="margin:5px 0;">📱 <strong>WhatsApp:</strong> +91-9876543210</p>
+              <p style="margin:5px 0;">📧 <strong>Email:</strong> services@homehni.com</p>
+              <p style="margin:5px 0;">⏰ <strong>Hours:</strong> 8 AM - 8 PM (Mon-Sun)</p>
+            </div>
+
+            <p style="margin:20px 0;">Thank you for choosing Home HNI. We're committed to providing you with exceptional service!</p>
+            
+            <p>Best regards,<br><strong>Team Home HNI</strong></p>
+          </td>
+        </tr>
+        
+        <!-- Footer -->
+        <tr>
+          <td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">
+            &copy; 2025 Home HNI - Your Trusted Property Service Partner
+          </td>
+        </tr>
       </table>
     </td></tr>
   </table>
 </body>
 </html>`;
 
-  const text = `🎯 Welcome to Home HNI Premium Services!
+  const text = `🎉 Thank You for Booking Our ${serviceName}!
 
 Dear ${userName || 'Valued Customer'},
 
-🎉 Excellent choice! Your application for ${serviceType || 'Premium Property Services'} has been successfully received.
+✅ Your Service Request is Confirmed!
+Service Selected: ${serviceName}
 
-📋 Your Service Application Summary:
-Service Requested: ${serviceType || 'Premium Property Service'}
-${serviceCategory ? `Category: ${serviceCategory}` : ''}
-${propertyType ? `Property Type: ${propertyType}` : ''}
-${locality ? `Location: ${locality}` : ''}
-${budget ? `Budget Range: ₹${budget}` : ''}
-Application Date: ${new Date().toLocaleDateString()}
-Priority Level: ${urgency === 'urgent' ? '🔥 URGENT' : urgency === 'asap' ? '⚡ ASAP' : '📅 Standard'}
-Status: ✅ Confirmed & Under Review
+Our expert agents will contact you within 12 hours to discuss your requirements and schedule the service.
 
-⚡ What Happens Next?
-📞 Step 1: Contact (${urgency === 'urgent' ? '2 Hours' : urgency === 'asap' ? '4 Hours' : '12 Hours'}) - Expert consultation call
-📋 Step 2: Assessment - Site visit & detailed analysis  
-💰 Step 3: Quotation - Transparent pricing, no hidden costs
-✅ Step 4: Execution - Professional service with quality assurance
+🕐 What Happens Next?
+📞 Our service expert will call you within 12 hours
+📋 We'll understand your specific requirements  
+💰 You'll receive a transparent quotation
+✅ Professional service delivery begins
 
-🏆 Our Complete Services:
-🏠 Property Management (tenant management, maintenance, legal compliance)
-🎨 Renovation & Interior (complete renovation, interior design, modular solutions)
-🧹 Cleaning & Maintenance (deep cleaning, housekeeping, post-construction)
-📜 Legal & Documentation (registration, agreements, NOCs, verification)
-🚚 Moving & Packers (professional packing, local/intercity relocation)
-🔧 Technical Services (electrical, plumbing, AC, security systems)
+🌟 Meanwhile, Explore More!
+🏠 Browse Properties: https://homehni.com/properties
+📋 View Plans: https://homehni.com/plans
 
-🌟 Why 50,000+ Customers Choose Us:
-✅ 100% Verified Professionals
-💰 Competitive & Transparent Pricing  
-🛡️ Quality Guarantee & Insurance
-📞 24/7 Customer Support
-⚡ Quick Response & Delivery
-🏆 4.8/5 Customer Rating
-
-Your Dedicated Service Team:
-📱 WhatsApp: +91-9876543210 (Instant response)
+📞 Need Immediate Assistance?
+📱 WhatsApp: +91-9876543210
 📧 Email: services@homehni.com
-⏰ Hours: 8 AM - 8 PM (Mon-Sun)  
-🆘 Emergency: +91-9876543211 (24/7)
+⏰ Hours: 8 AM - 8 PM (Mon-Sun)
 
-${applicationDetails ? `📝 Your Special Requirements: "${applicationDetails}"` : ''}
+Thank you for choosing Home HNI!
 
-🎁 Special Welcome Offer (7 days):
-✓ FREE consultation & site visit (₹500 value)
-✓ 10% OFF on first service booking
-✓ Priority scheduling for future services
+Best regards,
+Team Home HNI
 
-Track Application: https://homehni.com/dashboard/services
-Emergency Services: https://homehni.com/services/emergency
-
-Get ready to experience the Home HNI difference!
-
-Home HNI Premium Services Team
-© 2025 Home HNI - Premium Property Services Network`;
+© 2025 Home HNI - Your Trusted Property Service Partner`;
 
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
