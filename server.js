@@ -2386,7 +2386,6 @@ Our expert agents will contact you within 12 hours to discuss your requirements 
 ✅ Professional service delivery begins
 
 🌟 Meanwhile, Explore More!
-🏠 Browse Properties: https://homehni.com/properties
 📋 View Plans: https://homehni.com/plans
 
 📞 Need Immediate Assistance?
