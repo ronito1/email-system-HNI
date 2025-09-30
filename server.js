@@ -333,14 +333,14 @@ app.post("/send-price-suggestions-email", async (req, res) => {
   if (userType === 'buyer' || userType === 'purchase') {
     planCategory = 'buyer';
     currentPlans = pricingPlans.buyer[propertyCategory] || pricingPlans.buyer.residential;
-  } else if (userType === 'tenant' || listingType === 'rent') {
-    if (userType === 'owner' || userType === 'landlord') {
-      planCategory = 'owner';
-      currentPlans = pricingPlans.owner[propertyCategory] || pricingPlans.owner.residential;
-    } else {
-      planCategory = 'tenant';
-      currentPlans = pricingPlans.tenant[propertyCategory] || pricingPlans.tenant.residential;
-    }
+  } else if (userType === 'tenant' || userType === 'renter') {
+    // Explicit tenant/renter plans
+    planCategory = 'tenant';
+    currentPlans = pricingPlans.tenant[propertyCategory] || pricingPlans.tenant.residential;
+  } else if (listingType === 'rent' || userType === 'owner' || userType === 'landlord') {
+    // Rental property owners (for renting out their property)
+    planCategory = 'owner';
+    currentPlans = pricingPlans.owner[propertyCategory] || pricingPlans.owner.residential;
   } else if (userType === 'builder' || propertyType === 'land' || propertyType === 'plot') {
     planCategory = 'builder';
     currentPlans = pricingPlans.builder[propertyCategory] || pricingPlans.builder.residential;
