@@ -218,7 +218,7 @@ app.post("/send-price-suggestions-email", async (req, res) => {
   const { to, userName, locality, rangeMin, rangeMax, yourPrice, updatePriceUrl, propertyType = 'residential', listingType = 'sell', userType = 'seller' } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
-  const subject = "💰 Market Insights & Premium Plans for " + (locality || 'Your Area');
+  const subject = "💰Premium Plans for " + (locality || 'Your Area');
   
   // Define pricing plans based on property type, listing type, and user type
   const pricingPlans = {
@@ -391,15 +391,11 @@ app.post("/send-price-suggestions-email", async (req, res) => {
         <tr><td align="center" style="background:linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);padding:25px;"><img src="https://homehni.com/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="filter: brightness(0) invert(1);"></td></tr>
         <tr>
           <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
-            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:26px;text-align:center;">💰 Market Insights for ${locality || 'Your Area'}</h2>
+
             <p style="font-size:18px;">Hello <strong>${userName || 'there'}</strong>,</p>
-            <p>Great news! We've analyzed recent market trends in <strong>${locality || 'your area'}</strong> and have personalized recommendations for your <strong>${propertyType || 'residential'} ${listingType || 'sale'}</strong> property.</p>
+            <p>Here is the pricing plan you requested in<strong>${locality || 'your area'}</strong> for your <strong>${propertyType || 'residential'} ${listingType || 'sale'}</strong> property.</p>
             
-            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 5px solid #d32f2f;">
-              <h3 style="margin: 0 0 15px; color: #d32f2f; font-size: 20px;">📊 Market Analysis</h3>
-              <p style="margin: 8px 0; font-size: 16px;">Properties in your area recently closed between <strong style="color:#2e7d32;">₹${rangeMin || 'N/A'} – ₹${rangeMax || 'N/A'}</strong></p>
-              <p style="margin: 8px 0; font-size: 16px;">Your current listing price: <strong style="color:#d32f2f;">₹${yourPrice || 'N/A'}</strong></p>
-            </div>
+          
 
             <h3 style="color: #d32f2f; margin: 35px 0 25px; text-align: center; font-size: 22px;">🚀 Boost Your Property's Success Rate</h3>
             <p style="text-align: center; font-size: 17px; margin-bottom: 30px;">Upgrade to our premium plans designed specifically for <strong>${planCategory}s</strong> and achieve <strong>3X faster results</strong>:</p>
