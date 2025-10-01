@@ -2827,15 +2827,13 @@ app.post("/send-report-problem-email", async (req, res) => {
             ${feedbackDetails ? `
             <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
               <h4 style="color:#d32f2f;margin:0 0 10px;">Description:</h4>
-              <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #d32f2f;font-style:italic;">${feedbackDetails}</div>
+              <div style="background:#fff;padding:15px;border-radius:5px;font-style:italic;">${feedbackDetails}</div>
             </div>
             ` : ''}
 
             <p>Our technical team will investigate this issue and work on a resolution. We will notify you once the issue is resolved.</p>
             
-            <p style="text-align:center;margin:30px 0;">
-              <a href="https://homehni.com/support/track-issue" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Track Status</a>
-            </p>
+         
 
             <p>Thank you for helping us improve Home HNI.</p>
             <p><strong>Home HNI Technical Support Team</strong></p>
