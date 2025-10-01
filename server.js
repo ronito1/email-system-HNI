@@ -111,6 +111,106 @@ Visit homehni.com • Contact Support`;
   res.json(result);
 });
 
+// Email verification endpoint for new user signups
+app.post("/send-email-verification", async (req, res) => {
+  const { to, userName, verificationToken } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+  if (!verificationToken) return res.status(400).json({ status: "error", error: "Verification token required" });
+
+  const subject = "Verify Your Email – Complete Your Home HNI Registration";
+  
+  // Professional HTML email template
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Your Email - Home HNI</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f9f9f9;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background-color:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden;">
+        <tr>
+          <td align="center" style="background:#d32f2f;padding:20px;">
+            <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="display:block;">
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">Verify Your Email Address</h2>
+            <p>Hi ${userName || 'there'},</p>
+            <p>Thank you for signing up with <strong>Home HNI</strong>! To complete your registration and start exploring India's premium real estate platform, please verify your email address.</p>
+            
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <p style="margin:0;color:#666;font-size:14px;">
+                <strong>Why verify your email?</strong><br>
+                • Secure your account and protect your data<br>
+                • Receive important property alerts and updates<br>
+                • Access all Home HNI premium features
+              </p>
+            </div>
+            
+            <p style="text-align:center;margin:28px 0;">
+              <a href="https://homehni.com/verify-email?token=${verificationToken}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;box-shadow:0 3px 8px rgba(211,47,47,0.3);">✅ Verify Now</a>
+            </p>
+            
+            <p style="font-size:14px;color:#666;text-align:center;margin:20px 0;">
+              If the button doesn't work, copy and paste this link into your browser:<br>
+              <a href="https://homehni.com/verify-email?token=${verificationToken}" style="color:#d32f2f;word-break:break-all;">https://homehni.com/verify-email?token=${verificationToken}</a>
+            </p>
+            
+            <div style="background:#fff3cd;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #ffc107;">
+              <p style="margin:0;color:#856404;font-size:14px;">
+                <strong>⏰ This verification link expires in 24 hours.</strong><br>
+                For security reasons, please verify your email as soon as possible.
+              </p>
+            </div>
+            
+            <p>If you didn't create this account, please ignore this email.</p>
+            <p>Thanks & Regards,<br><strong>Team Home HNI</strong></p>
+          </td>
+        </tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+        <tr>
+          <td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">
+            <p style="margin:0;">&copy; 2025 Home HNI. All rights reserved.</p>
+            <p style="margin:5px 0 0;">Visit <a href="https://homehni.com" style="color:#d32f2f;text-decoration:none;">homehni.com</a> • <a href="mailto:support@homehni.com" style="color:#d32f2f;text-decoration:none;">Contact Support</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  // Fallback text version for email clients that don't support HTML
+  const text = `Verify Your Email Address – Complete Your Home HNI Registration
+
+Hi ${userName || 'there'},
+
+Thank you for signing up with Home HNI! To complete your registration and start exploring India's premium real estate platform, please verify your email address.
+
+Why verify your email?
+• Secure your account and protect your data
+• Receive important property alerts and updates
+• Access all Home HNI premium features
+
+Click here to verify: https://homehni.com/verify-email?token=${verificationToken}
+
+⏰ This verification link expires in 24 hours.
+For security reasons, please verify your email as soon as possible.
+
+If you didn't create this account, please ignore this email.
+
+Thanks & Regards,
+Team Home HNI
+
+© 2025 Home HNI. All rights reserved.
+Visit homehni.com • Contact Support`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
 
 // 2. Property live email
 app.post("/send-listing-live-email", async (req, res) => {
