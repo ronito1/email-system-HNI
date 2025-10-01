@@ -2450,8 +2450,8 @@ app.post("/send-service-provider-email", async (req, res) => {
             <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">Service Provider Application Received</h2>
             <p>Dear ${userName || 'Service Provider'},</p>
             <p>Thank you for submitting your service provider application to Home HNI. We have successfully received your application and it will be reviewed within 24-48 hours.</p>
-            
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
               <h4 style="margin:0 0 15px;color:#d32f2f;">Application Details:</h4>
               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                 <tr><td style="padding:8px 0;width:35%;"><strong>Company Name:</strong></td><td>${companyName || 'N/A'}</td></tr>
@@ -2466,9 +2466,7 @@ app.post("/send-service-provider-email", async (req, res) => {
 
             <p>Our team will contact you within 24-48 hours regarding the next steps in the application process.</p>
             
-            <p style="text-align:center;margin:30px 0;">
-              <a href="https://homehni.com/service-provider-dashboard" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Check Application Status</a>
-            </p>
+
 
             <p>Thank you for your interest in partnering with Home HNI.</p>
             <p><strong>Home HNI Partner Team</strong></p>
@@ -2626,7 +2624,7 @@ app.post("/send-corporate-enquiry-email", async (req, res) => {
             <p>Dear ${userName || 'Corporate Partner'},</p>
             <p>Thank you for your corporate enquiry with Home HNI. We have received your request for corporate solutions and our enterprise team will contact you within 24 hours.</p>
             
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
               <h4 style="margin:0 0 15px;color:#d32f2f;">Enquiry Details:</h4>
               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                 <tr><td style="padding:8px 0;width:35%;"><strong>Contact Person:</strong></td><td>${userName || 'N/A'}</td></tr>
@@ -2641,9 +2639,7 @@ app.post("/send-corporate-enquiry-email", async (req, res) => {
 
             <p>Our corporate solutions team will analyze your requirements and provide a customized proposal within 48 hours.</p>
             
-            <p style="text-align:center;margin:30px 0;">
-              <a href="https://homehni.com/corporate-solutions" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Learn More</a>
-            </p>
+            
 
             <p>Thank you for considering Home HNI for your corporate real estate needs.</p>
             <p><strong>Home HNI Corporate Solutions Team</strong></p>
@@ -2685,8 +2681,6 @@ Corporate Solutions:
 • Facility Management
 • Real Estate Consulting
 
-Explore solutions: https://homehni.com/corporate-solutions
-
 Home HNI Corporate Solutions Team
 © 2025 Home HNI`;
 
@@ -2715,12 +2709,12 @@ app.post("/send-grievance-redressal-email", async (req, res) => {
             <p>Dear ${userName || 'Valued Customer'},</p>
             <p>Thank you for bringing this matter to our attention. We have received your grievance and assigned it a unique ticket ID for tracking purposes.</p>
             
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;border:2px solid #d32f2f;">
+            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
               <h3 style="color:#d32f2f;margin:0 0 10px;font-size:20px;">Ticket #${Date.now().toString().slice(-6)}</h3>
               <p style="margin:0;color:#856404;font-weight:bold;">Please reference this number for all communications</p>
             </div>
 
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
               <h4 style="margin:0 0 15px;color:#d32f2f;">Complaint Details:</h4>
               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                 <tr><td style="padding:8px 0;width:35%;"><strong>Name:</strong></td><td>${userName || 'N/A'}</td></tr>
@@ -2742,9 +2736,7 @@ app.post("/send-grievance-redressal-email", async (req, res) => {
 
             <p>Our customer support team will investigate this matter and provide an initial response within 2 hours. Complete resolution is expected within 3-5 business days.</p>
             
-            <p style="text-align:center;margin:30px 0;">
-              <a href="https://homehni.com/support/track-complaint" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Track Status</a>
-            </p>
+            
 
             <p>We appreciate your patience and will keep you updated throughout the resolution process.</p>
             <p><strong>Home HNI Customer Support Team</strong></p>
@@ -2808,12 +2800,12 @@ app.post("/send-report-problem-email", async (req, res) => {
             <p>Dear ${userName || 'User'},</p>
             <p>Thank you for reporting this issue. Your feedback helps us improve our platform. We have logged your report and our technical team will investigate.</p>
             
-            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;border:2px solid #d32f2f;">
+            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;">
               <h3 style="color:#d32f2f;margin:0 0 10px;font-size:20px;">Report ID #${Date.now().toString().slice(-6)}</h3>
               <p style="margin:0;color:#856404;font-weight:bold;">Reference this ID for follow-up communications</p>
             </div>
 
-            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;">
               <h4 style="margin:0 0 15px;color:#d32f2f;">Report Details:</h4>
               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                 <tr><td style="padding:8px 0;width:35%;"><strong>Reporter:</strong></td><td>${userName || 'N/A'}</td></tr>
