@@ -2430,6 +2430,453 @@ Team Home HNI
   res.json(result);
 });
 
+// 19. Service provider application email
+app.post("/send-service-provider-email", async (req, res) => {
+  const { to, userName, companyName, serviceType, phoneNumber, emailId, state, city, gstCopy, servicePortfolio } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "🎯 Service Provider Application Received - Welcome to Home HNI Network!";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Service Provider Application Received</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">Service Provider Application Received</h2>
+            <p>Dear ${userName || 'Service Provider'},</p>
+            <p>Thank you for submitting your service provider application to Home HNI. We have successfully received your application and it will be reviewed within 24-48 hours.</p>
+            
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="margin:0 0 15px;color:#d32f2f;">Application Details:</h4>
+              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr><td style="padding:8px 0;width:35%;"><strong>Company Name:</strong></td><td>${companyName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Service Type:</strong></td><td>${serviceType || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Contact Person:</strong></td><td>${userName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Phone:</strong></td><td>${phoneNumber || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Email:</strong></td><td>${emailId || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Location:</strong></td><td>${city || 'N/A'}, ${state || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Submitted:</strong></td><td>${new Date().toLocaleDateString()}</td></tr>
+              </table>
+            </div>
+
+            <p>Our team will contact you within 24-48 hours regarding the next steps in the application process.</p>
+            
+            <p style="text-align:center;margin:30px 0;">
+              <a href="https://homehni.com/service-provider-dashboard" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Check Application Status</a>
+            </p>
+
+            <p>Thank you for your interest in partnering with Home HNI.</p>
+            <p><strong>Home HNI Partner Team</strong></p>
+          </td>
+        </tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">© 2025 Home HNI - Service Provider Network</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `🎯 Welcome to Home HNI Service Provider Network!
+
+Dear ${userName || 'Service Provider'},
+
+Thank you for your interest in joining Home HNI's Premium Service Provider Network. We've received your application and will review it within 24-48 hours.
+
+Application Summary:
+- Company: ${companyName || 'N/A'}
+- Service Type: ${serviceType || 'N/A'}
+- Contact: ${userName || 'N/A'}
+- Phone: ${phoneNumber || 'N/A'}
+- Email: ${emailId || 'N/A'}
+- Location: ${city || 'N/A'}, ${state || 'N/A'}
+
+Next Steps:
+1. Document verification (24-48 hours)
+2. Quality assessment call
+3. Partnership agreement & training
+4. Profile activation
+
+Benefits:
+• Access to 50,000+ verified customers
+• Regular business leads
+• Marketing support
+• Professional development
+• Competitive commissions
+• Quality assurance support
+
+Check status: https://homehni.com/service-provider-dashboard
+
+Home HNI Partner Onboarding Team
+© 2025 Home HNI`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+// 20. Career application email
+app.post("/send-career-application-email", async (req, res) => {
+  const { to, userName, phoneNumber, emailId, state, city, positionOfInterest, resumeCV } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "🚀 Career Application Received - Welcome to Home HNI Team!";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Career Application Received</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">Career Application Received</h2>
+            <p>Dear ${userName || 'Candidate'},</p>
+            <p>Thank you for your job application with Home HNI. We have successfully received your application for the position of <strong>${positionOfInterest || 'specified role'}</strong>.</p>
+            
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="margin:0 0 15px;color:#d32f2f;">Application Details:</h4>
+              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr><td style="padding:8px 0;width:35%;"><strong>Full Name:</strong></td><td>${userName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Position Applied:</strong></td><td>${positionOfInterest || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Phone Number:</strong></td><td>${phoneNumber || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Email ID:</strong></td><td>${emailId || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Location:</strong></td><td>${city || 'N/A'}, ${state || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Submitted:</strong></td><td>${new Date().toLocaleDateString()}</td></tr>
+              </table>
+            </div>
+
+            <p>Our HR team will review your application within 3-5 business days. If your profile matches our requirements, we will contact you to schedule an interview.</p>
+            
+            <p style="text-align:center;margin:30px 0;">
+              <a href="https://homehni.com/careers" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">View More Opportunities</a>
+            </p>
+
+            <p>Thank you for your interest in joining Home HNI.</p>
+            <p><strong>Home HNI HR Team</strong></p>
+          </td>
+        </tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">© 2025 Home HNI - Careers</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `🚀 Thank You for Your Interest in Home HNI!
+
+Dear ${userName || 'Candidate'},
+
+Thank you for applying for the ${positionOfInterest || 'position'} at Home HNI. We've received your application and will review it within 3-5 business days.
+
+Application Details:
+- Name: ${userName || 'N/A'}
+- Position: ${positionOfInterest || 'N/A'}
+- Phone: ${phoneNumber || 'N/A'}
+- Email: ${emailId || 'N/A'}
+- Location: ${city || 'N/A'}, ${state || 'N/A'}
+
+Hiring Process:
+1. Resume screening (3-5 days)
+2. Initial interview
+3. Technical assessment
+4. Final interview
+5. Reference check & offer
+
+Why Home HNI?
+• Fastest-growing PropTech company
+• Competitive compensation
+• Health & wellness benefits
+• Professional development
+• Flexible work arrangements
+• Transform real estate industry
+
+View more opportunities: https://homehni.com/careers
+
+Home HNI HR Team
+© 2025 Home HNI`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+// 21. Corporate enquiry email
+app.post("/send-corporate-enquiry-email", async (req, res) => {
+  const { to, userName, companyName, phoneNumber, officialEmail, city, numberOfEmployees } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "🏢 Corporate Enquiry Received - Premium Enterprise Solutions";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Corporate Enquiry Received</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">Corporate Enquiry Received</h2>
+            <p>Dear ${userName || 'Corporate Partner'},</p>
+            <p>Thank you for your corporate enquiry with Home HNI. We have received your request for corporate solutions and our enterprise team will contact you within 24 hours.</p>
+            
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="margin:0 0 15px;color:#d32f2f;">Enquiry Details:</h4>
+              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr><td style="padding:8px 0;width:35%;"><strong>Contact Person:</strong></td><td>${userName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Company Name:</strong></td><td>${companyName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Phone Number:</strong></td><td>${phoneNumber || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Official Email:</strong></td><td>${officialEmail || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>City:</strong></td><td>${city || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Team Size:</strong></td><td>${numberOfEmployees || 'N/A'} employees</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Submitted:</strong></td><td>${new Date().toLocaleDateString()}</td></tr>
+              </table>
+            </div>
+
+            <p>Our corporate solutions team will analyze your requirements and provide a customized proposal within 48 hours.</p>
+            
+            <p style="text-align:center;margin:30px 0;">
+              <a href="https://homehni.com/corporate-solutions" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Learn More</a>
+            </p>
+
+            <p>Thank you for considering Home HNI for your corporate real estate needs.</p>
+            <p><strong>Home HNI Corporate Solutions Team</strong></p>
+          </td>
+        </tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">© 2025 Home HNI - Corporate Solutions</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `🏢 Thank You for Your Corporate Enquiry!
+
+Dear ${userName || 'Corporate Partner'},
+
+Thank you for your interest in Home HNI's Corporate Solutions. We'll connect with you within 24 hours for ${companyName || 'your organization'}.
+
+Enquiry Summary:
+- Contact: ${userName || 'N/A'}
+- Company: ${companyName || 'N/A'}
+- Phone: ${phoneNumber || 'N/A'}
+- Email: ${officialEmail || 'N/A'}
+- City: ${city || 'N/A'}
+- Team Size: ${numberOfEmployees || 'N/A'} employees
+
+Our Process:
+1. Initial consultation (24 hours)
+2. Requirement analysis
+3. Solution presentation
+4. Pilot program
+5. Full implementation
+
+Corporate Solutions:
+• Employee Relocation Services
+• Corporate Housing Solutions
+• Bulk Property Services
+• Employee Benefits Program
+• Facility Management
+• Real Estate Consulting
+
+Explore solutions: https://homehni.com/corporate-solutions
+
+Home HNI Corporate Solutions Team
+© 2025 Home HNI`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+// 22. Grievance redressal email
+app.post("/send-grievance-redressal-email", async (req, res) => {
+  const { to, userName, emailId, contactNumber, urlOfPage, platformSection, natureOfComplaint, complaintDetails } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "🛡️ Grievance Received - Home HNI Customer Support";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Grievance Received</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">Grievance Received</h2>
+            <p>Dear ${userName || 'Valued Customer'},</p>
+            <p>Thank you for bringing this matter to our attention. We have received your grievance and assigned it a unique ticket ID for tracking purposes.</p>
+            
+            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;border:2px solid #d32f2f;">
+              <h3 style="color:#d32f2f;margin:0 0 10px;font-size:20px;">Ticket #${Date.now().toString().slice(-6)}</h3>
+              <p style="margin:0;color:#856404;font-weight:bold;">Please reference this number for all communications</p>
+            </div>
+
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="margin:0 0 15px;color:#d32f2f;">Complaint Details:</h4>
+              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr><td style="padding:8px 0;width:35%;"><strong>Name:</strong></td><td>${userName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Email:</strong></td><td>${emailId || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Contact:</strong></td><td>${contactNumber || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Platform Section:</strong></td><td>${platformSection || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Complaint Type:</strong></td><td>${natureOfComplaint || 'N/A'}</td></tr>
+                ${urlOfPage ? `<tr><td style="padding:8px 0;"><strong>Page URL:</strong></td><td style="word-break:break-all;">${urlOfPage}</td></tr>` : ''}
+                <tr><td style="padding:8px 0;"><strong>Submitted:</strong></td><td>${new Date().toLocaleDateString()}</td></tr>
+              </table>
+            </div>
+
+            ${complaintDetails ? `
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="color:#d32f2f;margin:0 0 10px;">Description:</h4>
+              <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #d32f2f;font-style:italic;">${complaintDetails}</div>
+            </div>
+            ` : ''}
+
+            <p>Our customer support team will investigate this matter and provide an initial response within 2 hours. Complete resolution is expected within 3-5 business days.</p>
+            
+            <p style="text-align:center;margin:30px 0;">
+              <a href="https://homehni.com/support/track-complaint" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Track Status</a>
+            </p>
+
+            <p>We appreciate your patience and will keep you updated throughout the resolution process.</p>
+            <p><strong>Home HNI Customer Support Team</strong></p>
+          </td>
+        </tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">© 2025 Home HNI - Customer Support</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `🛡️ Your Grievance Has Been Received
+
+Dear ${userName || 'Valued Customer'},
+
+Your complaint has been logged with Ticket #${Date.now().toString().slice(-6)}.
+
+Complaint Details:
+- Name: ${userName || 'N/A'}
+- Email: ${emailId || 'N/A'}
+- Contact: ${contactNumber || 'N/A'}
+- Platform Section: ${platformSection || 'N/A'}
+- Nature: ${natureOfComplaint || 'N/A'}
+${urlOfPage ? `- Page URL: ${urlOfPage}` : ''}
+${complaintDetails ? `\nDescription: ${complaintDetails}` : ''}
+
+Resolution Timeline:
+• Initial Response: Within 2 hours
+• Investigation: 24-48 hours
+• Resolution: 3-5 business days
+• Follow-up: Satisfaction check
+
+Track status: https://homehni.com/support/track-complaint
+
+Home HNI Customer Support Team
+© 2025 Home HNI`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+// 23. Report problem email
+app.post("/send-report-problem-email", async (req, res) => {
+  const { to, userName, emailId, feedbackType, feedbackDetails } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "📝 Problem Report Received - Thank You for Your Feedback";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Problem Report Received</title></head>
+<body style="margin:0;padding:0;background:#f9f9f9;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);overflow:hidden;">
+        <tr><td align="center" style="background:#d32f2f;padding:20px;"><img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI"></td></tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 20px;color:#d32f2f;font-size:24px;">Problem Report Received</h2>
+            <p>Dear ${userName || 'User'},</p>
+            <p>Thank you for reporting this issue. Your feedback helps us improve our platform. We have logged your report and our technical team will investigate.</p>
+            
+            <div style="background:#fff3cd;padding:20px;border-radius:8px;margin:20px 0;text-align:center;border:2px solid #d32f2f;">
+              <h3 style="color:#d32f2f;margin:0 0 10px;font-size:20px;">Report ID #${Date.now().toString().slice(-6)}</h3>
+              <p style="margin:0;color:#856404;font-weight:bold;">Reference this ID for follow-up communications</p>
+            </div>
+
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="margin:0 0 15px;color:#d32f2f;">Report Details:</h4>
+              <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
+                <tr><td style="padding:8px 0;width:35%;"><strong>Reporter:</strong></td><td>${userName || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Email:</strong></td><td>${emailId || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Feedback Type:</strong></td><td>${feedbackType || 'General Feedback'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Submitted:</strong></td><td>${new Date().toLocaleDateString()}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>Status:</strong></td><td><span style="color:#ff9800;font-weight:bold;">Under Investigation</span></td></tr>
+              </table>
+            </div>
+
+            ${feedbackDetails ? `
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <h4 style="color:#d32f2f;margin:0 0 10px;">Description:</h4>
+              <div style="background:#fff;padding:15px;border-radius:5px;border-left:3px solid #d32f2f;font-style:italic;">${feedbackDetails}</div>
+            </div>
+            ` : ''}
+
+            <p>Our technical team will investigate this issue and work on a resolution. We will notify you once the issue is resolved.</p>
+            
+            <p style="text-align:center;margin:30px 0;">
+              <a href="https://homehni.com/support/track-issue" style="background:#d32f2f;color:#fff;text-decoration:none;padding:12px 24px;border-radius:5px;font-weight:bold;display:inline-block;">Track Status</a>
+            </p>
+
+            <p>Thank you for helping us improve Home HNI.</p>
+            <p><strong>Home HNI Technical Support Team</strong></p>
+          </td>
+        </tr>
+        <tr><td align="center" style="background:#f9f9f9;padding:20px;font-size:13px;color:#777;">© 2025 Home HNI - Technical Support</td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `📝 Thank You for Reporting the Problem!
+
+Dear ${userName || 'Valued User'},
+
+Your problem report has been logged with ID #${Date.now().toString().slice(-6)}.
+
+Report Summary:
+- Reporter: ${userName || 'N/A'}
+- Email: ${emailId || 'N/A'}
+- Feedback Type: ${feedbackType || 'General Feedback'}
+- Status: 🔍 Under Investigation
+${feedbackDetails ? `\nProblem Description: ${feedbackDetails}` : ''}
+
+Our Resolution Process:
+1. Issue verification and categorization
+2. Technical investigation and analysis
+3. Solution development and testing
+4. Implementation and deployment
+5. Verification and user notification
+
+Track status: https://homehni.com/support/track-issue
+
+Home HNI Technical Support Team
+© 2025 Home HNI`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
 
 // Health check endpoint
 app.get("/health", (req, res) => {
