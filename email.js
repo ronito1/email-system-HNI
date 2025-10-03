@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const _dirname = path.dirname(_filename);
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -13,12 +13,13 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+  from: '"Home HNI" <homehni8@gmail.com>', // Update this line
 });
 
 export const sendEmail = async ({ to, subject, text, html }) => {
   try {
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: '"Home HNI" <homehni8@gmail.com>', // Update this line
       to,
       subject,
     };

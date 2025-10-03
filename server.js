@@ -54,7 +54,7 @@ app.post("/send-welcome-email", async (req, res) => {
       <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden;">
         <tr>
           <td align="center" style="background:#d32f2f;padding:20px;">
-            <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="display:block;">
+            <img src=  width="150" alt="Home HNI" style="display:block;">
           </td>
         </tr>
         <tr>
