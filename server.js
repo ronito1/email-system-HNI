@@ -214,7 +214,7 @@ Visit homehni.com • Contact Support`;
 
 // 2. Property live email
 app.post("/send-listing-live-email", async (req, res) => {
-  const { to, userName, price, bhkDetails, locality, phone, propertyUrl, planType } = req.body;
+  const { to, userName, price, bhkDetails, locality, phone, propertyUrl, planType, propertyType } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
 
   const subject = "🎉 Welcome to Home HNI! Your Premium Property is Now Live!";
@@ -237,7 +237,8 @@ app.post("/send-listing-live-email", async (req, res) => {
               <h3 style="margin:0 0 15px;color:#d32f2f;font-size:18px;">📋 Your Property Details</h3>
               <table cellpadding="0" cellspacing="0" border="0" style="width:100%;">
                 <tr><td style="padding:8px 0;"><strong>💰 Rent/Sale Price:</strong> ${price || 'N/A'}</td></tr>
-                <tr><td style="padding:8px 0;"><strong>🏠 Property Type:</strong> ${bhkDetails || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>🏠 Property Type:</strong> ${propertyType || 'N/A'}</td></tr>
+                <tr><td style="padding:8px 0;"><strong>🏢 Configuration:</strong> ${bhkDetails || 'N/A'}</td></tr>
                 <tr><td style="padding:8px 0;"><strong>📍 Locality:</strong> ${locality || 'N/A'}</td></tr>
                 <tr><td style="padding:8px 0;"><strong>📞 Contact:</strong> ${phone || 'N/A'}</td></tr>
               </table>
@@ -285,7 +286,8 @@ Congratulations! Your premium property is now live on Home HNI - India's most tr
 
 Your Property Details:
 • Rent/Sale Price: ₹${price || 'N/A'}
-• Property Type: ${bhkDetails || 'N/A'}
+• Property Type: ${propertyType || 'N/A'}
+• Configuration: ${bhkDetails || 'N/A'}
 • Locality: ${locality || 'N/A'}
 • Contact: ${phone || 'N/A'}
 
