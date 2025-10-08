@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async ({ to, subject, text, html }) => {
   try {
     const mailOptions = {
-      from: process.env.GMAIL_USER,
+      from: `"Home HNI" <${process.env.GMAIL_USER}>`,
       to,
       subject,
     };
