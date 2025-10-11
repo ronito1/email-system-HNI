@@ -34,6 +34,59 @@ app.post("/send-email", async (req, res) => {
   res.json(result);
 });
 
+// Simple, clean HTML template for admin user-registration alerts
+function generateUserRegistrationAdminAlertHTML(userName, userEmail) {
+  const safeName = userName || 'New User';
+  const safeEmail = userEmail || '';
+
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New User Registered</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; padding:0; background:#f7f7f8; font-family:Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:#111827; }
+    .wrap { max-width:560px; margin:24px auto; background:#ffffff; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; }
+    .header { background:#111827; color:#fff; padding:16px 20px; }
+    .title { margin:0; font-size:18px; font-weight:700; }
+    .content { padding:20px; }
+    .row { margin:0 0 12px 0; }
+    .label { color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px; }
+    .value { font-size:15px; font-weight:600; }
+    .cta { margin-top:18px; }
+    .btn { display:inline-block; background:#111827; color:#fff !important; text-decoration:none; padding:10px 14px; border-radius:8px; font-weight:600; }
+    .footer { padding:14px 20px; font-size:12px; color:#6b7280; border-top:1px solid #f3f4f6; }
+    a { color:#0ea5e9; }
+  </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="header">
+        <h1 class="title">New user registered on HomeHNI</h1>
+      </div>
+      <div class="content">
+        <div class="row">
+          <div class="label">Name</div>
+          <div class="value">${safeName}</div>
+        </div>
+        <div class="row">
+          <div class="label">Email</div>
+          <div class="value">${safeEmail}</div>
+        </div>
+        <div class="cta">
+          <a class="btn" href="mailto:${safeEmail}">Contact User</a>
+        </div>
+      </div>
+      <div class="footer">
+        HomeHNI • Admin Alert
+      </div>
+    </div>
+  </body>
+  </html>`;
+}
+
 // Welcome email endpoint for new user signups
 app.post("/send-welcome-email", async (req, res) => {
   const { to, userName } = req.body;
@@ -107,8 +160,22 @@ Team Home HNI
 © 2025 Home HNI. All rights reserved.
 Visit homehni.com • Contact Support`;
 
-  const result = await sendEmail({ to, subject, html, text });
-  res.json(result);
+  const userResult = await sendEmail({ to, subject, html, text });
+
+  // Admin notification email (best-effort, non-blocking to user result)
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.GMAIL_USER;
+  if (adminEmail) {
+    const adminSubject = "New User Registered";
+    const adminHtml = generateUserRegistrationAdminAlertHTML(userName, to);
+    const adminText = `New user registered on HomeHNI\nName: ${userName || 'New User'}\nEmail: ${to}`;
+    try {
+      await sendEmail({ to: adminEmail, subject: adminSubject, html: adminHtml, text: adminText });
+    } catch (e) {
+      // ignore admin email delivery errors
+    }
+  }
+
+  res.json(userResult);
 });
 
 // Email verification endpoint for new user signups
