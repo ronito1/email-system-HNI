@@ -2,16 +2,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import { sendEmail } from "./email.js";
-import { 
-  generateResetToken, 
-  hashPassword, 
-  comparePassword, 
-  storeResetToken, 
-  validateResetToken, 
-  markTokenAsUsed, 
-  sendPasswordResetEmail, 
-  sendPasswordResetSuccessEmail 
-} from "./passwordReset.js";
 
 dotenv.config();
 const app = express();
@@ -187,12 +177,11 @@ Visit homehni.com • Contact Support`;
 
   res.json(userResult);
 });
-
 // Email verification endpoint for new user signups
-app.post("/send-email-verification", async (req, res) => {
-  const { to, userName, verificationToken } = req.body;
+app.post("/send-verification-email", async (req, res) => {
+  const { to, userName, verificationUrl } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
-  if (!verificationToken) return res.status(400).json({ status: "error", error: "Verification token required" });
+  if (!verificationUrl) return res.status(400).json({ status: "error", error: "Verification URL required" });
 
   const subject = "Verify Your Email – Complete Your Home HNI Registration";
   
@@ -228,12 +217,12 @@ app.post("/send-email-verification", async (req, res) => {
             </div>
             
             <p style="text-align:center;margin:28px 0;">
-              <a href="https://homehni.com/verify-email?token=${verificationToken}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;box-shadow:0 3px 8px rgba(211,47,47,0.3);">✅ Verify Now</a>
+              <a href="${verificationUrl}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;box-shadow:0 3px 8px rgba(211,47,47,0.3);">✅ Verify Now</a>
             </p>
             
             <p style="font-size:14px;color:#666;text-align:center;margin:20px 0;">
               If the button doesn't work, copy and paste this link into your browser:<br>
-              <a href="https://homehni.com/verify-email?token=${verificationToken}" style="color:#d32f2f;word-break:break-all;">https://homehni.com/verify-email?token=${verificationToken}</a>
+              <a href="${verificationUrl}" style="color:#d32f2f;word-break:break-all;">${verificationUrl}</a>
             </p>
             
             <div style="background:#fff3cd;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #ffc107;">
@@ -260,7 +249,7 @@ app.post("/send-email-verification", async (req, res) => {
 </body>
 </html>`;
 
-  // Fallback text version for email clients that don't support HTML
+  // Fallback text version
   const text = `Verify Your Email Address – Complete Your Home HNI Registration
 
 Hi ${userName || 'there'},
@@ -272,7 +261,7 @@ Why verify your email?
 • Receive important property alerts and updates
 • Access all Home HNI premium features
 
-Click here to verify: https://homehni.com/verify-email?token=${verificationToken}
+Click here to verify: ${verificationUrl}
 
 ⏰ This verification link expires in 24 hours.
 For security reasons, please verify your email as soon as possible.
@@ -288,6 +277,223 @@ Visit homehni.com • Contact Support`;
   const result = await sendEmail({ to, subject, html, text });
   res.json(result);
 });
+
+// Password reset endpoint
+app.post("/send-password-reset-email", async (req, res) => {
+  const { to, userName, resetUrl } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+  if (!resetUrl) return res.status(400).json({ status: "error", error: "Reset URL required" });
+
+  const subject = "Reset Your Password – Home HNI Account Security";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Reset Your Password - Home HNI</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f9f9f9;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background-color:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden;">
+        <tr>
+          <td align="center" style="background:#d32f2f;padding:20px;">
+            <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="display:block;">
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">Reset Your Password</h2>
+            <p>Hi ${userName || 'there'},</p>
+            <p>We received a request to reset your password for your <strong>Home HNI</strong> account. If you made this request, click the button below to set a new password.</p>
+            
+            <div style="background:#f8f9fa;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <p style="margin:0;color:#666;font-size:14px;">
+                <strong>Password Reset Instructions:</strong><br>
+                • Click the "Reset Password" button below<br>
+                • Create a strong, unique password<br>
+                • Use at least 8 characters with numbers and symbols
+              </p>
+            </div>
+            
+            <p style="text-align:center;margin:28px 0;">
+              <a href="${resetUrl}" style="background:#d32f2f;color:#fff;text-decoration:none;padding:16px 32px;border-radius:5px;font-weight:bold;font-size:18px;display:inline-block;box-shadow:0 3px 8px rgba(211,47,47,0.3);">🔒 Reset Password</a>
+            </p>
+            
+            <p style="font-size:14px;color:#666;text-align:center;margin:20px 0;">
+              If the button doesn't work, copy and paste this link into your browser:<br>
+              <a href="${resetUrl}" style="color:#d32f2f;word-break:break-all;">${resetUrl}</a>
+            </p>
+            
+            <div style="background:#fff3cd;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #ffc107;">
+              <p style="margin:0;color:#856404;font-size:14px;">
+                <strong>⏰ This reset link expires in 1 hour.</strong><br>
+                For security reasons, please reset your password as soon as possible.
+              </p>
+            </div>
+            
+            <div style="background:#f8d7da;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #dc3545;">
+              <p style="margin:0;color:#721c24;font-size:14px;">
+                <strong>Didn't request this?</strong><br>
+                If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+              </p>
+            </div>
+            
+            <p>Need help? Contact our support team if you're having trouble accessing your account.</p>
+            <p>Thanks & Regards,<br><strong>Team Home HNI</strong></p>
+          </td>
+        </tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+        <tr>
+          <td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">
+            <p style="margin:0;">&copy; 2025 Home HNI. All rights reserved.</p>
+            <p style="margin:5px 0 0;">Visit <a href="https://homehni.com" style="color:#d32f2f;text-decoration:none;">homehni.com</a> • <a href="mailto:support@homehni.com" style="color:#d32f2f;text-decoration:none;">Contact Support</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `Reset Your Password – Home HNI Account Security
+
+Hi ${userName || 'there'},
+
+We received a request to reset your password for your Home HNI account. If you made this request, click the link below to set a new password.
+
+Password Reset Instructions:
+• Click the reset link below
+• Create a strong, unique password
+• Use at least 8 characters with numbers and symbols
+
+Click here to reset: ${resetUrl}
+
+⏰ This reset link expires in 1 hour.
+For security reasons, please reset your password as soon as possible.
+
+Didn't request this?
+If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.
+
+Need help? Contact our support team if you're having trouble accessing your account.
+
+Thanks & Regards,
+Team Home HNI
+
+© 2025 Home HNI. All rights reserved.
+Visit homehni.com • Contact Support`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+
+
+
+// Password changed confirmation endpoint
+app.post("/send-password-changed-email", async (req, res) => {
+  const { to, userName } = req.body;
+  if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
+
+  const subject = "Password Successfully Changed – Home HNI Security Update";
+  
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Password Changed - Home HNI</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f9f9f9;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="padding:30px 0;background-color:#f9f9f9;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" border="0" style="background:#ffffff;border:1px solid #e0e0e0;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden;">
+        <tr>
+          <td align="center" style="background:#d32f2f;padding:20px;">
+            <img src="https://homehni.in/lovable-uploads/main-logo-final.png" width="150" alt="Home HNI" style="display:block;">
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px;color:#333;font-size:16px;line-height:1.6;">
+            <h2 style="margin:0 0 10px;color:#d32f2f;font-size:22px;">Password Successfully Changed</h2>
+            <p>Hi ${userName || 'there'},</p>
+            <p>✅ Your <strong>Home HNI</strong> account password has been successfully changed. Your account security has been updated.</p>
+            
+            <div style="background:#d4edda;padding:20px;border-radius:8px;margin:20px 0;border-left:4px solid #28a745;">
+              <p style="margin:0;color:#155724;font-size:14px;">
+                <strong>Security Update Confirmed:</strong><br>
+                • Your password has been successfully updated<br>
+                • All active sessions have been logged out<br>
+                • Your account is now more secure
+              </p>
+            </div>
+            
+            <div style="background:#f8f9fa;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #d32f2f;">
+              <p style="margin:0;color:#666;font-size:14px;">
+                <strong>Security Tips:</strong><br>
+                • Use a unique password for your Home HNI account<br>
+                • Enable two-factor authentication if available<br>
+                • Never share your password with anyone<br>
+                • Log out from shared devices
+              </p>
+            </div>
+            
+            <div style="background:#fff3cd;padding:15px;border-radius:8px;margin:20px 0;border-left:4px solid #ffc107;">
+              <p style="margin:0;color:#856404;font-size:14px;">
+                <strong>Didn't make this change?</strong><br>
+                If you didn't change your password, please contact our support team immediately at support@homehni.com
+              </p>
+            </div>
+            
+            <p>Your account security is our priority. Thank you for keeping your Home HNI account safe!</p>
+            <p>Thanks & Regards,<br><strong>Team Home HNI</strong></p>
+          </td>
+        </tr>
+        <tr><td style="padding:0 40px;"><hr style="border:none;border-top:1px solid #eee;margin:0;"></td></tr>
+        <tr>
+          <td align="center" style="background:#f9f9f9;padding:18px 20px;font-size:13px;color:#777;">
+            <p style="margin:0;">&copy; 2025 Home HNI. All rights reserved.</p>
+            <p style="margin:5px 0 0;">Visit <a href="https://homehni.com" style="color:#d32f2f;text-decoration:none;">homehni.com</a> • <a href="mailto:support@homehni.com" style="color:#d32f2f;text-decoration:none;">Contact Support</a></p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `Password Successfully Changed – Home HNI Security Update
+
+Hi ${userName || 'there'},
+
+✅ Your Home HNI account password has been successfully changed. Your account security has been updated.
+
+Security Update Confirmed:
+• Your password has been successfully updated
+• All active sessions have been logged out
+• Your account is now more secure
+
+Security Tips:
+• Use a unique password for your Home HNI account
+• Enable two-factor authentication if available
+• Never share your password with anyone
+• Log out from shared devices
+
+Didn't make this change?
+If you didn't change your password, please contact our support team immediately at support@homehni.com
+
+Your account security is our priority. Thank you for keeping your Home HNI account safe!
+
+Thanks & Regards,
+Team Home HNI
+
+© 2025 Home HNI. All rights reserved.
+Visit homehni.com • Contact Support`;
+
+  const result = await sendEmail({ to, subject, html, text });
+  res.json(result);
+});
+
+
 
 // 2. Property live email
 app.post("/send-listing-live-email", async (req, res) => {
@@ -3046,158 +3252,6 @@ Home HNI Technical Support Team
   res.json(result);
 });
 
-// Password Reset Endpoints
-
-// Forgot Password - Send reset email
-app.post("/forgot-password", async (req, res) => {
-  try {
-    const { email, userName } = req.body;
-    
-    if (!email) {
-      return res.status(400).json({ 
-        status: "error", 
-        error: "Email address is required" 
-      });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({ 
-        status: "error", 
-        error: "Please provide a valid email address" 
-      });
-    }
-
-    // Generate reset token
-    const resetToken = generateResetToken();
-    
-    // Store token in memory with expiration
-    storeResetToken(email, resetToken);
-    
-    // Send password reset email
-    const emailResult = await sendPasswordResetEmail(email, userName, resetToken);
-    
-    if (emailResult.status === "error") {
-      return res.status(500).json({
-        status: "error",
-        error: "Failed to send reset email. Please try again later."
-      });
-    }
-    
-    // Always return success for security (don't reveal if email exists)
-    res.json({
-      status: "success",
-      message: "If an account with that email exists, a password reset link has been sent."
-    });
-    
-  } catch (error) {
-    console.error("Forgot password error:", error);
-    res.status(500).json({
-      status: "error",
-      error: "An unexpected error occurred. Please try again later."
-    });
-  }
-});
-
-// Reset Password - Validate token and update password
-app.post("/reset-password", async (req, res) => {
-  try {
-    const { token, newPassword, confirmPassword } = req.body;
-    
-    if (!token || !newPassword || !confirmPassword) {
-      return res.status(400).json({
-        status: "error",
-        error: "Token, new password, and password confirmation are required"
-      });
-    }
-    
-    // Verify passwords match
-    if (newPassword !== confirmPassword) {
-      return res.status(400).json({
-        status: "error",
-        error: "Passwords do not match"
-      });
-    }
-    
-    // Validate password strength
-    if (newPassword.length < 8) {
-      return res.status(400).json({
-        status: "error",
-        error: "Password must be at least 8 characters long"
-      });
-    }
-    
-    // Validate the reset token
-    const tokenData = validateResetToken(token);
-    if (!tokenData) {
-      return res.status(400).json({
-        status: "error",
-        error: "Invalid or expired reset token"
-      });
-    }
-    
-    // Hash the new password
-    const hashedPassword = await hashPassword(newPassword);
-    
-    // Mark token as used
-    markTokenAsUsed(token);
-    
-    // TODO: Update password in your database here
-    // Example: await updateUserPassword(tokenData.email, hashedPassword);
-    
-    // Send confirmation email
-    await sendPasswordResetSuccessEmail(tokenData.email, req.body.userName);
-    
-    res.json({
-      status: "success",
-      message: "Password has been successfully reset. You can now log in with your new password."
-    });
-    
-  } catch (error) {
-    console.error("Reset password error:", error);
-    res.status(500).json({
-      status: "error",
-      error: "An unexpected error occurred. Please try again later."
-    });
-  }
-});
-
-// Validate Reset Token - Check if token is valid (for frontend validation)
-app.post("/validate-reset-token", async (req, res) => {
-  try {
-    const { token } = req.body;
-    
-    if (!token) {
-      return res.status(400).json({
-        status: "error",
-        error: "Token is required"
-      });
-    }
-    
-    // Validate the reset token
-    const tokenData = validateResetToken(token);
-    if (!tokenData) {
-      return res.status(400).json({
-        status: "error",
-        error: "Invalid or expired reset token"
-      });
-    }
-    
-    res.json({
-      status: "success",
-      message: "Token is valid",
-      email: tokenData.email
-    });
-    
-  } catch (error) {
-    console.error("Validate reset token error:", error);
-    res.status(500).json({
-      status: "error",
-      error: "An unexpected error occurred"
-    });
-  }
-});
 
 // Health check endpoint
 app.get("/health", (req, res) => {
