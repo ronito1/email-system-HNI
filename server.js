@@ -281,6 +281,7 @@ Visit homehni.com • Contact Support`;
 // Password reset endpoint
 app.post("/send-password-reset-email", async (req, res) => {
   const { to, userName, resetUrl } = req.body;
+  
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
   if (!resetUrl) return res.status(400).json({ status: "error", error: "Reset URL required" });
 
