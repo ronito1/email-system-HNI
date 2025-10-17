@@ -2,6 +2,16 @@
 import express from "express";
 import dotenv from "dotenv";
 import { sendEmail } from "./email.js";
+import { 
+  generateResetToken, 
+  hashPassword, 
+  comparePassword, 
+  storeResetToken, 
+  validateResetToken, 
+  markTokenAsUsed, 
+  sendPasswordResetEmail, 
+  sendPasswordResetSuccessEmail 
+} from "./passwordReset.js";
 
 dotenv.config();
 const app = express();
@@ -3036,6 +3046,158 @@ Home HNI Technical Support Team
   res.json(result);
 });
 
+// Password Reset Endpoints
+
+// Forgot Password - Send reset email
+app.post("/forgot-password", async (req, res) => {
+  try {
+    const { email, userName } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ 
+        status: "error", 
+        error: "Email address is required" 
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        status: "error", 
+        error: "Please provide a valid email address" 
+      });
+    }
+
+    // Generate reset token
+    const resetToken = generateResetToken();
+    
+    // Store token in memory with expiration
+    storeResetToken(email, resetToken);
+    
+    // Send password reset email
+    const emailResult = await sendPasswordResetEmail(email, userName, resetToken);
+    
+    if (emailResult.status === "error") {
+      return res.status(500).json({
+        status: "error",
+        error: "Failed to send reset email. Please try again later."
+      });
+    }
+    
+    // Always return success for security (don't reveal if email exists)
+    res.json({
+      status: "success",
+      message: "If an account with that email exists, a password reset link has been sent."
+    });
+    
+  } catch (error) {
+    console.error("Forgot password error:", error);
+    res.status(500).json({
+      status: "error",
+      error: "An unexpected error occurred. Please try again later."
+    });
+  }
+});
+
+// Reset Password - Validate token and update password
+app.post("/reset-password", async (req, res) => {
+  try {
+    const { token, newPassword, confirmPassword } = req.body;
+    
+    if (!token || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        status: "error",
+        error: "Token, new password, and password confirmation are required"
+      });
+    }
+    
+    // Verify passwords match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        status: "error",
+        error: "Passwords do not match"
+      });
+    }
+    
+    // Validate password strength
+    if (newPassword.length < 8) {
+      return res.status(400).json({
+        status: "error",
+        error: "Password must be at least 8 characters long"
+      });
+    }
+    
+    // Validate the reset token
+    const tokenData = validateResetToken(token);
+    if (!tokenData) {
+      return res.status(400).json({
+        status: "error",
+        error: "Invalid or expired reset token"
+      });
+    }
+    
+    // Hash the new password
+    const hashedPassword = await hashPassword(newPassword);
+    
+    // Mark token as used
+    markTokenAsUsed(token);
+    
+    // TODO: Update password in your database here
+    // Example: await updateUserPassword(tokenData.email, hashedPassword);
+    
+    // Send confirmation email
+    await sendPasswordResetSuccessEmail(tokenData.email, req.body.userName);
+    
+    res.json({
+      status: "success",
+      message: "Password has been successfully reset. You can now log in with your new password."
+    });
+    
+  } catch (error) {
+    console.error("Reset password error:", error);
+    res.status(500).json({
+      status: "error",
+      error: "An unexpected error occurred. Please try again later."
+    });
+  }
+});
+
+// Validate Reset Token - Check if token is valid (for frontend validation)
+app.post("/validate-reset-token", async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    if (!token) {
+      return res.status(400).json({
+        status: "error",
+        error: "Token is required"
+      });
+    }
+    
+    // Validate the reset token
+    const tokenData = validateResetToken(token);
+    if (!tokenData) {
+      return res.status(400).json({
+        status: "error",
+        error: "Invalid or expired reset token"
+      });
+    }
+    
+    res.json({
+      status: "success",
+      message: "Token is valid",
+      email: tokenData.email
+    });
+    
+  } catch (error) {
+    console.error("Validate reset token error:", error);
+    res.status(500).json({
+      status: "error",
+      error: "An unexpected error occurred"
+    });
+  }
+});
 
 // Health check endpoint
 app.get("/health", (req, res) => {
