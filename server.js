@@ -177,7 +177,7 @@ Visit homehni.com • Contact Support`;
 
   res.json(userResult);
 });
-// Email verification endpoint for new user signups
+// Email  cation endpoint for new user signups
 app.post("/send-verification-email", async (req, res) => {
   const { to, userName, verificationUrl } = req.body;
   if (!to) return res.status(400).json({ status: "error", error: "Email address required" });
@@ -3253,6 +3253,264 @@ Home HNI Technical Support Team
   res.json(result);
 });
 
+
+// 23. Requirement Submission Email Templates =================
+
+// Admin Alert HTML Generator
+function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
+    const requirementType = intent === 'Service' ? serviceCategory : propertyType || 'N/A';
+    const budgetDisplay = `${budgetMin} - ${budgetMax}`;
+    
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>New Requirement Submission</title>
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
+            .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color: white; padding: 30px; text-align: center; }
+            .header h1 { margin: 0; font-size: 24px; }
+            .content { padding: 30px; }
+            .info-box { background-color: #f9f9f9; border-left: 4px solid #DC2626; padding: 20px; margin: 20px 0; border-radius: 4px; }
+            .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+            .info-label { font-weight: 600; color: #666; }
+            .info-value { color: #333; }
+            .highlight { background-color: #fff3cd; padding: 15px; border-radius: 4px; margin: 20px 0; }
+            .footer { background-color: #f9f9f9; padding: 20px; text-align: center; border-top: 1px solid #eee; color: #666; font-size: 14px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <h1>📋 New Requirement Submission</h1>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Reference ID: ${referenceId}</p>
+            </div>
+            
+            <div class="content">
+                <div class="highlight">
+                    <strong>⚠️ Action Required:</strong> A new requirement has been submitted and requires your attention.
+                </div>
+
+                <div class="info-box">
+                    <h2 style="margin-top: 0; color: #DC2626;">User Information</h2>
+                    <div class="info-row">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value">${userName}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">${userEmail}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value">${userPhone}</span>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h2 style="margin-top: 0; color: #DC2626;">Requirement Details</h2>
+                    <div class="info-row">
+                        <span class="info-label">Intent:</span>
+                        <span class="info-value"><strong>${intent}</strong></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Type:</span>
+                        <span class="info-value">${requirementType}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Budget Range:</span>
+                        <span class="info-value">${budgetDisplay}</span>
+                    </div>
+                    ${notes ? `<div class="info-row"><span class="info-label">Notes:</span><span class="info-value">${notes}</span></div>` : ''}
+                </div>
+
+                <div style="background-color: #e3f2fd; padding: 15px; border-radius: 4px; margin: 20px 0;">
+                    <strong>Reference ID:</strong> ${referenceId}<br>
+                    <small style="color: #666;">Use this ID to track this requirement.</small>
+                </div>
+
+                <p style="margin-top: 30px; color: #666;">
+                    Please review this requirement and contact the user as soon as possible to provide assistance.
+                </p>
+            </div>
+
+            <div class="footer">
+                <p>HomeHNI | Requirement Management System</p>
+                <p><small>This is an automated notification. Please do not reply to this email.</small></p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+}
+
+// User Confirmation HTML Generator
+function generateRequirementConfirmationHTML(userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, referenceId, supportUrl) {
+    const requirementType = intent === 'Service' ? serviceCategory : propertyType || 'N/A';
+    const budgetDisplay = `${budgetMin} - ${budgetMax}`;
+    
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Requirement Submitted Successfully</title>
+        <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }
+            .container { max-width: 600px; margin: 20px auto; background-color: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .header { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 40px 30px; text-align: center; }
+            .header h1 { margin: 10px 0; font-size: 28px; }
+            .success-icon { font-size: 48px; margin-bottom: 10px; }
+            .content { padding: 40px 30px; }
+            .summary-box { background-color: #f9f9f9; border-left: 4px solid #28a745; padding: 25px; margin: 30px 0; border-radius: 4px; }
+            .summary-item { padding: 12px 0; border-bottom: 1px solid #eee; }
+            .summary-item:last-child { border-bottom: none; }
+            .summary-label { font-weight: 600; color: #666; }
+            .summary-value { color: #333; font-size: 16px; }
+            .reference-box { background-color: #e3f2fd; padding: 20px; border-radius: 4px; margin: 30px 0; text-align: center; }
+            .reference-id { font-size: 24px; font-weight: bold; color: #1976d2; margin: 10px 0; }
+            .next-steps { background-color: #fff3cd; padding: 20px; border-radius: 4px; margin: 30px 0; }
+            .next-steps h3 { color: #856404; margin-top: 0; }
+            .next-steps ul { margin: 10px 0; padding-left: 20px; }
+            .footer { background-color: #f9f9f9; padding: 30px; text-align: center; border-top: 1px solid #eee; }
+            .footer a { color: #DC2626; text-decoration: none; margin: 0 10px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="success-icon">✅</div>
+                <h1>Requirement Submitted Successfully!</h1>
+                <p style="margin: 10px 0 0 0; opacity: 0.9;">Thank you for choosing HomeHNI</p>
+            </div>
+            
+            <div class="content">
+                <h2 style="color: #333; margin-bottom: 20px;">Hello ${userName}!</h2>
+                
+                <p>Your requirement has been submitted successfully. Our team will review your request and get back to you shortly.</p>
+
+                <div class="summary-box">
+                    <h3 style="margin-top: 0; color: #28a745;">📋 Submission Summary</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">Intent:</span>
+                        <span class="summary-value">${intent}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Type:</span>
+                        <span class="summary-value">${requirementType}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Budget Range:</span>
+                        <span class="summary-value">${budgetDisplay}</span>
+                    </div>
+                </div>
+
+                <div class="reference-box">
+                    <p style="margin: 0 0 10px 0; color: #666; font-weight: 600;">Your Reference ID</p>
+                    <div class="reference-id">${referenceId}</div>
+                    <p style="margin: 10px 0 0 0; color: #666; font-size: 14px;">
+                        Keep this reference ID for tracking your requirement.
+                    </p>
+                </div>
+
+                <div class="next-steps">
+                    <h3>What Happens Next?</h3>
+                    <ul>
+                        <li>Our team will review your requirement within 24 hours</li>
+                        <li>You'll receive a personalized response via email or phone</li>
+                        <li>We'll match you with the best options available</li>
+                    </ul>
+                </div>
+
+                <p style="margin-top: 30px; text-align: center;">
+                    <strong>Need immediate assistance?</strong><br>
+                    <a href="${supportUrl}">Contact our support team</a> or reply to this email.
+                </p>
+            </div>
+
+            <div class="footer">
+                <p><strong>HomeHNI</strong> - Your Trusted Property Partner</p>
+                <p style="margin: 15px 0;">
+                    <a href="https://homehni.com">Visit Website</a>
+                    <a href="https://homehni.com/contact">Contact Support</a>
+                </p>
+                <p style="color: #999; font-size: 12px; margin-top: 20px;">
+                    © ${new Date().getFullYear()} HomeHNI. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </body>
+    </html>
+    `;
+}
+
+// ================= Requirement Submission Admin Alert =================
+app.post("/send-requirement-submission-admin-alert", async (req, res) => {
+    const { adminEmail, userName, userEmail, userPhone, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
+
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey !== process.env.API_KEY) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (!adminEmail || !userName || !userEmail) {
+        return res.status(400).json({ error: 'adminEmail, userName, and userEmail are required' });
+    }
+
+    const html = generateRequirementAdminAlertHTML(
+        userName, 
+        userEmail, 
+        userPhone, 
+        intent, 
+        propertyType, 
+        serviceCategory, 
+        budgetMinFormatted || budgetMin, 
+        budgetMaxFormatted || budgetMax, 
+        currency, 
+        notes, 
+        referenceId
+    );
+
+    const subject = `New Requirement Submission - ${intent} | Reference: ${referenceId}`;
+
+    const result = await sendEmail({ to: adminEmail, subject, html });
+    res.json(result);
+});
+
+// ================= Requirement Submission User Confirmation =================
+app.post("/send-requirement-submission-confirmation", async (req, res) => {
+    const { to, userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, referenceId, supportUrl } = req.body;
+
+    const apiKey = req.headers['x-api-key'];
+    if (apiKey !== process.env.API_KEY) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    if (!to || !userName) {
+        return res.status(400).json({ error: 'to and userName are required' });
+    }
+
+    const html = generateRequirementConfirmationHTML(
+        userName, 
+        intent, 
+        propertyType, 
+        serviceCategory, 
+        budgetMinFormatted || budgetMin, 
+        budgetMaxFormatted || budgetMax, 
+        currency, 
+        referenceId, 
+        supportUrl || 'https://homehni.com/contact'
+    );
+
+    const subject = `Requirement Submitted Successfully - ${referenceId}`;
+
+    const result = await sendEmail({ to, subject, html });
+    res.json(result);
+});
 
 // Health check endpoint
 app.get("/health", (req, res) => {
