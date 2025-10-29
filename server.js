@@ -3257,7 +3257,7 @@ Home HNI Technical Support Team
 // 23. Requirement Submission Email Templates =================
 
 // Admin Alert HTML Generator
-function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
+function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
     const requirementType = intent === 'Service' ? serviceCategory : propertyType || 'N/A';
     const budgetDisplay = `${budgetMin} - ${budgetMax}`;
     
@@ -3308,6 +3308,10 @@ function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, inten
                         <span class="info-label">Phone:</span>
                         <span class="info-value">${userPhone}</span>
                     </div>
+                    ${city ? `<div class="info-row">
+                        <span class="info-label">City:</span>
+                        <span class="info-value">${city}</span>
+                    </div>` : ''}
                 </div>
 
                 <div class="info-box">
@@ -3450,12 +3454,7 @@ function generateRequirementConfirmationHTML(userName, intent, propertyType, ser
 
 // ================= Requirement Submission Admin Alert =================
 app.post("/send-requirement-submission-admin-alert", async (req, res) => {
-    const { adminEmail, userName, userEmail, userPhone, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
-
-    const apiKey = req.headers['x-api-key'];
-    if (apiKey !== process.env.API_KEY) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
+    const { adminEmail, userName, userEmail, userPhone, city, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
 
     if (!adminEmail || !userName || !userEmail) {
         return res.status(400).json({ error: 'adminEmail, userName, and userEmail are required' });
@@ -3465,6 +3464,7 @@ app.post("/send-requirement-submission-admin-alert", async (req, res) => {
         userName, 
         userEmail, 
         userPhone, 
+        city || '', 
         intent, 
         propertyType, 
         serviceCategory, 
@@ -3484,11 +3484,6 @@ app.post("/send-requirement-submission-admin-alert", async (req, res) => {
 // ================= Requirement Submission User Confirmation =================
 app.post("/send-requirement-submission-confirmation", async (req, res) => {
     const { to, userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, referenceId, supportUrl } = req.body;
-
-    const apiKey = req.headers['x-api-key'];
-    if (apiKey !== process.env.API_KEY) {
-        return res.status(401).json({ error: 'Unauthorized' });
-    }
 
     if (!to || !userName) {
         return res.status(400).json({ error: 'to and userName are required' });
