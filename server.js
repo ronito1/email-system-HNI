@@ -3257,7 +3257,7 @@ Home HNI Technical Support Team
 // 23. Requirement Submission Email Templates =================
 
 // Admin Alert HTML Generator
-function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
+function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city, locality, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
     const requirementType = intent === 'Service' ? serviceCategory : propertyType || 'N/A';
     const budgetDisplay = `${budgetMin} - ${budgetMax}`;
     
@@ -3311,6 +3311,10 @@ function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city,
                     ${city ? `<div class="info-row">
                         <span class="info-label">City:</span>
                         <span class="info-value">${city}</span>
+                    </div>` : ''}
+                    ${locality ? `<div class="info-row">
+                        <span class="info-label">Locality:</span>
+                        <span class="info-value">${locality}</span>
                     </div>` : ''}
                 </div>
 
@@ -3454,7 +3458,7 @@ function generateRequirementConfirmationHTML(userName, intent, propertyType, ser
 
 // ================= Requirement Submission Admin Alert =================
 app.post("/send-requirement-submission-admin-alert", async (req, res) => {
-    const { adminEmail, userName, userEmail, userPhone, city, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
+    const { adminEmail, userName, userEmail, userPhone, city, locality, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
 
     if (!adminEmail || !userName || !userEmail) {
         return res.status(400).json({ error: 'adminEmail, userName, and userEmail are required' });
@@ -3465,6 +3469,7 @@ app.post("/send-requirement-submission-admin-alert", async (req, res) => {
         userEmail, 
         userPhone, 
         city || '', 
+        locality || '', 
         intent, 
         propertyType, 
         serviceCategory, 
