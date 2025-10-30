@@ -3460,6 +3460,50 @@ function generateRequirementConfirmationHTML(userName, intent, propertyType, ser
     `;
 }
 
+// 24. Callback Request (Builder/Dealer Plans) - Admin Alert Template
+function generateCallbackRequestAdminAlertHTML(name, email, phone, city, userClass, source) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Callback Request</title>
+  <style>
+    body { margin:0; padding:0; background:#f7f7f8; font-family:Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:#111827; }
+    .wrap { max-width:560px; margin:24px auto; background:#ffffff; border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; }
+    .header { background:#111827; color:#fff; padding:16px 20px; }
+    .title { margin:0; font-size:18px; font-weight:700; }
+    .subtitle { margin:6px 0 0 0; color:#d1d5db; font-size:12px; }
+    .content { padding:20px; }
+    .box { background:#f9f9f9; border-left:4px solid #dc2626; padding:14px 16px; border-radius:6px; }
+    .row { margin:8px 0; display:flex; justify-content:space-between; }
+    .label { color:#6b7280; font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
+    .value { font-size:15px; font-weight:600; color:#111827; }
+    .footer { padding:14px 20px; font-size:12px; color:#6b7280; border-top:1px solid #f3f4f6; text-align:center; }
+  </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="header">
+        <h1 class="title">📞 New Callback Request</h1>
+        <div class="subtitle">${source || 'Builder/Dealer Plans'}</div>
+      </div>
+      <div class="content">
+        <div class="box">
+          <div class="row"><div class="label">Name</div><div class="value">${name || ''}</div></div>
+          <div class="row"><div class="label">Email</div><div class="value">${email || ''}</div></div>
+          <div class="row"><div class="label">Phone</div><div class="value">${phone || ''}</div></div>
+          ${city ? `<div class="row"><div class="label">City</div><div class="value">${city}</div></div>` : ''}
+          ${userClass ? `<div class="row"><div class="label">Class</div><div class="value">${userClass}</div></div>` : ''}
+        </div>
+      </div>
+      <div class="footer">HomeHNI • Admin Alert</div>
+    </div>
+  </body>
+  </html>`;
+}
+
 // ================= Requirement Submission Admin Alert =================
 app.post("/send-requirement-submission-admin-alert", async (req, res) => {
     const { adminEmail, userName, userEmail, userPhone, city, locality, preferredProject, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
@@ -3518,6 +3562,29 @@ app.post("/send-requirement-submission-confirmation", async (req, res) => {
 
     const result = await sendEmail({ to, subject, html });
     res.json(result);
+});
+
+// 28. Callback Request - Admin Notification
+app.post("/send-callback-request-admin-alert", async (req, res) => {
+  const { adminEmail, name, email, phone, city, userClass, source } = req.body;
+
+  if (!adminEmail || !name || !email || !phone) {
+    return res.status(400).json({ error: 'adminEmail, name, email, phone are required' });
+  }
+
+  const html = generateCallbackRequestAdminAlertHTML(
+    name,
+    email,
+    phone,
+    city || '',
+    userClass || '',
+    source || 'Builder/Dealer Plans'
+  );
+
+  const subject = `Callback Request: ${name} (${userClass || 'N/A'})`;
+
+  const result = await sendEmail({ to: adminEmail, subject, html });
+  res.json(result);
 });
 
 // Health check endpoint
