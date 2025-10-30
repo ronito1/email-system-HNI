@@ -3257,7 +3257,7 @@ Home HNI Technical Support Team
 // 23. Requirement Submission Email Templates =================
 
 // Admin Alert HTML Generator
-function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city, locality, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
+function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city, locality, preferredProject, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, notes, referenceId) {
     const requirementType = intent === 'Service' ? serviceCategory : propertyType || 'N/A';
     const budgetDisplay = `${budgetMin} - ${budgetMax}`;
     
@@ -3328,6 +3328,7 @@ function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city,
                         <span class="info-label">Type:</span>
                         <span class="info-value">${requirementType}</span>
                     </div>
+                    ${preferredProject ? `<div class="info-row"><span class="info-label">Preferred Project:</span><span class="info-value">${preferredProject}</span></div>` : ''}
                     <div class="info-row">
                         <span class="info-label">Budget Range:</span>
                         <span class="info-value">${budgetDisplay}</span>
@@ -3356,7 +3357,7 @@ function generateRequirementAdminAlertHTML(userName, userEmail, userPhone, city,
 }
 
 // User Confirmation HTML Generator
-function generateRequirementConfirmationHTML(userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, referenceId, supportUrl) {
+function generateRequirementConfirmationHTML(userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, currency, referenceId, supportUrl, city, locality, preferredProject) {
     const requirementType = intent === 'Service' ? serviceCategory : propertyType || 'N/A';
     const budgetDisplay = `${budgetMin} - ${budgetMax}`;
     
@@ -3411,6 +3412,9 @@ function generateRequirementConfirmationHTML(userName, intent, propertyType, ser
                         <span class="summary-label">Type:</span>
                         <span class="summary-value">${requirementType}</span>
                     </div>
+                    ${city ? `<div class="summary-item"><span class="summary-label">City:</span><span class="summary-value">${city}</span></div>` : ''}
+                    ${locality ? `<div class="summary-item"><span class="summary-label">Locality:</span><span class="summary-value">${locality}</span></div>` : ''}
+                    ${preferredProject ? `<div class="summary-item"><span class="summary-label">Preferred Project:</span><span class="summary-value">${preferredProject}</span></div>` : ''}
                     <div class="summary-item">
                         <span class="summary-label">Budget Range:</span>
                         <span class="summary-value">${budgetDisplay}</span>
@@ -3458,7 +3462,7 @@ function generateRequirementConfirmationHTML(userName, intent, propertyType, ser
 
 // ================= Requirement Submission Admin Alert =================
 app.post("/send-requirement-submission-admin-alert", async (req, res) => {
-    const { adminEmail, userName, userEmail, userPhone, city, locality, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
+    const { adminEmail, userName, userEmail, userPhone, city, locality, preferredProject, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, notes, referenceId } = req.body;
 
     if (!adminEmail || !userName || !userEmail) {
         return res.status(400).json({ error: 'adminEmail, userName, and userEmail are required' });
@@ -3468,8 +3472,9 @@ app.post("/send-requirement-submission-admin-alert", async (req, res) => {
         userName, 
         userEmail, 
         userPhone, 
-        city || '', 
+        city ||  '', 
         locality || '', 
+        preferredProject || '', 
         intent, 
         propertyType, 
         serviceCategory, 
@@ -3488,7 +3493,7 @@ app.post("/send-requirement-submission-admin-alert", async (req, res) => {
 
 // ================= Requirement Submission User Confirmation =================
 app.post("/send-requirement-submission-confirmation", async (req, res) => {
-    const { to, userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, referenceId, supportUrl } = req.body;
+    const { to, userName, intent, propertyType, serviceCategory, budgetMin, budgetMax, budgetMinFormatted, budgetMaxFormatted, currency, referenceId, supportUrl, city, locality, preferredProject } = req.body;
 
     if (!to || !userName) {
         return res.status(400).json({ error: 'to and userName are required' });
@@ -3503,7 +3508,10 @@ app.post("/send-requirement-submission-confirmation", async (req, res) => {
         budgetMaxFormatted || budgetMax, 
         currency, 
         referenceId, 
-        supportUrl || 'https://homehni.com/contact'
+        supportUrl || 'https://homehni.com/contact',
+        city || '',
+        locality || '',
+        preferredProject || ''
     );
 
     const subject = `Requirement Submitted Successfully - ${referenceId}`;
